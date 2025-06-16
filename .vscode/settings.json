@@ -1,0 +1,7 @@
+{
+  "php.executablePath": "docker",
+  "php.dockerExecution": true,
+  "php.dockerContainer": "my-php-app-php-app-1",
+  "composer.executablePath": "/usr/bin/composer",
+  "composer.dockerExecution": true
+}
