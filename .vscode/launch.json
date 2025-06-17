@@ -7,7 +7,7 @@
       "request": "launch",
       "port": 9003,
       "pathMappings": {
-        "/var/www/html": "C:\\Users\\alex\\Documents\\my-php-app\\src"
+        "/var/www/html": "C:\\Users\\alex\\Documents\\Giga\\ro-crate-php\\src"
       },
       "log": true
     }
