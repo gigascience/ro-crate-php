@@ -2,23 +2,46 @@
 
 namespace ROCrate;
 
+use ROCrate\Entity;
+
 /**
- * Handles the ro-crate metadata descriptor and other data entities of normal type, root type and contextual type
+ * Extends the Entity class
  */
-class DataEntity {
-    private int $index = 0;
-    // need handle id type value specially ? or only when formatting the file when read and write
-    // get set
-    // list of tuples
-    // add doc
-    private Tuple $pair = NULL;
-    public function __construct(int $index, ) 
-    {
-        $this->index = $index;
+class DataEntity extends Entity {
+    private ?string $sourcePath;
+
+    /**
+     * Constructs a data/(contextual) entity instance
+     * @param string $id The ID of the data entity
+     * @param array $types The type(s) of the data entity
+     * @param mixed $source The path to the data entity or null for a contextual entity
+     */
+    public function __construct(string $id, array $types, ?string $source = null) {
+        parent::__construct($id, $types);
+        $this->sourcePath = $source;
     }
-    public function __destruct() {}
 
+    /**
+     * Gets the path to the data entity
+     * @return string|null The path to the data entity or null for a contextual entity
+     */
+    public function getSourcePath(): ?string {
+        return $this->sourcePath;
+    }
 
-    
-    public function __toString(): string  {return "Internal Index: " . $this->index;}
+    /**
+     * Gets the information of the data entity as an array for printing, debugging and inheritance
+     * @return array The information array
+     */
+    public function toArray(): array {
+        $data = parent::baseArray();
+        
+        // Add file-specific properties
+        if ($this->sourcePath && file_exists($this->sourcePath)) {
+            $data['contentSize'] = filesize($this->sourcePath);
+            $data['sha256'] = hash_file('sha256', $this->sourcePath);
+        }
+        
+        return array_merge($data, $this->properties);
+    }
 }

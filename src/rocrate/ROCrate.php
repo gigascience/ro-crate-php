@@ -7,151 +7,17 @@ use EasyRdf\RdfNamespace;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
-use Json\{FileHandler, Flattener, Unflattener};
-
-/**
- * Specifies the exceptions for ROCrate
- */
-class ROCrateException extends \RuntimeException {}
+use Exceptions\ROCrateException;
+use ROCrate\Entity;
+use ROCrate\DataEntity;
+use ROCrate\Dataset;
+use ROCrate\File;
+use ROCrate\Descriptor;
+use ROCrate\Person;
 
 /**
  * Stores the structural information of a ro-crate-metadata.json as a crate object
  */
-
- /**
-  * Handles the entities of a ro-crate object
-  */
-abstract class Entity {
-    protected string $id;
-    protected array $types;
-    protected array $properties = [];
-    protected ?ROCrate $crate = null;
-
-    public function __construct(string $id, array $types) {
-        $this->id = $id;
-        $this->types = $types;
-    }
-
-    public function getId(): string {
-        return $this->id;
-    }
-
-    public function getTypes(): array {
-        return $this->types;
-    }
-
-    public function addType(string $type): void {
-        if (!in_array($type, $this->types, true)) {
-            $this->types[] = $type;
-        }
-    }
-
-    public function getProperty(string $key) {
-        return $this->properties[$key] ?? null;
-    }
-
-    public function getProperties() {
-        return $this->properties;
-    }
-
-    public function addProperty(string $key, $value): void {
-        $this->properties[$key] = $value;
-    }
-
-    public function removeProperty(string $key): void {
-        unset($this->properties[$key]);
-    }
-
-    public function setCrate(ROCrate $crate): void {
-        $this->crate = $crate;
-    }
-
-    abstract public function toArray(): array;
-
-    protected function baseArray(): array {
-        return [
-            '@id' => $this->id,
-            '@type' => $this->types
-        ];
-    }
-}
-
-/**
- * Extends the Entity class
- */
-class DataEntity extends Entity {
-    private ?string $sourcePath;
-
-    public function __construct(string $id, array $types, ?string $source = null) {
-        parent::__construct($id, $types);
-        $this->sourcePath = $source;
-    }
-
-    public function getSourcePath(): ?string {
-        return $this->sourcePath;
-    }
-
-    public function toArray(): array {
-        $data = parent::baseArray();
-        
-        // Add file-specific properties
-        if ($this->sourcePath && file_exists($this->sourcePath)) {
-            $data['contentSize'] = filesize($this->sourcePath);
-            $data['sha256'] = hash_file('sha256', $this->sourcePath);
-        }
-        
-        return array_merge($data, $this->properties);
-    }
-}
-
-/**
- * Extends the DataEntity class
- */
-class File extends DataEntity {
-    public function __construct(string $id, ?string $source = null) {
-        parent::__construct($id, ['File'], $source);
-    }
-}
-
-/**
- * Extends the Entity class
- */
-class Descriptor extends Entity {
-    public function __construct(string $id = 'ro-crate-metadata.json') {
-        parent::__construct($id, ['CreativeWork']);
-    }
-
-    public function toArray(): array {
-        return array_merge(parent::baseArray(), $this->properties);
-    }
-}
-
-/**
- * Extends the Entity class
- */
-class Dataset extends Entity {
-    public function __construct(string $id = './') {
-        parent::__construct($id, ['Dataset']);
-    }
-
-    public function toArray(): array {
-        $data = parent::baseArray();
-        //$data['datePublished'] = date('c'); // !!!
-        return array_merge($data, $this->properties);
-    }
-}
-
-class Person extends Entity {
-    public function __construct(string $id, string $name) {
-        parent::__construct($id, ['Person']);
-        $this->addProperty('name', $name);
-    }
-
-    public function toArray(): array {
-        return array_merge(parent::baseArray(), $this->properties);
-    }
-}
-
 class ROCrate {
     private string $basePath;
     private array $entities = [];
@@ -161,6 +27,11 @@ class ROCrate {
     private Graph $graph;
     private Client $httpClient;
 
+    /**
+     * Constructs a ROCrate instance
+     * @param string $directory The directory for reading and writing files
+     * @param bool $loadExisting The flag to indicate whether we construct from nothing or reading an existing file
+     */
     public function __construct(string $directory, bool $loadExisting = true) {
         $this->basePath = realpath($directory) ?: $directory;
         $this->graph = new Graph();
@@ -180,10 +51,18 @@ class ROCrate {
         }
     }
 
+    /**
+     * Gets the path to the ro-crate metadata file
+     * @return string The path to the ro-crate metadata file as a string
+     */
     private function getMetadataPath(): string {
         return $this->basePath . '/ro-crate-metadata.json';
     }
 
+    /**
+     * Initializes a ro-crate instance
+     * @return void
+     */
     private function initializeNewCrate(): void {
         $this->descriptor = new Descriptor();
         $this->addEntity($this->descriptor);
@@ -192,6 +71,11 @@ class ROCrate {
         $this->addEntity($this->rootDataset);
     }
 
+    /**
+     * Reads and loads the existing ro-crate file as an instance
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return void
+     */
     public function loadMetadata(): void {
         $path = $this->getMetadataPath();
         
@@ -204,6 +88,10 @@ class ROCrate {
         } catch (JsonException $e) {
             throw new ROCrateException("Invalid JSON in metadata: " . $e->getMessage());
         }
+
+        $this->descriptor = new Descriptor();
+        $this->addEntity($this->descriptor);
+        $this->addProfile();
         
         // Set context
         $this->context = $json['@context'] ?? $this->context;
@@ -223,9 +111,6 @@ class ROCrate {
                 break;
             }
         }*/
-        $this->descriptor = new Descriptor();
-        $this->addEntity($this->descriptor);
-        $this->addProfile();
 
         // Find root dataset
         foreach ($this->entities as $entity) {
@@ -244,6 +129,12 @@ class ROCrate {
         }
     }
 
+    /**
+     * Adds entities to the crate given an array
+     * @param array $data The given array
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return void
+     */
     private function addEntityFromArray(array $data): void {
         $id = $data['@id'] ?? null;
         $types = (array)($data['@type'] ?? []);
@@ -259,7 +150,7 @@ class ROCrate {
         $entity = match(true) {
             in_array('Dataset', $types) => new Dataset($id),
             in_array('File', $types) => $this->createFileEntity($id, $data),
-            in_array('Person', $types) => new Person($id, $data['name'] ?? 'Unknown'),
+            in_array('Person', $types) => $this->createGenericEntity($id, ['Person'])->addProperty('name', $data['name'] ?? 'Unknown'),
             default => $this->createGenericEntity($id, $types)
         };
         
@@ -273,6 +164,12 @@ class ROCrate {
         $this->addEntity($entity);
     }
 
+    /**
+     * Creates a file entity
+     * @param string $id The ID of the file entity
+     * @param array $data The attributes of the file entity
+     * @return File The file entity instacne
+     */
     private function createFileEntity(string $id, array $data): File {
         $source = null;
         
@@ -282,7 +179,13 @@ class ROCrate {
         return new File($id, $source);
     }
 
-    private function createGenericEntity(string $id, array $types): Entity {
+    /**
+     * Creates a generic entity
+     * @param string $id The ID of the entity
+     * @param array $types The type(s) of the entity as an array
+     * @return Entity The entity instance
+     */
+    public function createGenericEntity(string $id, array $types): Entity {
         return new class($id, $types) extends Entity {
             public function toArray(): array {
                 return array_merge($this->baseArray(), $this->properties);
@@ -290,6 +193,12 @@ class ROCrate {
         };
     }
 
+    /**
+     * Adds an entity to the crate given an entity instacne
+     * @param Entity $entity The given entity instacne
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return void
+     */
     public function addEntity(Entity $entity): void {
         $id = $entity->getId();
         
@@ -311,10 +220,21 @@ class ROCrate {
         }*/
     }
 
+    /**
+     * Gets an entity instance with its ID from the crate
+     * @param string $id The ID of the entity instacne to retrieve
+     * @return ?Entity The entity instacne or null if the ID is invalid
+     */
     public function getEntity(string $id): ?Entity {
         return $this->entities[$id] ?? null;
     }
 
+    /**
+     * Removes an entity from the crate with its ID
+     * @param string $id The ID of the entity to remove
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return void
+     */
     public function removeEntity(string $id): void {
         if (!isset($this->entities[$id])) {
             throw new ROCrateException("Entity not found: $id");
@@ -326,6 +246,14 @@ class ROCrate {
         unset($this->entities[$id]);
     }
 
+    //!!! not proper
+    /**
+     * Adds a file entity to the crate
+     * @param string $source The path to the file
+     * @param mixed $destPath The destination path
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return File The file entity instance of the file entity added to the crate
+     */
     public function addFile(string $source, ?string $destPath = null): File {
         if (!file_exists($source)) {
             throw new ROCrateException("Source file not found: $source");
@@ -343,6 +271,13 @@ class ROCrate {
         return $file;
     }
 
+    // Directory is not dataset !!! need sep context from data !!! remote need a class for web-based? apart from file directory
+    /**
+     * Adds a directory entity to the crate
+     * @param string $path The path to the directory
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return Dataset The directory entity instance of the directory entity added to the crate
+     */
     public function addDirectory(string $path): Dataset {
         $fullPath = $this->basePath . '/' . trim($path, '/');
         
@@ -355,6 +290,12 @@ class ROCrate {
         return $dataset;
     }
 
+    /**
+     * Adds a remote entity to the crate
+     * @param string $url
+     * @throws \Exceptions\ROCrateException
+     * @return Entity
+     */
     public function addRemoteEntity(string $url): Entity {
         try {
             $response = $this->httpClient->get($url, ['headers' => ['Accept' => 'application/ld+json']]);
@@ -379,6 +320,10 @@ class ROCrate {
         return $entity;
     }
 
+    /**
+     * Validates the crate before saving
+     * @return string[] The error(s) or issue(s) found during the validation as a string array
+     */
     public function validate(): array {
         $errors = [];
         
@@ -406,6 +351,12 @@ class ROCrate {
         return $errors;
     }
 
+    /**
+     * Saves the crate object as a ro-crate metadata file
+     * @param mixed $path The path to save the crate object if the default base path is not used
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return void
+     */
     public function save(?string $path = null): void {
         $target = $path ? realpath($path) : $this->basePath;
         
@@ -440,6 +391,11 @@ class ROCrate {
         file_put_contents($target . '/ro-crate-metadata-out.json', $json);
     }
 
+    /**
+     * Gets the metadata descriptor instance from the crate
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return Descriptor|null The metadata descriptor instance or null if the instance does not exist
+     */
     public function getDescriptor(): Descriptor {
         if (!$this->descriptor) {
             throw new ROCrateException("Metadata descriptor not initialized");
@@ -447,6 +403,11 @@ class ROCrate {
         return $this->descriptor;
     }
 
+    /**
+     * Gets the root data entity instance from the crate
+     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
+     * @return Dataset|null The root data entity instance or null if the instance does not exist
+     */
     public function getRootDataset(): Dataset {
         if (!$this->rootDataset) {
             throw new ROCrateException("Root dataset not initialized");
@@ -454,12 +415,69 @@ class ROCrate {
         return $this->rootDataset;
     }
 
+    //!!! not useful at least for now
+    /**
+     * Gets the SQL engine
+     * @return \EasyRdf\Sparql\Client The SQL engine
+     */
     public function getSparqlQueryEngine(): \EasyRdf\Sparql\Client {
         return new \EasyRdf\Sparql\Client($this->graph);
     }
 
+    /**
+     * Adds a metadata descriptor to the crate
+     * @param string $profile The ro-crate standard used with the specific version
+     * @param string $about The dataset to describe
+     * @return void
+     */
     public function addProfile(string $profile = 'https://w3id.org/ro/crate/1.2', string $about = './'): void {
         $this->descriptor->addProperty('conformsTo', ['@id' => $profile]);
         $this->descriptor->addProperty('about', ['@id' => $about]);
     }
+
+    /**
+     * Sets the base path, particularly useful for remote dataset to describe
+     * @param string $basePath The base path as a string
+     * @return void
+     */
+    public function setBasePath(string $basePath): void 
+    {
+        $this->basePath = $basePath;
+    }
+
+    /*
+    public function importFromZip(string $zipPath): void {
+        $zip = new \ZipArchive();
+        
+        if ($zip->open($zipPath) !== true) {
+            throw new ROCrateException("Failed to open ZIP file: $zipPath");
+        }
+        
+        $zip->extractTo($this->basePath);
+        $zip->close();
+        $this->loadMetadata();
+    }
+
+    public function exportToZip(string $outputPath): void {
+        $zip = new \ZipArchive();
+        
+        if ($zip->open($outputPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            throw new ROCrateException("Failed to create ZIP file: $outputPath");
+        }
+        
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->basePath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+        
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($this->basePath) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+        }
+        
+        $zip->close();
+    }*/
 }
