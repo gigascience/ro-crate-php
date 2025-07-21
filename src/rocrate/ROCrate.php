@@ -98,19 +98,9 @@ class ROCrate {
         
         // Parse entities
         foreach ($json['@graph'] as $entityData) {
-            //if ($entityData['@id'] == "ro-crate-metadata.json") continue; // !!!
             if ($entityData['@id'] == "ro-crate-metadata.json") continue;
             $this->addEntityFromArray($entityData);
         }
-        
-        // Find metadata descriptor !!!
-        /*
-        foreach ($this->entities as $entity) {
-            if (in_array('CreativeWork', $entity->getTypes()) && $entity->getId() === 'ro-crate-metadata.json') {
-                //$this->descriptor = $entity;
-                break;
-            }
-        }*/
 
         // Find root dataset
         foreach ($this->entities as $entity) {
@@ -197,9 +187,9 @@ class ROCrate {
      * Adds an entity to the crate given an entity instacne
      * @param Entity $entity The given entity instacne
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return void
+     * @return ROCrate The crate to which the entity is added
      */
-    public function addEntity(Entity $entity): void {
+    public function addEntity(Entity $entity): ROCrate {
         $id = $entity->getId();
         
         if (isset($this->entities[$id])) {
@@ -208,16 +198,7 @@ class ROCrate {
         
         $entity->setCrate($this);
         $this->entities[$id] = $entity;
-        
-        // Add to RDF graph !!!
-        /*
-        $resource = $this->graph->resource($id);
-        foreach ($entity->getTypes() as $type) {
-            $resource->addType($type);
-        }
-        foreach ($entity->getProperties() as $key => $value) {
-            $resource->add($key, $value);
-        }*/
+        return $this;
     }
 
     /**
@@ -233,17 +214,14 @@ class ROCrate {
      * Removes an entity from the crate with its ID
      * @param string $id The ID of the entity to remove
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return void
+     * @return ROCrate The crate from which the entity is deleted
      */
-    public function removeEntity(string $id): void {
+    public function removeEntity(string $id): ROCrate {
         if (!isset($this->entities[$id])) {
             throw new ROCrateException("Entity not found: $id");
         }
-        
-        // Remove from RDF graph !!!
-        //$this->graph->deleteResource($this->graph->resource($id));
-        //print("The removal of a resource from the RDF graph is not implemented.");
         unset($this->entities[$id]);
+        return $this;
     }
 
     //!!! not proper
@@ -354,10 +332,11 @@ class ROCrate {
     /**
      * Saves the crate object as a ro-crate metadata file
      * @param mixed $path The path to save the crate object if the default base path is not used
+     * @param string $prefix The prefix of the metadata file, needed for a detached ro-crate package
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return void
      */
-    public function save(?string $path = null): void {
+    public function save(?string $path = null, string $prefix = ""): void {
         $target = $path ? realpath($path) : $this->basePath;
         
         if (!$target) {
@@ -386,9 +365,9 @@ class ROCrate {
         } catch (JsonException $e) {
             throw new ROCrateException("JSON encoding failed: " . $e->getMessage());
         }
-        
-        // !!!
-        file_put_contents($target . '/ro-crate-metadata-out.json', $json);
+        //!!!
+        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata-out.json', $json);
+        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
     }
 
     /**
@@ -415,15 +394,6 @@ class ROCrate {
         return $this->rootDataset;
     }
 
-    //!!! not useful at least for now
-    /**
-     * Gets the SQL engine
-     * @return \EasyRdf\Sparql\Client The SQL engine
-     */
-    public function getSparqlQueryEngine(): \EasyRdf\Sparql\Client {
-        return new \EasyRdf\Sparql\Client($this->graph);
-    }
-
     /**
      * Adds a metadata descriptor to the crate
      * @param string $profile The ro-crate standard used with the specific version
@@ -444,40 +414,4 @@ class ROCrate {
     {
         $this->basePath = $basePath;
     }
-
-    /*
-    public function importFromZip(string $zipPath): void {
-        $zip = new \ZipArchive();
-        
-        if ($zip->open($zipPath) !== true) {
-            throw new ROCrateException("Failed to open ZIP file: $zipPath");
-        }
-        
-        $zip->extractTo($this->basePath);
-        $zip->close();
-        $this->loadMetadata();
-    }
-
-    public function exportToZip(string $outputPath): void {
-        $zip = new \ZipArchive();
-        
-        if ($zip->open($outputPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
-            throw new ROCrateException("Failed to create ZIP file: $outputPath");
-        }
-        
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->basePath),
-            \RecursiveIteratorIterator::LEAVES_ONLY
-        );
-        
-        foreach ($files as $file) {
-            if (!$file->isDir()) {
-                $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, strlen($this->basePath) + 1);
-                $zip->addFile($filePath, $relativePath);
-            }
-        }
-        
-        $zip->close();
-    }*/
 }

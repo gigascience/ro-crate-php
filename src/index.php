@@ -76,6 +76,8 @@ $root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#
 
 $crate->addEntity($crate->createGenericEntity('Test ID', []));
 
+//$crate->removeEntity($author->getId());
+
 // Validate and save
 $errors = $crate->validate();
 if (!empty($errors)) {
