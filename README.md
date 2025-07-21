@@ -38,9 +38,9 @@ Interact with the crate just like normal objects with methods:
 
 Chain up the methods to enhance the compactness of the code when adding/removing properties of an entity:
 > $root->addPropertyPair('creator', '#bob')
-> &ensp; ->addPropertyPair('creator', '#cathy')
-> &ensp; ->removePropertyPair('creator', '#alice')
-> &ensp; ->addPropertyPair('creator', '#alice');
+> <br> &ensp; ->addPropertyPair('creator', '#cathy')
+> <br> &ensp; ->removePropertyPair('creator', '#alice')
+> <br> &ensp; ->addPropertyPair('creator', '#alice');
 
 
 ## Change Log
