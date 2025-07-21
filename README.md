@@ -25,7 +25,7 @@ Add an entity to the crate:
 > <br> $author = $crate->createGenericEntity('#alice', ['Person']);
 > <br> $author->addProperty('name', 'Alice Smith');
 > <br> $author->addProperty('affiliation', 'Institution of Example');
-> // Add the person to the crate
+> <br> // Add the person to the crate
 > <br> \$crate->addEntity($author);
 >
 > // Adds the person as one of the creators of the root data entity, i.e. the dataset being described by the crate
