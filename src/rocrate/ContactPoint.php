@@ -7,17 +7,17 @@ use ROCrate\Entity;
 /**
  * Extends the ContextualEntity class
  */
-class Person extends ContextualEntity {
+class ContactPoint extends ContextualEntity {
     /**
-     * Constructs an instance of Person type
-     * @param string $id The ID of the person entity
+     * Constructs an instance of ContactPoint type
+     * @param string $id The ID of the contact point entity
      */
     public function __construct(string $id) {
-        parent::__construct($id, ['Person']);
+        parent::__construct($id, ['ContactPoint']);
     }
 
     /**
-     * Gets the information of the Person entity as an array for printing, debugging and inheritance
+     * Gets the information of the contact point entity as an array for printing, debugging and inheritance
      * @return array The information array
      */
     public function toArray(): array {

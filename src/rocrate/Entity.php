@@ -48,6 +48,16 @@ abstract class Entity {
     }
 
     /**
+     * Sets the type(s) ot the entity instance
+     * @param array $newTypes The new type(s)
+     * @return Entity The entity instance itself
+     */
+    public function setTypes(array $newTypes): Entity {
+        $this->types = $newTypes;
+        return $this;
+    }
+
+    /**
      * Adds a new type to the existing type(s) of the entity instance, or does nothing when the type already exists
      * @param string $type The type to add
      * @return Entity The entity instance itself
@@ -90,7 +100,7 @@ abstract class Entity {
     }
 
     /**
-     * Adds a new property to the entity instance, or overwrites the old property of the same key
+     * Adds a new property to the entity instance, or overwrites the old property of the same key, i.e. sets the property
      * @param string $key The key string of the new property
      * @param mixed $value The value of the property
      * @return Entity The entity instance itself
@@ -104,7 +114,7 @@ abstract class Entity {
      * Adds a new key-value pair to a property, or does nothing when the pair alraedy exists in the property
      * @param string $propertyKey The key string of the property
      * @param mixed $value The value to be added of the property
-     * @param ?bool $flag The flag is true if @id, or is false if literal
+     * @param mixed $flag The flag is true if @id, or is false if literal
      * @return Entity The entity instance itself
      */
     public function addPropertyPair(string $propertyKey, $value, ?bool $flag = null): Entity {
@@ -160,6 +170,7 @@ abstract class Entity {
                 if (!is_array($pair)) {
                     if ($pair == $value) {
                         unset($this->properties[$propertyKey][array_search($pair, $this->properties[$propertyKey])]);
+                        if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
                         break;
                     }
                 }
@@ -167,6 +178,7 @@ abstract class Entity {
                     if ($pair['@id'] == $value) {
                         unset($this->properties[$propertyKey][array_search($pair, $this->properties[$propertyKey])]);
                         $this->properties[$propertyKey] = array_values($this->properties[$propertyKey]);
+                        if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
                         break;
                     }
                 }
@@ -186,7 +198,7 @@ abstract class Entity {
 
     /**
      * Gets the information of the entity as an array for printing, debugging and inheritance and is to be overriden
-     * @return void
+     * @return array The information array
      */
     abstract public function toArray(): array;
 

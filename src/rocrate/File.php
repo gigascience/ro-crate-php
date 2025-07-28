@@ -11,9 +11,8 @@ class File extends DataEntity {
     /**
      * Constructs a file data entity (more specific data entity)
      * @param string $id The ID of the file data entity
-     * @param mixed $source The path to the file represented by the file data entity
      */
-    public function __construct(string $id, ?string $source = null) {
-        parent::__construct($id, ['File'], $source);
+    public function __construct(string $id) {
+        parent::__construct($id, ['File']);
     }
 }

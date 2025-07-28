@@ -21,23 +21,31 @@ use ROCrate\Person;
 class ROCrate {
     private string $basePath;
     private array $entities = [];
-    private string $context = "https://w3id.org/ro/crate/1.2/context";
+    private mixed $context = "https://w3id.org/ro/crate/1.2/context";
     private ?Descriptor $descriptor = null;
     private ?Dataset $rootDataset = null;
     private Graph $graph;
     private Client $httpClient;
+    private bool $attached = true;
+    private bool $preview = false;
+    private ?ContextualEntity $website = null;
 
     /**
      * Constructs a ROCrate instance
      * @param string $directory The directory for reading and writing files
      * @param bool $loadExisting The flag to indicate whether we construct from nothing or reading an existing file
+     * @param bool $attahcedFlag The flag to indicate whether RO-Crate Package is attached
+     * @param bool $previewFlag The flag to indicate whether the RO-Crate Website is needed
      */
-    public function __construct(string $directory, bool $loadExisting = true) {
+    public function __construct(string $directory, bool $loadExisting = false, bool $attachedFlag = true, bool $previewFlag = false) {
+        $this->attached = $attachedFlag;
+        $this->preview = $previewFlag;
+        
         $this->basePath = realpath($directory) ?: $directory;
         $this->graph = new Graph();
         $this->httpClient = new Client();
         
-        RdfNamespace::set('rocrate', 'https://w3id.org/ro/crate/');
+        RdfNamespace::set('rocrate', 'https://w3id.org/ro/crate/1.2');
         RdfNamespace::set('schema', 'http://schema.org/');
         
         if (!file_exists($this->basePath)) {
@@ -49,6 +57,16 @@ class ROCrate {
         } else {
             $this->initializeNewCrate();
         }
+    }
+
+    /**
+     * Sets the context of the RO-Crate
+     * @param mixed $newContext The new context
+     * @return ROCrate The crate whose context is updated
+     */
+    public function setContext(mixed $newContext): ROCrate {
+        $this->context = $newContext;
+        return $this;
     }
 
     /**
@@ -69,6 +87,16 @@ class ROCrate {
 
         $this->rootDataset = new Dataset();
         $this->addEntity($this->rootDataset);
+
+        if ($this->preview) {
+            $this->website = new class("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
+                public function toArray(): array {
+                    return array_merge($this->baseArray(), $this->properties);
+                }
+            };
+            $this->website->addProperty("about", ["@id" => "./"]);
+            $this->addEntity($this->website);
+        }
     }
 
     /**
@@ -97,16 +125,40 @@ class ROCrate {
         $this->context = $json['@context'] ?? $this->context;
         
         // Parse entities
+        $rootId = './';
         foreach ($json['@graph'] as $entityData) {
-            if ($entityData['@id'] == "ro-crate-metadata.json") continue;
+            if (str_contains($entityData['@id'], "ro-crate-metadata.json") && array_key_exists("conformsTo", $entityData)) {
+                $conformsTo = $entityData["conformsTo"]["@id"];
+                $rootId = $entityData['about']['@id'];
+                $this->addProfile($conformsTo, $rootId);
+                continue;
+            }
             $this->addEntityFromArray($entityData);
         }
 
         // Find root dataset
         foreach ($this->entities as $entity) {
-            if (in_array('Dataset', $entity->getTypes()) && $entity->getId() === './') {
-                $this->rootDataset = $entity;
+            if (in_array('Dataset', $entity->getTypes()) && ($entity->getId() === $rootId)) {
+                $this->rootDataset = new Dataset($rootId);
+                foreach ($entity->getTypes() as $type) $this->rootDataset->addType($type);
+                foreach ($entity->getProperties() as $key => $val) $this->rootDataset->addProperty($key, $val);
                 break;
+            }
+        }
+
+        // Find preview if it exists
+        if ($this->preview) {
+            foreach ($this->entities as $entity) {
+                if (in_array('CreativeWork', $entity->getTypes()) && ($entity->getProperty("about")["@id"] === $rootId) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
+                    $this->website = new class("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
+                        public function toArray(): array {
+                            return array_merge($this->baseArray(), $this->properties);
+                        }
+                    };
+                    foreach ($entity->getTypes() as $type) $this->website->addType($type);
+                    foreach ($entity->getProperties() as $key => $val) $this->website->addProperty($key, $val);
+                    break;
+                }
             }
         }
         
@@ -123,9 +175,9 @@ class ROCrate {
      * Adds entities to the crate given an array
      * @param array $data The given array
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return void
+     * @return ROCrate The crate to which the entity is added
      */
-    private function addEntityFromArray(array $data): void {
+    private function addEntityFromArray(array $data): ROCrate {
         $id = $data['@id'] ?? null;
         $types = (array)($data['@type'] ?? []);
         
@@ -137,12 +189,7 @@ class ROCrate {
             throw new ROCrateException("Entity missing @type property: $id");
         }
         
-        $entity = match(true) {
-            in_array('Dataset', $types) => new Dataset($id),
-            in_array('File', $types) => $this->createFileEntity($id, $data),
-            in_array('Person', $types) => $this->createGenericEntity($id, ['Person'])->addProperty('name', $data['name'] ?? 'Unknown'),
-            default => $this->createGenericEntity($id, $types)
-        };
+        $entity = $this->createGenericEntity($id, $types);
         
         // Set properties
         foreach ($data as $key => $value) {
@@ -152,21 +199,8 @@ class ROCrate {
         }
         
         $this->addEntity($entity);
-    }
 
-    /**
-     * Creates a file entity
-     * @param string $id The ID of the file entity
-     * @param array $data The attributes of the file entity
-     * @return File The file entity instacne
-     */
-    private function createFileEntity(string $id, array $data): File {
-        $source = null;
-        
-        // Resolve local file path
-        if (isset($data['contentSize'])) $source = $this->basePath . '/' . ltrim($id, '/');
-        
-        return new File($id, $source);
+        return $this;
     }
 
     /**
@@ -204,7 +238,7 @@ class ROCrate {
     /**
      * Gets an entity instance with its ID from the crate
      * @param string $id The ID of the entity instacne to retrieve
-     * @return ?Entity The entity instacne or null if the ID is invalid
+     * @return mixed The entity instacne or null if the ID is invalid
      */
     public function getEntity(string $id): ?Entity {
         return $this->entities[$id] ?? null;
@@ -224,86 +258,15 @@ class ROCrate {
         return $this;
     }
 
-    //!!! not proper
     /**
-     * Adds a file entity to the crate
-     * @param string $source The path to the file
-     * @param mixed $destPath The destination path
-     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return File The file entity instance of the file entity added to the crate
-     */
-    public function addFile(string $source, ?string $destPath = null): File {
-        if (!file_exists($source)) {
-            throw new ROCrateException("Source file not found: $source");
-        }
-        
-        $destPath = $destPath ?? basename($source);
-        $destFullPath = $this->basePath . '/' . ltrim($destPath, '/');
-        
-        if (!copy($source, $destFullPath)) {
-            throw new ROCrateException("Failed to copy file to $destFullPath");
-        }
-        
-        $file = new File($destPath, $destFullPath);
-        $this->addEntity($file);
-        return $file;
-    }
-
-    // Directory is not dataset !!! need sep context from data !!! remote need a class for web-based? apart from file directory
-    /**
-     * Adds a directory entity to the crate
-     * @param string $path The path to the directory
-     * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return Dataset The directory entity instance of the directory entity added to the crate
-     */
-    public function addDirectory(string $path): Dataset {
-        $fullPath = $this->basePath . '/' . trim($path, '/');
-        
-        if (!file_exists($fullPath) && !mkdir($fullPath, 0755, true)) {
-            throw new ROCrateException("Failed to create directory: $fullPath");
-        }
-        
-        $dataset = new Dataset($path);
-        $this->addEntity($dataset);
-        return $dataset;
-    }
-
-    /**
-     * Adds a remote entity to the crate
-     * @param string $url
-     * @throws \Exceptions\ROCrateException
-     * @return Entity
-     */
-    public function addRemoteEntity(string $url): Entity {
-        try {
-            $response = $this->httpClient->get($url, ['headers' => ['Accept' => 'application/ld+json']]);
-            $json = json_decode($response->getBody(), true);
-        } catch (GuzzleException $e) {
-            throw new ROCrateException("Failed to fetch remote entity: " . $e->getMessage());
-        }
-        
-        if (!isset($json['@id'], $json['@type'])) {
-            throw new ROCrateException("Invalid JSON-LD response from $url");
-        }
-        
-        $entity = $this->createGenericEntity($json['@id'], (array)$json['@type']);
-        
-        foreach ($json as $key => $value) {
-            if (!in_array($key, ['@id', '@type', '@context'])) {
-                $entity->addProperty($key, $value);
-            }
-        }
-        
-        $this->addEntity($entity);
-        return $entity;
-    }
-
-    /**
-     * Validates the crate before saving
+     * Validates the crate before saving with minimal checks only
      * @return string[] The error(s) or issue(s) found during the validation as a string array
      */
     public function validate(): array {
         $errors = [];
+
+        // MUST Checks
+        // RO-Crate Structure
         
         // 1. Metadata descriptor check
         if (!$this->descriptor) {
@@ -315,16 +278,332 @@ class ROCrate {
             $errors[] = "Missing root dataset";
         }
 
-        // No required property check
-        
-        // 3. File existence check
-        foreach ($this->entities as $entity) {
-            if ($entity instanceof DataEntity && $entity->getSourcePath()) {
-                if (!file_exists($entity->getSourcePath())) {
-                    $errors[] = "File not found: " . $entity->getSourcePath();
+        // Metadata of the RO-Crate
+
+        // 1. @id check
+        foreach($this->entities as $entity) {
+            if (!is_string($entity->getId())) $errors[] = "There is an entity without an id.";
+        }
+
+        // 2. @type check
+        foreach($this->entities as $entity) {
+            if ($entity->getTypes() === []) $errors[] = "There is an entity without a type using id: " . $entity->getId() . ".";
+        }
+
+        // 3. entity property references to other entities using {"@id": "..."} check
+        // newly created property managed using addPropertyPair and removePropertyPair automatically satisfy
+        // the only exceptions that require manual manipulation are encodingFormat due to mixed use of literal and reference
+        // and context with extra terms
+        // old property imported either:
+        // case 1: reset it using removeProperty and manage using ...Pair
+        // case 2: the developers have to be cautious for any change 
+
+        // 4. flat @graph list is enforced in the implementation
+
+        // Root Data Entity
+
+        // 1. @id value of the descriptor has to be "ro-crate-metadata.json" or "ro-crate-metadata.jsonld" (legacy from v1.0 or before) check
+        // This is needed even if the actual metadata file maybe absent or has a prefix in detached package.
+        if ((strcmp($this->descriptor->getId(), "ro-crate-metadata.json") !== 0) && (strcmp($this->descriptor->getId(), "ro-crate-metadata.jsonld") !== 0)) {
+            $errors[] = "The descriptor's id is invalid.";
+        }
+
+        // 2. @type of the descriptor has to be CreativeWork check
+        if (count($this->descriptor->getTypes()) == 1) {
+            if (strcmp($this->descriptor->getTypes()[0], "CreativeWork") !== 0) {
+                $errors[] = "The descriptor's type is invalid.";
+            }
+        }
+        else {
+            $errors[] = "The descriptor's type is invalid.";
+        }
+
+        // 3. The descriptor has an about property and it references the Root Data Entity's @id check
+        if (array_key_exists("about", $this->descriptor->getProperties())) {
+            if (strcmp($this->descriptor->getProperty("about")["@id"], $this->rootDataset->getId()) !== 0) {
+                $errors[] = "The descriptor's about property is invalid.";
+            }
+        }
+        else {
+            $errors[] = "The descriptor does not have an about property.";
+        }
+
+        // 4. One of the root data entity's type(s) has to be Dataset check
+        if (!in_array("Dataset", $this->rootDataset->getTypes())) {
+            $errors[] = "The root data entity's type is invalid.";
+        }
+
+        // 5. The root data entity has to have the property name check
+        if (!array_key_exists("name", $this->rootDataset->getProperties())) {
+            $errors[] = "The root data entity does not have a name property.";
+        }
+
+        // 6. The root data entity has to have the property description check
+        if (!array_key_exists("description", $this->rootDataset->getProperties())) {
+            $errors[] = "The root data entity does not have a description property.";
+        }
+
+        // 7. The root data entity has to have the property datePublished check, and the property
+        // has to be a string in ISO 8601 date format
+        if (!array_key_exists("datePublished", $this->rootDataset->getProperties())) {
+            $errors[] = "The root data entity does not have a datePublished property.";
+        }
+        else if (is_string($this->rootDataset->getProperty("datePublished"))) {
+            $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $this->rootDataset->getProperty("datePublished"));
+            if ($dateTime) {
+                if (strcmp($dateTime->format(\DateTime::ISO8601), $this->rootDataset->getProperty("datePublished")) !== 0) {
+                    $errors[] = "The root data entity's datePublished property is not in ISO 8601 date format.";
+                }
+            }
+            else {
+                $errors[] = "The root data entity's datePublished property is not in ISO 8601 date format.";
+            }
+        }
+        else {
+            $errors[] = "The root data entity's datePublished property is not a string.";
+        }
+
+        // 8. The root data entity has to have the property license check
+        if (!array_key_exists("license", $this->rootDataset->getProperties())) {
+            $errors[] = "The root data entity does not have a license property.";
+        }
+
+        // Data Entities
+
+        // 1. all file and folders as data entities have to be indirectly or directly linked to the root data
+        // entity via hasPart
+        // This is not possible to check for detached package without knowing how to access the details.
+        // For attached package, since contextual entity of type Dataset with # local identifier to collectively
+        // describe a bunch of files is possible and it has no strict criteria for its use, it is also not
+        // possible to check.
+
+        // 2. a file as a data entity has file as one of its type(s)
+        // This satisfies if it is created using new File
+        // This cannot be strictly enforced for the same reason as above
+
+        // 3. @id have to be valid URI references
+        //!!!
+
+        // 4. file data entity @id relative or absolute URI
+        //!!!
+
+        // 5. Dataset data entity has Dataset as one of its type(s)
+        // This satisfies if it is created using new Dataset
+        // Difficult to strictly enforce for the same reason as above
+
+        // 6. Dataset data entity @id has to resolve to a directory present in the crate root for an attached package
+        // Difficult to strictly enforce
+
+        // 7.
+
+        // 8.
+
+        // Contextual Entities
+
+        // 1. Contextual data entity as a standalone object
+        // automatically enforced by treating things as entity instances
+
+        // 2. no repeated use of @id
+        $idArray = [];
+        foreach($this->entities as $entity) {
+            $idArray[] = $entity->getId();
+        }
+        $uniqueIdArray = array_unique($idArray);
+        if (sizeof($idArray) !== sizeof($uniqueIdArray)) {
+            $errors[] = "There are multiple entities using the same @id value.";
+        }
+
+        // 3. The crate metadata file needs a URL as the @id of a publication using citation property if we
+        // want to associate a publication with the dataset
+        // It relies on disciplined use.
+
+        // 4. subjects & keywords
+        // It relies on disciplined use.
+
+        // 5. include thumbnail if have
+        // It relies on disciplined use.
+
+        // 6. put thumbnail in the bagit manifest if it is present and it is a bagged ro-crate
+        // It releis on disciplined use.
+
+        // Provenance of entities
+
+        // 1. A curation action, i.e. type of CreateAction or UpdateAction, has at least one object check
+        foreach($this->entities as $entity) {
+            if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
+                if (!array_key_exists("object", $entity->getProperties())) {
+                    $errors[] = "There is no object property for a curation action.";
                 }
             }
         }
+
+        // 2. An action's endTime has to be in ISO 8601 date format if this property is present, same for startTime
+        foreach($this->entities as $entity) {
+            if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
+                // startTime
+                if (!in_array("startTime", $entity->getProperties())) continue;
+                if (is_string($entity->getProperty("startTime"))) {
+                    $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $entity->getProperty("startTime"));
+                    if ($dateTime) {
+                        if (!($dateTime->format(\DateTime::ISO8601) === $entity->getProperty("startTime"))) {
+                            $errors[] = "An action's startTime property is not in ISO 8601 date format.";
+                        }
+                    }
+                    else {
+                        $errors[] = "An action's startTime property is not in ISO 8601 date format.";
+                    }
+                }
+                else {
+                    $errors[] = "An action's startTime property is not in ISO 8601 date format.";
+                }
+
+                // endTime
+                if (!in_array("endTime", $entity->getProperties())) continue;
+                if (is_string($entity->getProperty("endTime"))) {
+                    $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $entity->getProperty("endTime"));
+                    if ($dateTime) {
+                        if (!($dateTime->format(\DateTime::ISO8601) === $entity->getProperty("endTime"))) {
+                            $errors[] = "An action's endTime property is not in ISO 8601 date format.";
+                        }
+                    }
+                    else {
+                        $errors[] = "An action's endTime property is not in ISO 8601 date format.";
+                    }
+                }
+                else {
+                    $errors[] = "An action's endTime property is not in ISO 8601 date format.";
+                }
+            }
+        }
+
+        // 3. if an action has an actionStatus property, the property has to be ActiveActionStatus,
+        // CompletedActionStatus, FailedActionStatus or PotentialActionStatus of type ActionStatusType
+        foreach($this->entities as $entity) {
+            if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
+                if (!array_key_exists("actionStatus", $entity->getProperties())) continue;
+                $actionStatus = $entity->getProperty("actionStatus")["@id"];
+                if (strcmp($actionStatus, "http://schema.org/ActiveActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "https://schema.org/ActiveActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "http://schema.org/CompletedActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "https://schema.org/CompletedActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "http://schema.org/FailedActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "https://schema.org/FailedActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "http://schema.org/PotentialActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "https://schema.org/PotentialActionStatus") == 0) continue;
+                $errors[] = "An action's actionStatus property is invalid.";
+            }
+        }
+
+        // Profiles
+
+        // 1. The profile URI, i.e. the reference of comformsTo property of the root data entity, resolves 
+        // to a human-readable profile description
+        // It relies on disciplined use.
+
+        // 2. If the root data entity conforms to a profile, it has to be a contextual entity having Profile
+        // as one of its type(s), similarly for multiple profiles
+        if (array_key_exists("conformsTo", $this->rootDataset->getProperties())) {
+            if (is_array($this->rootDataset->getProperty("conformsTo"))) {
+                foreach($this->rootDataset->getProperty("conformsTo") as $profile) {
+                    $flag = true;
+                    foreach($this->entities as $entity) {
+                        if (strcmp($entity->getId(), $profile["@id"]) == 0) {
+                            if (in_array("Profile", $entity->getTypes())) {
+                                $flag = false;
+                                break;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        $errors[] = "The contextual entity for a profile is missing.";
+                    }
+                }
+            }
+            else {
+                $flag = true;
+                foreach($this->entities as $entity) {
+                    if (strcmp($entity->getId(), $this->rootDataset->getProperty("conformsTo")["@id"]) == 0) {
+                        if (in_array("Profile", $entity->getTypes())) {
+                            $flag = false;
+                            break;
+                        }
+                    }
+                }
+                if ($flag) {
+                    $errors[] = "The contextual entity for the profile is missing.";
+                }
+            }
+        }
+
+        // 3. if it is a profile crate, it has Profile as one of its type(s)
+        // It relies on disciplined use.
+
+        // 4. if it is a profile crate, its hasPart references the human-readable profile description as a data entity,
+        // and this data entity has to reference the absolute URI of the root data entity of the profile crate
+        // using the about property
+        // It relies on disciplined use.
+
+        // 5. any terms defined in the profile has to be used as full URIs matching @id or mapped to these URIs from the conforming crate's
+        // @context in the conforming crate.
+        // It relies on disciplined use.
+
+        // 6. An entity representing a JSON-LD context has to have an encodingFormat of application/ld+json and
+        // has an absolute URI as @id retrievable as JSON-LD directly or indirectly
+        // It relies on disciplined use.
+
+        // Workflows and scripts
+
+        // 1. script and workflow type, id and name
+        // It relies on disciplined use.
+
+        // 2. If a contextual entity has type ComputerLanguage and/or SoftwareApplication, it has a name, url and version
+        foreach($this->entities as $entity) {
+            if (in_array("ComputerLanguage", $entity->getTypes()) || in_array("SoftwareApplication", $entity->getTypes())) {
+                if (!array_key_exists("name", $entity->getProperties())) {
+                    $errors[] = "The name property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                }
+                if (!array_key_exists("url", $entity->getProperties())) {
+                    $errors[] = "The url property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                }
+                if (!array_key_exists("version", $entity->getProperties())) {
+                    $errors[] = "The version property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                }
+            }
+        }
+
+        // 3. complying with the Bioschemas computational workflow profile
+        // Difficult to check and less generic to check for a particular profile
+
+        // 4. complying with the Bioschemas formal parameter profile
+        // same as above
+
+        // Changelog
+
+        // 1. The descriptor has conformsTo to indicate RO-Crate version
+        if (!array_key_exists("conformsTo", $this->descriptor->getProperties())) {
+            $errors[] = "The conformsTo property for the descriptor is missing.";
+        }
+
+        // Handling relative URI references
+
+        // 1. When we have to parse as RDF, if ro-crate-metadata.json is not recognised, we rename it to jsonld
+        // it relies on disciplined use
+
+        // Implementation notes
+
+        // 1. Bagit enforcement
+        // It relies on disciplined use.
+
+        // RO-Crate JSON-LD
+
+        // 1. / and escape character care (should: utf-8 encoded, i.e. #, space, ... encoded with %)
+        // It relies on disiplined use.
+
+        // 2. if (present) generate ro-crate website, use sameAs for the term.
+        // it relies on disiplined use.
+        
+        // 3. if there is extra / ad-hoc term / vocab, put them in context.
+        // it relies on disiplined use.
         
         return $errors;
     }
@@ -337,6 +616,16 @@ class ROCrate {
      * @return void
      */
     public function save(?string $path = null, string $prefix = ""): void {
+        if(!$this->attached) {
+            if (strcmp($prefix, "") == 0) {
+                throw new ROCrateException("The prefix cannot be empty for a detached RO-Crate Package.");
+            }
+        }
+
+        if (!($this->validate() === [])) {
+            throw new ROCrateException("Validation before saving failed.");
+        }
+
         $target = $path ? realpath($path) : $this->basePath;
         
         if (!$target) {
@@ -349,10 +638,55 @@ class ROCrate {
         }
         
         // Generate JSON-LD
+        $rootId = "";
+        $first = [];
+        $second = [];
+        $last = [];
+
         $graph = [];
         foreach ($this->entities as $entity) {
-            $graph[] = $entity->toArray();
+            if (str_contains($entity->getId(), "ro-crate-metadata.json") && array_key_exists("conformsTo", $entity->getProperties())) {
+                $rootId = $entity->getProperty("about")["@id"];
+                $first[] = $entity->toArray();
+                $key = array_search($entity, $this->entities, true);
+                unset($this->entities[$key]);
+                break;
+            }
         }
+
+        foreach ($this->entities as $entity) {
+            if (in_array('CreativeWork', $entity->getTypes()) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
+                if (!array_key_exists("about", $entity->getProperties())) continue;
+                if (!($entity->getProperty("about")["@id"] === $rootId)) continue;
+
+                $first[] = $entity->toArray();
+                $key = array_search($entity, $this->entities, true);
+                unset($this->entities[$key]);
+                break;
+            }
+        }
+
+        foreach ($this->entities as $entity) {
+            if (in_array('Dataset', $entity->getTypes()) && ($entity->getId() === $rootId)) {
+                $first[] = $entity->toArray();
+                continue;
+            }            
+
+            if (in_array("Dataset", $entity->getTypes())) {
+                $second[] = $entity->toArray();
+                continue;
+            }
+            else if (in_array("File", $entity->getTypes())) {
+                $second[] = $entity->toArray();
+                continue;
+            }
+
+            $last[] = $entity->toArray();
+        }
+
+        $graph = array_merge($graph, $first);
+        $graph = array_merge($graph, $second);;
+        $graph = array_merge($graph, $last);;
         
         $metadata = [
             '@context' => $this->context,
@@ -406,7 +740,7 @@ class ROCrate {
     }
 
     /**
-     * Sets the base path, particularly useful for remote dataset to describe
+     * Sets the base path
      * @param string $basePath The base path as a string
      * @return void
      */

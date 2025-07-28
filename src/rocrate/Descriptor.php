@@ -5,9 +5,9 @@ namespace ROCrate;
 use ROCrate\Entity;
 
 /**
- * Extends the Entity class
+ * Extends the ContextualEntity class and Is a special contextual entity
  */
-class Descriptor extends Entity {
+class Descriptor extends ContextualEntity {
     /**
      * Constructs a metadata descriptor instance
      * @param string $id The ID of the metadata descriptor

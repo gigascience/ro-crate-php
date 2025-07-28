@@ -5,11 +5,11 @@ namespace ROCrate;
 use ROCrate\Entity;
 
 /**
- * Extends the Entity class
+ * Extends the DataEntity class and is also known as directory
  */
-class Dataset extends Entity {
+class Dataset extends DataEntity {
     /**
-     * Constructs a dataset entity, i.e. root data entity
+     * Constructs a dataset entity (a more specfic data entity), for instance, the root data entity
      * @param string $id The ID of the dataset entity
      */
     public function __construct(string $id = './') {
@@ -22,7 +22,6 @@ class Dataset extends Entity {
      */
     public function toArray(): array {
         $data = parent::baseArray();
-        //$data['datePublished'] = date('c'); // !!!
         return array_merge($data, $this->properties);
     }
 }
