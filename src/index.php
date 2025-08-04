@@ -9,7 +9,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Json\{Flattener, Unflattener, FileHandler};
 use Exceptions\JsonFileException;
-use ROCrate\{ROCrate, File, Person};
+use ROCrate\{ROCrate, File, Person, ROCratePreviewGenerator};
 
 /*
 $example = new Example();
@@ -47,46 +47,49 @@ try {
 
 
 // Create new crate
-$crate = new ROCrate(__DIR__ . '/../resources', false);
+//$crate = new ROCrate(__DIR__ . '/../resources', false);
 
 // Add Metadata Descriptor
-$crate->addProfile();
+//$crate->addProfile();
 
 // Add Root Data Entity
-$root = $crate->getRootDataset();
-$root->addProperty('name', 'My Research Project');
-$root->addProperty('description', 'Example RO-Crate');
-
-
-//$crate = new ROCrate(__DIR__ . '/../resources', true);
 //$root = $crate->getRootDataset();
+//$root->addProperty('name', 'My Research Project');
+//$root->addProperty('description', 'Example RO-Crate');
+
+
+$crate = new ROCrate(__DIR__ . '/../resources', true);
+$root = $crate->getRootDataset();
 
 // Add Data Entity (creator)
 // Similar for Contextual Entity
-$author = new Person('#alice', 'Alice Smith');
+$author = new Person('#alice');
+$author->addProperty('name', 'Alice Smith');
 $author->addProperty('affiliation', 'University of Example 1');
 $crate->addEntity($author);
-$author = new Person('#bob', 'Bob');
+$author = new Person('#bob');
+$author->addProperty('name', 'Bob');
 $author->addProperty('affiliation', 'University of Example 2');
-$author->addPropertyPair('knows', '#alice');
-$author->addPropertyPair('knows', '#alice')->addPropertyPair('knows', '#cathy');
 $crate->addEntity($author);
-///$root->addProperty('creator', [['@id' => '#alice'], ['@id' => '#bob']]);
-$root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')->addPropertyPair('creator', '#cathy')->removePropertyPair('creator', '#alice')->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob');
+$author->addPropertyPair('knows', '#alice', true)->addPropertyPair('knows', '#cathy');
 
-$crate->addEntity($crate->createGenericEntity('Test ID', []));
+//$root->addProperty('creator', [['@id' => '#alice']]);
+//$root->addProperty('creator', [['@id' => '#alice'], ['@id' => '#bob']]);
+//$root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')->addPropertyPair('creator', '#cathy')->removePropertyPair("creator", "#alice")->addPropertyPair('creator', '#alice')->addPropertyPair('creator', '#bob');
+$root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']])->removePropertyPair('creator', '#bob')->removePropertyPair('creator', '#cathy');
+
+$crate->addEntity($crate->createGenericEntity('Test ID', [])->addType("TestType"));
+
+//$crate->getEntity("data.csv")->removePropertyPair("license", "https://creativecommons.org/licenses/by-nc-sa/3.0/au/");
 
 //$crate->removeEntity($author->getId());
 
 // Validate and save
-$errors = $crate->validate();
-if (!empty($errors)) {
-    echo "Validation errors:\n" . implode("\n", $errors);
-} else {
-    $crate->save();
-}
+$crate->save();
 
 /*
 foreach ($root->toArray() as $key => $value) {
     print("". $key ."=>". $value ."");
 }*/
+
+

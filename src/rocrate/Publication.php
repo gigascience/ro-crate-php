@@ -6,7 +6,8 @@ use ROCrate\Entity;
 use Exceptions\ROCrateException;
 
 /**
- * Extends the ContextualEntity class
+ * Extends the ContextualEntity class and should have either ScholarlyArticle or CreativeWork type (not must:
+ * the type can be updated after instantiation if applicable)
  */
 class Publication extends ContextualEntity {
     /**

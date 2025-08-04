@@ -4,6 +4,7 @@ namespace ROCrate;
 
 use EasyRdf\Graph;
 use EasyRdf\RdfNamespace;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -14,6 +15,7 @@ use ROCrate\Dataset;
 use ROCrate\File;
 use ROCrate\Descriptor;
 use ROCrate\Person;
+use function PHPUnit\Framework\throwException;
 
 /**
  * Stores the structural information of a ro-crate-metadata.json as a crate object
@@ -22,13 +24,13 @@ class ROCrate {
     private string $basePath;
     private array $entities = [];
     private mixed $context = "https://w3id.org/ro/crate/1.2/context";
-    private ?Descriptor $descriptor = null;
-    private ?Dataset $rootDataset = null;
+    private ?Entity $descriptor = null;
+    private ?Entity $rootDataset = null;
     private Graph $graph;
     private Client $httpClient;
     private bool $attached = true;
     private bool $preview = false;
-    private ?ContextualEntity $website = null;
+    private ?Entity $website = null;
 
     /**
      * Constructs a ROCrate instance
@@ -97,6 +99,23 @@ class ROCrate {
             $this->website->addProperty("about", ["@id" => "./"]);
             $this->addEntity($this->website);
         }
+
+        // make values of all properties, i.e. key-value pairs, of each entity to be [...]
+        foreach ($this->entities as $entity) {
+            foreach (array_keys($entity->getProperties()) as $key) {
+                if (is_array($entity->getProperties()[$key])) {
+                    if (array_keys($entity->getProperties()[$key]) !== range(0, count($entity->getProperties()[$key]) - 1)) {
+                        // if {"@id" : "..."} by checking whether $val is an associative array
+                        $entity->addProperty($key, [$entity->getProperties()[$key]]);
+                    }
+                    // else already [...]
+                }
+                else {
+                    // literal
+                    $entity->addProperty($key, [$entity->getProperties()[$key]]);
+                }
+            }
+        }
     }
 
     /**
@@ -137,6 +156,8 @@ class ROCrate {
         }
 
         // Find root dataset
+        $this->rootDataset = $this->getEntity($rootId);
+        /*
         foreach ($this->entities as $entity) {
             if (in_array('Dataset', $entity->getTypes()) && ($entity->getId() === $rootId)) {
                 $this->rootDataset = new Dataset($rootId);
@@ -144,12 +165,15 @@ class ROCrate {
                 foreach ($entity->getProperties() as $key => $val) $this->rootDataset->addProperty($key, $val);
                 break;
             }
-        }
+        }*/
 
         // Find preview if it exists
+        $this->website = $this->getEntity("ro-crate-preview.html");
+        /*
         if ($this->preview) {
             foreach ($this->entities as $entity) {
                 if (in_array('CreativeWork', $entity->getTypes()) && ($entity->getProperty("about")["@id"] === $rootId) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
+                    $this->website = $this->getEntity("ro-crate-preview.html");
                     $this->website = new class("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
                         public function toArray(): array {
                             return array_merge($this->baseArray(), $this->properties);
@@ -160,7 +184,7 @@ class ROCrate {
                     break;
                 }
             }
-        }
+        }*/
         
         if (!$this->descriptor) {
             throw new ROCrateException("Metadata descriptor not found in crate");
@@ -168,6 +192,23 @@ class ROCrate {
 
         if (!$this->rootDataset) {
             throw new ROCrateException("Root dataset not found in crate");
+        }
+
+        // make values of all properties, i.e. key-value pairs, of each entity to be [...]
+        foreach ($this->entities as $entity) {
+            foreach (array_keys($entity->getProperties()) as $key) {
+                if (is_array($entity->getProperties()[$key])) {
+                    if (array_keys($entity->getProperties()[$key]) !== range(0, count($entity->getProperties()[$key]) - 1)) {
+                        // if {"@id" : "..."} by checking whether $val is an associative array
+                        $entity->addProperty($key, [$entity->getProperties()[$key]]);
+                    }
+                    // else already [...]
+                }
+                else {
+                    // literal
+                    $entity->addProperty($key, [$entity->getProperties()[$key]]);
+                }
+            }
         }
     }
 
@@ -349,13 +390,7 @@ class ROCrate {
             $errors[] = "The root data entity does not have a datePublished property.";
         }
         else if (is_string($this->rootDataset->getProperty("datePublished"))) {
-            $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $this->rootDataset->getProperty("datePublished"));
-            if ($dateTime) {
-                if (strcmp($dateTime->format(\DateTime::ISO8601), $this->rootDataset->getProperty("datePublished")) !== 0) {
-                    $errors[] = "The root data entity's datePublished property is not in ISO 8601 date format.";
-                }
-            }
-            else {
+            if (!ROCrate::isValidISO8601Date($this->rootDataset->getProperty("datePublished"))) {
                 $errors[] = "The root data entity's datePublished property is not in ISO 8601 date format.";
             }
         }
@@ -382,10 +417,10 @@ class ROCrate {
         // This cannot be strictly enforced for the same reason as above
 
         // 3. @id have to be valid URI references
-        //!!!
+        // Under Development
 
         // 4. file data entity @id relative or absolute URI
-        //!!!
+        // under Development
 
         // 5. Dataset data entity has Dataset as one of its type(s)
         // This satisfies if it is created using new Dataset
@@ -443,13 +478,7 @@ class ROCrate {
                 // startTime
                 if (!in_array("startTime", $entity->getProperties())) continue;
                 if (is_string($entity->getProperty("startTime"))) {
-                    $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $entity->getProperty("startTime"));
-                    if ($dateTime) {
-                        if (!($dateTime->format(\DateTime::ISO8601) === $entity->getProperty("startTime"))) {
-                            $errors[] = "An action's startTime property is not in ISO 8601 date format.";
-                        }
-                    }
-                    else {
+                    if (!ROCrate::isValidISO8601Date($entity->getProperty("startTime"))) {
                         $errors[] = "An action's startTime property is not in ISO 8601 date format.";
                     }
                 }
@@ -460,13 +489,7 @@ class ROCrate {
                 // endTime
                 if (!in_array("endTime", $entity->getProperties())) continue;
                 if (is_string($entity->getProperty("endTime"))) {
-                    $dateTime = \DateTime::createFromFormat(\DateTime::ISO8601, $entity->getProperty("endTime"));
-                    if ($dateTime) {
-                        if (!($dateTime->format(\DateTime::ISO8601) === $entity->getProperty("endTime"))) {
-                            $errors[] = "An action's endTime property is not in ISO 8601 date format.";
-                        }
-                    }
-                    else {
+                    if (!ROCrate::isValidISO8601Date($entity->getProperty("endTime"))) {
                         $errors[] = "An action's endTime property is not in ISO 8601 date format.";
                     }
                 }
@@ -616,6 +639,26 @@ class ROCrate {
      * @return void
      */
     public function save(?string $path = null, string $prefix = ""): void {
+        // make values of all properties, i.e. key-value pairs, of each entity to be without [...] if there
+        // is only a single literal or {"@id" : "..."}
+        foreach ($this->entities as $entity) {
+            foreach ($entity->getProperties() as $key => $val) {
+                if (strcmp($key, "hasPart") == 0) {
+                    continue;
+                }
+                // safety check if $val is an array
+                if (is_array($val)) {
+                    if (array_keys($val) == range(0, count($val) - 1)) {
+                        // safety check if $val is not an associative array
+                        if (count($val) == 1) {
+                            // there is only a single item
+                            $entity->addProperty($key, $val[0]);
+                        }
+                    }
+                }
+            }
+        }
+
         if(!$this->attached) {
             if (strcmp($prefix, "") == 0) {
                 throw new ROCrateException("The prefix cannot be empty for a detached RO-Crate Package.");
@@ -699,17 +742,17 @@ class ROCrate {
         } catch (JsonException $e) {
             throw new ROCrateException("JSON encoding failed: " . $e->getMessage());
         }
-        //!!!
-        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata-out.json', $json);
-        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
+        // overwritting happens
+        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata.json', $json);
+        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata.json', $json);
     }
 
     /**
      * Gets the metadata descriptor instance from the crate
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return Descriptor|null The metadata descriptor instance or null if the instance does not exist
+     * @return Entity|null The metadata descriptor instance or null if the instance does not exist
      */
-    public function getDescriptor(): Descriptor {
+    public function getDescriptor(): Entity {
         if (!$this->descriptor) {
             throw new ROCrateException("Metadata descriptor not initialized");
         }
@@ -719,9 +762,9 @@ class ROCrate {
     /**
      * Gets the root data entity instance from the crate
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
-     * @return Dataset|null The root data entity instance or null if the instance does not exist
+     * @return Entity|null The root data entity instance or null if the instance does not exist
      */
-    public function getRootDataset(): Dataset {
+    public function getRootDataset(): Entity {
         if (!$this->rootDataset) {
             throw new ROCrateException("Root dataset not initialized");
         }
@@ -747,5 +790,196 @@ class ROCrate {
     public function setBasePath(string $basePath): void 
     {
         $this->basePath = $basePath;
+    }
+
+    /**
+     * Tells if a text is valid according to ISO 8601 standard and allows only up-to-day, up-to-month
+     * and up-to-day specification for more flexibility and compatibility
+     * @param string $dateString The text to be validated
+     * @return bool The flag that indicates the result of validation
+     */
+    public static function isValidISO8601Date(string $dateString): bool {
+
+        $MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+
+        if (strcmp(substr($dateString, 0, 1), "-") == 0) {
+            $dateString = substr($dateString, 1);
+        }
+
+        $year = "";
+        $month = "";
+        $day = "";
+
+        // It does not check for the presence of day 29, 30 and 31 in the particular month for day-only,
+        // month-only and year-only cases
+        $flag = true;
+        switch(strlen($dateString)) {
+            case 4:
+                $year = $dateString;
+                if (!ctype_digit($year)) {
+                    $flag = false;
+                }
+                break;
+            case 7:
+                if (strcmp(substr($dateString, 4, 1), "-") !== 0) {
+                    $flag = false;
+                }
+                $year = substr($dateString, 0, 4);
+                $month = substr($dateString, 5, 2);
+                if (!ctype_digit($year)) {
+                    $flag = false;
+                }
+                else if (!in_array($month, $MM)) {
+                    $flag = false;
+                }
+                break;
+            case 10:
+                if (strcmp(substr($dateString, 4, 1), "-") !== 0) {
+                    $flag = false;
+                }
+                else if (strcmp(substr($dateString, 7, 1), "-") !== 0) {
+                    $flag = false;
+                }
+                $year = substr($dateString, 0, 4);
+                $month = substr($dateString, 5, 2);
+                $day = substr($dateString, 8, 2);
+                if (!ctype_digit($year)) {
+                    $flag = false;
+                }
+                else if (!in_array($month, $MM)) {
+                    $flag = false;
+                }
+                else if (!in_array($day, $MM)) {
+                    if (!ctype_digit($year)) {
+                        $flag = false;
+                    }
+                    else if (((int)$day < 13) || ((int)$day > 31)) {
+                        $flag = false;
+                    }
+                }
+                break;
+            default:
+                $flag = false;
+                break;
+        }
+        if ($flag) return true;
+
+
+        // Regex to match the structure: optional minus, date, time, and optional timezone
+        $pattern = '/^(-)?(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|([+-]\d{2}:\d{2}))?$/';
+        if (!preg_match($pattern, $dateString, $matches)) {
+            return false;
+        }
+
+        // Extract components from matches
+        $hasMinus = ($matches[1] === '-');
+        $yearStr = $matches[2];
+        $month = $matches[3];
+        $day = $matches[4];
+        $hour = $matches[5];
+        $minute = $matches[6];
+        $second = $matches[7];
+        $timezone = $matches[8] ?? '';
+
+        // Convert year to integer (accounting for optional minus)
+        $year = (int)$yearStr;
+        if ($hasMinus) {
+            $year = -$year;
+        }
+
+        // Validate month (01-12)
+        $monthInt = (int)$month;
+        if ($monthInt < 1 || $monthInt > 12) {
+            return false;
+        }
+
+        // Validate day based on month/year
+        $daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        // Adjust February days for leap years
+        if ($monthInt === 2) {
+            $isLeap = ($year % 4 === 0) && ($year % 100 !== 0 || $year % 400 === 0);
+            $daysInMonth[1] = $isLeap ? 29 : 28;
+        }
+        $dayInt = (int)$day;
+        $maxDay = $daysInMonth[$monthInt - 1];
+        if ($dayInt < 1 || $dayInt > $maxDay) {
+            return false;
+        }
+
+        // Validate time (00-23 for hour, 00-59 for minute/second)
+        if ($hour < '00' || $hour > '23') {
+            return false;
+        }
+        if ($minute < '00' || $minute > '59') {
+            return false;
+        }
+        if ($second < '00' || $second > '59') {
+            return false;
+        }
+
+        // Validate timezone if present
+        if ($timezone !== '') {
+            if ($timezone === 'Z') {
+                return true; // UTC is valid
+            }
+            // Check offset structure: [+-]hh:mm
+            $offsetParts = explode(':', $timezone);
+            if (count($offsetParts) !== 2) {
+                return false;
+            }
+            $offsetSignPart = $offsetParts[0];
+            $offsetMinute = $offsetParts[1];
+            // Validate sign and hour part (00-23)
+            $sign = $offsetSignPart[0];
+            $offsetHour = substr($offsetSignPart, 1);
+            if (($sign !== '+' && $sign !== '-') || 
+                $offsetHour < '00' || $offsetHour > '23') {
+                return false;
+            }
+            // Validate minute part (00-59)
+            if ($offsetMinute < '00' || $offsetMinute > '59') {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Tells if a string is a valid uri
+     * @param string $uri The uri string to be examined
+     * @param bool $absoluteOnly The flag to indicate whether only absolute uri is allowed
+     * @return bool The flag that indicates the validation result
+     */
+    public static function isValidUri(string $uri, bool $absoluteOnly = true): bool {
+        // Validate absolute URI (requires a scheme like http, ftp, etc.)
+        if (filter_var($uri, FILTER_VALIDATE_URL) !== false) {
+            return true;
+        }
+        
+        // If only absolute URIs are allowed, return false here
+        if ($absoluteOnly) {
+            return false;
+        }
+        
+        // Validate relative URI: checks for allowed characters and proper percent-encoding
+        $pattern = '/^([a-zA-Z0-9._~!$&\'()*+,;=:@\/?#\[\]-]|%[0-9a-fA-F]{2})*$/';
+        return (bool) preg_match($pattern, $uri);
+    }
+
+    /**
+     * Tells if a string is a valid url
+     * @param string $url The url string to be exmained
+     * @return bool The flag that indicates the checking result
+     */
+    public static function isValidUrl(string $url): bool {
+        // Validate URL structure using filter_var
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+        
+        // Ensure the URL has a valid scheme
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+        return $scheme !== null;
     }
 }

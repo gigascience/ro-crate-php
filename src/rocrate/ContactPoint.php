@@ -5,7 +5,8 @@ namespace ROCrate;
 use ROCrate\Entity;
 
 /**
- * Extends the ContextualEntity class
+ * Extends the ContextualEntity class and is recommended to be associated with a Dataset indirectly via author
+ * or publisher property to respect the specification of properties of the Dataset type in Schema.org (not must)
  */
 class ContactPoint extends ContextualEntity {
     /**
@@ -21,6 +22,6 @@ class ContactPoint extends ContextualEntity {
      * @return array The information array
      */
     public function toArray(): array {
-        return array_merge(parent::baseArray(), $this->properties);
+        return parent::toArray();
     }
 }

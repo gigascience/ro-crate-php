@@ -118,9 +118,23 @@ abstract class Entity {
      * @return Entity The entity instance itself
      */
     public function addPropertyPair(string $propertyKey, $value, ?bool $flag = null): Entity {
+
         if (array_key_exists($propertyKey, $this->properties)) {
             if (!is_array($this->properties[$propertyKey])) return $this;
             if ($this->properties[$propertyKey] === []) return $this;
+
+            if (!is_null($flag)) {
+                if ($flag) {
+                    if (in_array(['@id' => $value], $this->properties[$propertyKey], true)) return $this;
+                    $this->properties[$propertyKey][] = ['@id' => $value];
+                }
+                else {
+                    if (in_array($value, $this->properties[$propertyKey], true)) return $this;
+                    $this->properties[$propertyKey][] = $value;
+                }
+                return $this;
+            }
+
             if (!is_array($this->properties[$propertyKey][0])) {
                 if (in_array($value, $this->properties[$propertyKey], true)) return $this;
                 $this->properties[$propertyKey][] = $value;
@@ -139,6 +153,7 @@ abstract class Entity {
                 $this->addProperty($propertyKey, [$value]);
             }
         }
+
         return $this;
     }
 
@@ -162,8 +177,23 @@ abstract class Entity {
      * @return Entity The entity instance itself
      */
     public function removePropertyPair(string $propertyKey, $value): Entity {
+
         if (array_key_exists($propertyKey, $this->properties)) {
             if (!is_array($this->properties[$propertyKey])) return $this;
+
+            if (array_search($value, $this->properties[$propertyKey]) !== false) {
+                // is literal
+                unset($this->properties[$propertyKey][array_search($value, $this->properties[$propertyKey])]);
+                if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
+            }
+            else if (array_search(["@id" => $value], $this->properties[$propertyKey]) !== false) {
+                // is ["@id" => "..."]
+                unset($this->properties[$propertyKey][array_search(["@id" => $value], $this->properties[$propertyKey])]);
+                $this->properties[$propertyKey] = array_values($this->properties[$propertyKey]);
+                if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
+            }
+
+            /*
             foreach($this->properties[$propertyKey] as $pair) {
                 // pair should be ['@id' => ...] We do not check
                 // or pair is string literal
@@ -182,8 +212,9 @@ abstract class Entity {
                         break;
                     }
                 }
-            }
+            }*/
         }
+
         return $this;
     }
 
