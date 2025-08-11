@@ -202,6 +202,11 @@ class ROCrateTest extends TestCase
         $this->assertEquals(false, ROCrate::isValidUri($strings[7], false));
         $this->assertEquals(false, ROCrate::isValidUri($strings[8], false));
         $this->assertEquals(false, ROCrate::isValidUri($strings[9], false));
+        $this->assertEquals(true, ROCrate::isValidUri("https://orcid.org/0000-0002-1825-0097"));
+        $this->assertEquals(true, ROCrate::isValidUri("https://en.wikipedia.org/wiki/Josiah_S._Carberry"));
+        $this->assertEquals(true, ROCrate::isValidUri("#josiah", false));
+        $this->assertEquals(true, ROCrate::isValidUri("#0fa587c6-4580-4ece-a5df-69af3c5590e3", false));
+        $this->assertEquals(false, ROCrate::isValidUri("#0fa587c6-4580-4ece-a5df-69af3c5590e3"));
     }
 
     /**

@@ -31,6 +31,7 @@ class ROCrate {
     private bool $attached = true;
     private bool $preview = false;
     private ?Entity $website = null;
+    private array $errors = [];
 
     /**
      * Constructs a ROCrate instance
@@ -361,7 +362,8 @@ class ROCrate {
 
         // 3. The descriptor has an about property and it references the Root Data Entity's @id check
         if (array_key_exists("about", $this->descriptor->getProperties())) {
-            if (strcmp($this->descriptor->getProperty("about")["@id"], $this->rootDataset->getId()) !== 0) {
+
+            if ((is_array($this->getDescriptor()->getProperty("about"))) && (strcmp($this->descriptor->getProperty("about")['@id'], $this->rootDataset->getId()) !== 0)) {
                 $errors[] = "The descriptor's about property is invalid.";
             }
         }
@@ -417,10 +419,14 @@ class ROCrate {
         // This cannot be strictly enforced for the same reason as above
 
         // 3. @id have to be valid URI references
-        // Under Development
+        //!!!
+        //foreach($this->entities as $entity) {
+        //    if (ROCrate::isValidUri($entity->getId(), false)) {
+        //        $errors[] = "The entity's id (" . $entity->getId() . ") is not a valid URI.";
+        //    }
+        //}
 
         // 4. file data entity @id relative or absolute URI
-        // under Development
 
         // 5. Dataset data entity has Dataset as one of its type(s)
         // This satisfies if it is created using new Dataset
@@ -639,33 +645,38 @@ class ROCrate {
      * @return void
      */
     public function save(?string $path = null, string $prefix = ""): void {
+        $this->errors = [];
+
         // make values of all properties, i.e. key-value pairs, of each entity to be without [...] if there
         // is only a single literal or {"@id" : "..."}
         foreach ($this->entities as $entity) {
-            foreach ($entity->getProperties() as $key => $val) {
+            foreach (array_keys($entity->getProperties()) as $key) {
                 if (strcmp($key, "hasPart") == 0) {
                     continue;
                 }
                 // safety check if $val is an array
-                if (is_array($val)) {
-                    if (array_keys($val) == range(0, count($val) - 1)) {
+                if (is_array($entity->getProperty($key))) {
+                    if (!array_key_exists('@id', $entity->getProperty($key))) {
                         // safety check if $val is not an associative array
-                        if (count($val) == 1) {
+                        if (count($entity->getProperty($key)) === 1) {
                             // there is only a single item
-                            $entity->addProperty($key, $val[0]);
+                            $entity->addProperty($key, $entity->getProperty($key)[0]);
+                            //$this->printNestedArray($this->descriptor->getProperties());
                         }
                     }
                 }
             }
         }
 
+        
         if(!$this->attached) {
             if (strcmp($prefix, "") == 0) {
                 throw new ROCrateException("The prefix cannot be empty for a detached RO-Crate Package.");
             }
         }
 
-        if (!($this->validate() === [])) {
+        $this->errors = $this->validate();
+        if (!($this->errors === [])) {
             throw new ROCrateException("Validation before saving failed.");
         }
 
@@ -715,11 +726,11 @@ class ROCrate {
                 continue;
             }            
 
-            if (in_array("Dataset", $entity->getTypes())) {
+            if (in_array("Dataset", $entity->getTypes()) && (strcmp($entity->getId()[0], '#') !== 0)) {
                 $second[] = $entity->toArray();
                 continue;
             }
-            else if (in_array("File", $entity->getTypes())) {
+            else if (in_array("File", $entity->getTypes()) && (strcmp($entity->getId()[0], '#') !== 0)) {
                 $second[] = $entity->toArray();
                 continue;
             }
@@ -742,9 +753,9 @@ class ROCrate {
         } catch (JsonException $e) {
             throw new ROCrateException("JSON encoding failed: " . $e->getMessage());
         }
-        // overwritting happens
-        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata.json', $json);
-        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata.json', $json);
+        //!!!
+        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata-out.json', $json);
+        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
     }
 
     /**
@@ -981,5 +992,50 @@ class ROCrate {
         // Ensure the URL has a valid scheme
         $scheme = parse_url($url, PHP_URL_SCHEME);
         return $scheme !== null;
+    }
+
+    /**
+     * Lays out and prints the structure of a nested array for debugging
+     * @param mixed $array The array to be examined
+     * @param mixed $indent The indentation
+     * @return void
+     */
+    public function printNestedArray($array, $indent = 0) : void {
+        foreach ($array as $key => $value) {
+            // Add indentation for better readability of nested levels
+            echo str_repeat("  ", $indent);
+
+            if (is_array($value)) {
+                echo "Key: " . $key . " (Array):\n";
+                $this->printNestedArray($value, $indent + 1); // Recursively call for nested arrays
+            } else {
+                echo "Key: " . $key . ", Value: " . $value . "\n";
+            }
+        }
+    }
+
+    /**
+     * Returns the validation error(s)
+     * @return array The array of all the error message(s)
+     */
+    public function showErrors(): array {
+        return $this->errors;
+    }
+
+    /**
+     * Saves with the error message explicitly returned for further examination
+     * @return array The array consisting of error messages
+     */
+    public function saveWithErrorMessage(): array {
+        $errors = [];
+
+        try {
+            $this->save();
+        }
+        catch(Exception $e) {
+            $errors = $this->showErrors();
+        }
+
+        return $errors;
     }
 }

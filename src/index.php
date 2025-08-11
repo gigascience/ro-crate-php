@@ -45,6 +45,7 @@ try {
     die("JSON Error: " . $e->getMessage());
 }
 
+ROCratePreviewGenerator::generatePreview(__DIR__ . '/../resources');
 
 // Create new crate
 //$crate = new ROCrate(__DIR__ . '/../resources', false);
@@ -60,6 +61,9 @@ try {
 
 $crate = new ROCrate(__DIR__ . '/../resources', true);
 $root = $crate->getRootDataset();
+
+$root->addPropertyPair("description", "Test Description", false);
+$root->addPropertyPair("license", "Test License", false);
 
 // Add Data Entity (creator)
 // Similar for Contextual Entity
@@ -80,16 +84,37 @@ $root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']])->remov
 
 $crate->addEntity($crate->createGenericEntity('Test ID', [])->addType("TestType"));
 
+$author->addPropertyPair("encodingFormat", "test/pdf", false)->addPropertyPair("encodingFormat", "TRY", true);//->removePropertyPair("encodingFormat", "TRY");
+
 //$crate->getEntity("data.csv")->removePropertyPair("license", "https://creativecommons.org/licenses/by-nc-sa/3.0/au/");
 
 //$crate->removeEntity($author->getId());
 
 // Validate and save
-$crate->save();
+//echo $crate->validate()[0];
+
+try {
+    $crate->save();
+}
+catch (Exception $e) {
+    foreach($crate->showErrors() as $msg) {
+        echo "\n$msg";
+    }
+}
+
+
 
 /*
 foreach ($root->toArray() as $key => $value) {
     print("". $key ."=>". $value ."");
 }*/
 
-
+// Usage example:
+/*
+try {
+    $generator = new ROCratePreviewGenerator(__DIR__ . '/../resources');
+    $generator->generateHTML();
+    echo "RO-Crate HTML preview generated successfully!";
+} catch (Exception $e) {
+    die("Error: " . $e->getMessage());
+}*/
