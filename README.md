@@ -46,7 +46,7 @@ The methods of addPropertyPair and removePropertyPair abstract away the details 
 
 ## HTML Rendering
 Use the following code to generate a human-readable HTML preview from the RO-Crate Metadata File.
-> <br> ROCratePreviewGenerator::generatePreview(\_\_DIR\_\_ . '/../resources');
+> ROCratePreviewGenerator::generatePreview(\_\_DIR\_\_ . '/../resources');
 
 ## Change Log
 The tool is currently under development.
