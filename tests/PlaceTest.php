@@ -41,7 +41,8 @@ class PlaceTest extends TestCase
 
         $this->assertEquals("http://sws.geonames.org/8152662/", $array["@id"]);
         $this->assertEquals(true, in_array("Place", $array["@type"]));
-        $this->assertEquals("Catalina Park is a disused motor racing venue, located at Katoomba ...", $array["description"]);
+        $expectedString = "Catalina Park is a disused motor racing venue, located at Katoomba ...";
+        $this->assertEquals($expectedString, $array["description"]);
         $this->assertEquals("_:Geometry-1", $array["geo"][0]["@id"]);
         $this->assertEquals("http://sws.geonames.org/8152662/", $array["identifier"]);
         $this->assertEquals("https://www.geonames.org/8152662/catalina-park.html", $array["uri"]);

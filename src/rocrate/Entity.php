@@ -110,7 +110,8 @@ abstract class Entity
     }
 
     /**
-     * Adds a new property to the entity instance, or overwrites the old property of the same key, i.e. sets the property
+     * Adds a new property to the entity instance, or overwrites the old property of the same key,
+     * i.e. sets the property
      * @param string $key The key string of the new property
      * @param mixed $value The value of the property
      * @return Entity The entity instance itself
@@ -193,7 +194,8 @@ abstract class Entity
     }
 
     /**
-     * Removes a key-value pair from a property of the entity instance, or does nothing when the either key does not exist or there is no inner array
+     * Removes a key-value pair from a property of the entity instance,
+     * or does nothing when the either key does not exist or there is no inner array
      * @param string $propertyKey The key string of the property to remove
      * @param string $key The key string of the property to remove
      * @param mixed $value The value to be deleted of the property
@@ -215,7 +217,8 @@ abstract class Entity
                 }
             } elseif (array_search(["@id" => $value], $this->properties[$propertyKey]) !== false) {
                 // is ["@id" => "..."]
-                unset($this->properties[$propertyKey][array_search(["@id" => $value], $this->properties[$propertyKey])]);
+                $key = $propertyKey;
+                unset($this->properties[$key][array_search(["@id" => $value], $this->properties[$key])]);
                 $this->properties[$propertyKey] = array_values($this->properties[$propertyKey]);
                 if ($this->properties[$propertyKey] === []) {
                     $this->removeProperty($propertyKey);

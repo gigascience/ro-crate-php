@@ -43,7 +43,8 @@ class FileHandler
     {
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new JsonFileException("JSON encoding failed: " . json_last_error_msg(), JsonFileException::INVALID_JSON);
+            throw
+            new JsonFileException("JSON encoding failed: " . json_last_error_msg(), JsonFileException::INVALID_JSON);
         }
 
         if (file_put_contents($filePath, $json) === false) {

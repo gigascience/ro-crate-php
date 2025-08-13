@@ -42,8 +42,12 @@ class ROCrate
      * @param bool $attahcedFlag The flag to indicate whether RO-Crate Package is attached
      * @param bool $previewFlag The flag to indicate whether the RO-Crate Website is needed
      */
-    public function __construct(string $directory, bool $loadExisting = false, bool $attachedFlag = true, bool $previewFlag = false)
+    public function __construct(string $directory, bool $lE = false, bool $aF = true, bool $pF = false)
     {
+        $loadExisting = $lE;
+        $attachedFlag = $aF;
+        $previewFlag = $pF;
+
         $this->attached = $attachedFlag;
         $this->preview = $previewFlag;
 
@@ -112,7 +116,8 @@ class ROCrate
         foreach ($this->entities as $entity) {
             foreach (array_keys($entity->getProperties()) as $key) {
                 if (is_array($entity->getProperties()[$key])) {
-                    if (array_keys($entity->getProperties()[$key]) !== range(0, count($entity->getProperties()[$key]) - 1)) {
+                    $property = $entity->getProperties()[$key];
+                    if (array_keys($property) !== range(0, count($property) - 1)) {
                         // if {"@id" : "..."} by checking whether $val is an associative array
                         $entity->addProperty($key, [$entity->getProperties()[$key]]);
                     }
@@ -154,7 +159,9 @@ class ROCrate
         // Parse entities
         $rootId = './';
         foreach ($json['@graph'] as $entityData) {
-            if (str_contains($entityData['@id'], "ro-crate-metadata.json") && array_key_exists("conformsTo", $entityData)) {
+            $condtionOne = str_contains($entityData['@id'], "ro-crate-metadata.json");
+            $conditionTwo = array_key_exists("conformsTo", $entityData);
+            if ($condtionOne && $conditionTwo) {
                 $conformsTo = $entityData["conformsTo"]["@id"];
                 $rootId = $entityData['about']['@id'];
                 $this->addProfile($conformsTo, $rootId);
@@ -180,7 +187,8 @@ class ROCrate
         /*
         if ($this->preview) {
             foreach ($this->entities as $entity) {
-                if (in_array('CreativeWork', $entity->getTypes()) && ($entity->getProperty("about")["@id"] === $rootId) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
+                if (in_array('CreativeWork', $entity->getTypes()) && ($entity->getProperty("about")["@id"] === $rootId)
+                && (!array_key_exists("conformsTo", $entity->getProperties()))) {
                     $this->website = $this->getEntity("ro-crate-preview.html");
                     $this->website = new class("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
                         public function toArray(): array {
@@ -206,7 +214,8 @@ class ROCrate
         foreach ($this->entities as $entity) {
             foreach (array_keys($entity->getProperties()) as $key) {
                 if (is_array($entity->getProperties()[$key])) {
-                    if (array_keys($entity->getProperties()[$key]) !== range(0, count($entity->getProperties()[$key]) - 1)) {
+                    $property = $entity->getProperties()[$key];
+                    if (array_keys($property) !== range(0, count($property) - 1)) {
                         // if {"@id" : "..."} by checking whether $val is an associative array
                         $entity->addProperty($key, [$entity->getProperties()[$key]]);
                     }
@@ -351,7 +360,8 @@ class ROCrate
 
         // 3. entity property references to other entities using {"@id": "..."} check
         // newly created property managed using addPropertyPair and removePropertyPair automatically satisfy
-        // the only exceptions that require manual manipulation are encodingFormat due to mixed use of literal and reference
+        // the only exceptions that require manual manipulation are encodingFormat
+        // due to mixed use of literal and reference
         // and context with extra terms
         // old property imported either:
         // case 1: reset it using removeProperty and manage using ...Pair
@@ -361,9 +371,12 @@ class ROCrate
 
         // Root Data Entity
 
-        // 1. @id value of the descriptor has to be "ro-crate-metadata.json" or "ro-crate-metadata.jsonld" (legacy from v1.0 or before) check
+        // 1. @id value of the descriptor has to be "ro-crate-metadata.json"
+        // or "ro-crate-metadata.jsonld" (legacy from v1.0 or before) check
         // This is needed even if the actual metadata file maybe absent or has a prefix in detached package.
-        if ((strcmp($this->descriptor->getId(), "ro-crate-metadata.json") !== 0) && (strcmp($this->descriptor->getId(), "ro-crate-metadata.jsonld") !== 0)) {
+        $conditionOne = (strcmp($this->descriptor->getId(), "ro-crate-metadata.json") !== 0);
+        $conditionTwo = (strcmp($this->descriptor->getId(), "ro-crate-metadata.jsonld") !== 0);
+        if ($conditionOne && $conditionTwo) {
             $errors[] = "The descriptor's id is invalid.";
         }
 
@@ -378,7 +391,9 @@ class ROCrate
 
         // 3. The descriptor has an about property and it references the Root Data Entity's @id check
         if (array_key_exists("about", $this->descriptor->getProperties())) {
-            if ((is_array($this->getDescriptor()->getProperty("about"))) && (strcmp($this->descriptor->getProperty("about")['@id'], $this->rootDataset->getId()) !== 0)) {
+            $conditionOne = (is_array($this->getDescriptor()->getProperty("about")));
+            $conditionTwo = (strcmp($this->descriptor->getProperty("about")['@id'], $this->rootDataset->getId()) !== 0);
+            if ($conditionOne && $conditionTwo) {
                 $errors[] = "The descriptor's about property is invalid.";
             }
         } else {
@@ -603,7 +618,8 @@ class ROCrate
         // using the about property
         // It relies on disciplined use.
 
-        // 5. any terms defined in the profile has to be used as full URIs matching @id or mapped to these URIs from the conforming crate's
+        // 5. any terms defined in the profile has to be used as full URIs matching @id
+        // or mapped to these URIs from the conforming crate's
         // @context in the conforming crate.
         // It relies on disciplined use.
 
@@ -616,17 +632,23 @@ class ROCrate
         // 1. script and workflow type, id and name
         // It relies on disciplined use.
 
-        // 2. If a contextual entity has type ComputerLanguage and/or SoftwareApplication, it has a name, url and version
+        // 2. If a contextual entity has type ComputerLanguage and/or SoftwareApplication,\
+        // it has a name, url and version
         foreach ($this->entities as $entity) {
-            if (in_array("ComputerLanguage", $entity->getTypes()) || in_array("SoftwareApplication", $entity->getTypes())) {
+            $conditionOne = in_array("ComputerLanguage", $entity->getTypes());
+            $conditionTwo = in_array("SoftwareApplication", $entity->getTypes());
+            if ($conditionOne || $conditionTwo) {
                 if (!array_key_exists("name", $entity->getProperties())) {
-                    $errors[] = "The name property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                    $errors[] = "The name property for the contextual entity of type ComputerLanguage 
+                    and/or SoftwareApplication is missing.";
                 }
                 if (!array_key_exists("url", $entity->getProperties())) {
-                    $errors[] = "The url property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                    $errors[] = "The url property for the contextual entity of type ComputerLanguage 
+                    and/or SoftwareApplication is missing.";
                 }
                 if (!array_key_exists("version", $entity->getProperties())) {
-                    $errors[] = "The version property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
+                    $errors[] = "The version property for the contextual entity of type ComputerLanguage 
+                    and/or SoftwareApplication is missing.";
                 }
             }
         }
@@ -731,7 +753,9 @@ class ROCrate
 
         $graph = [];
         foreach ($this->entities as $entity) {
-            if (str_contains($entity->getId(), "ro-crate-metadata.json") && array_key_exists("conformsTo", $entity->getProperties())) {
+            $conditionOne = str_contains($entity->getId(), "ro-crate-metadata.json");
+            $conditionTwo = array_key_exists("conformsTo", $entity->getProperties());
+            if ($conditionOne && $conditionTwo) {
                 $rootId = $entity->getProperty("about")["@id"];
                 $first[] = $entity->toArray();
                 $key = array_search($entity, $this->entities, true);
@@ -741,7 +765,9 @@ class ROCrate
         }
 
         foreach ($this->entities as $entity) {
-            if (in_array('CreativeWork', $entity->getTypes()) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
+            $conditionOne = in_array('CreativeWork', $entity->getTypes());
+            $conditionTwo = (!array_key_exists("conformsTo", $entity->getProperties()));
+            if ($conditionOne && $conditionTwo) {
                 if (!array_key_exists("about", $entity->getProperties())) {
                     continue;
                 }

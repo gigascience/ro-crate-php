@@ -95,7 +95,9 @@ class ROCratePreviewGenerator
     public function findRootEntity(array $entities)
     {
         foreach ($entities as $entityData) {
-            if (str_contains($entityData['@id'], "ro-crate-metadata.json") && array_key_exists("conformsTo", $entityData)) {
+            $conditionOne = str_contains($entityData['@id'], "ro-crate-metadata.json");
+            $conditionTwo = array_key_exists("conformsTo", $entityData);
+            if ($conditionOne && $conditionTwo) {
                 global $rootId;
                 $rootId = $entityData['about']['@id'];
                 break;
@@ -355,7 +357,9 @@ class ROCratePreviewGenerator
                     $keyFirst = "<li><span class=\"property\">$keyHtml <a href=$resolvedKey> [?] </a> </span>:";
                     foreach ($values as $valueHtml) {
                         // if value is id, we make it hyperlink and show name if name exists in the entity
-                        if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
+                        $conditionOne = (!is_array($valueHtml)) && (strcmp($key, '@id') !== 0);
+                        $conditionTwo = (array_key_exists($valueHtml, $entities));
+                        if ($conditionOne && $conditionTwo) {
                             $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
                             if (strcmp($temp, "") == 0) {
                                 $temp = $valueHtml;
@@ -373,18 +377,24 @@ class ROCratePreviewGenerator
                 //else {
                 //    $valueHtml = $values;
                 //    // if value is id, we make it hyperlink and show name if name exists in the entity
-                //    if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
+                //    if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0)
+                // && (array_key_exists($valueHtml, $entities))) {
                 //        $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
-                //        $html .= "<li><span class=\"property\"> $keyHtml <a href=$resolvedKey> [?] </a> </span>: <a href=#$valueHtml> $temp </a></li>";
+                //        $html .= "<li><span class=\"property\"> $keyHtml <a href=$resolvedKey>
+                //  [?] </a> </span>: <a href=#$valueHtml> $temp </a></li>";
                 //    }
-                //    else $html .= "<li><span class=\"property\">$keyHtml <a href=$resolvedKey> [?] </a> </span>: $valueHtml</li>";
+                //    else $html .= "<li><span class=\"property\">$keyHtml <a href=$resolvedKey>
+                //  [?] </a> </span>: $valueHtml</li>";
                 //}
             } else {
                 if (is_array($values)) {
                     $keyFirst = "<li><span class=\"property\"> $keyHtml </span>:";
                     foreach ($values as $valueHtml) {
                         // if value is id, we make it hyperlink and show name if name exists in the entity
-                        if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
+                        $conditionOne = (!is_array($valueHtml));
+                        $conditionTwo = (strcmp($key, '@id') !== 0);
+                        $conditionThree = (array_key_exists($valueHtml, $entities));
+                        if ($conditionOne && $conditionTwo && $conditionThree) {
                             $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
                             if (strcmp($temp, "") == 0) {
                                 $temp = $valueHtml;
@@ -402,9 +412,11 @@ class ROCratePreviewGenerator
                 //else {
                 //    $valueHtml = $values;
                 //    // if value is id, we make it hyperlink and show name if name exists in the entity
-                //    if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
+                //    if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0)
+                // && (array_key_exists($valueHtml, $entities))) {
                 //        $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
-                //        $html .= "<li><span class=\"property\"> $keyHtml </span>: <a href=#$valueHtml> $temp </a></li>";
+                //        $html .= "<li><span class=\"property\"> $keyHtml </span>: <a href=#$valueHtml>
+                //  $temp </a></li>";
                 //   }
                 //    else $html .= "<li><span class=\"property\">$keyHtml</span>: $valueHtml</li>";
                 //}

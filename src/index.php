@@ -78,12 +78,16 @@ $author->addPropertyPair('knows', '#alice', true)->addPropertyPair('knows', '#ca
 
 //$root->addProperty('creator', [['@id' => '#alice']]);
 //$root->addProperty('creator', [['@id' => '#alice'], ['@id' => '#bob']]);
-//$root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')->addPropertyPair('creator', '#cathy')->removePropertyPair("creator", "#alice")->addPropertyPair('creator', '#alice')->addPropertyPair('creator', '#bob');
-$root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']])->removePropertyPair('creator', '#bob')->removePropertyPair('creator', '#cathy');
+//$root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')
+// ->addPropertyPair('creator', '#cathy')->removePropertyPair("creator", "#alice")
+// ->addPropertyPair('creator', '#alice')->addPropertyPair('creator', '#bob');
+$root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']])
+    ->removePropertyPair('creator', '#bob')->removePropertyPair('creator', '#cathy');
 
 $crate->addEntity($crate->createGenericEntity('Test ID', [])->addType("TestType"));
 
-$author->addPropertyPair("encodingFormat", "test/pdf", false)->addPropertyPair("encodingFormat", "TRY", true);//->removePropertyPair("encodingFormat", "TRY");
+$author->addPropertyPair("encodingFormat", "test/pdf", false)
+    ->addPropertyPair("encodingFormat", "TRY", true);//->removePropertyPair("encodingFormat", "TRY");
 
 //$crate->getEntity("data.csv")->removePropertyPair("license", "https://creativecommons.org/licenses/by-nc-sa/3.0/au/");
 
