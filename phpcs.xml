@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Project PSR12 Rules">
+  <description>PSR12 checks for src/ and tests/ directories</description>
+
+  <!-- Directories to scan -->
+  <file>src</file>
+  <file>tests</file>
+
+  <!-- Exclude dependencies -->
+  <exclude>vendor</exclude>
+ 
+  <!-- Use PSR12 standard -->
+  <rule ref="PSR12"/>
+</ruleset>

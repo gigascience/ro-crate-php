@@ -31,7 +31,7 @@ class JsonUnflattenerTest extends TestCase
             'b.c' => 2,
             'b.d.e' => 3
         ];
-        
+
         $expected = [
             'a' => 1,
             'b' => [
@@ -39,7 +39,7 @@ class JsonUnflattenerTest extends TestCase
                 'd' => ['e' => 3]
             ]
         ];
-        
+
         $this->assertEquals($expected, $this->unflattener->unflatten($input));
     }
 

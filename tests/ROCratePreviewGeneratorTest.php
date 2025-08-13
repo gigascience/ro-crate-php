@@ -12,18 +12,19 @@ use ROCrate\ROCratePreviewGenerator;
 /**
  * Summary of ROCratePreviewGeneratorTest
  */
-class ROCratePreviewGeneratorTest extends TestCase {
+class ROCratePreviewGeneratorTest extends TestCase
+{
     /**
      * Tests whether the preview HTML file is successfully generated
      * @return void
      */
-    public function testGeneration(): void {
+    public function testGeneration(): void
+    {
         $flag = true;
 
         try {
             ROCratePreviewGenerator::generatePreview(__DIR__ . '/../resources');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $flag = false;
         }
 

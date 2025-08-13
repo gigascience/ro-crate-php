@@ -5,7 +5,8 @@ namespace ROCrate;
 /**
  * Handles the entities of a ro-crate object
  */
-abstract class Entity {
+abstract class Entity
+{
     protected string $id;
     protected array $types;
     protected array $properties = [];
@@ -16,7 +17,8 @@ abstract class Entity {
      * @param string $id The ID of the entity
      * @param array $types The type(s) of the entity
      */
-    public function __construct(string $id, array $types) {
+    public function __construct(string $id, array $types)
+    {
         $this->id = $id;
         $this->types = $types;
     }
@@ -25,7 +27,8 @@ abstract class Entity {
      * Gets the ID of the entity instance
      * @return string The ID string
      */
-    public function getId(): string {
+    public function getId(): string
+    {
         return $this->id;
     }
 
@@ -34,7 +37,8 @@ abstract class Entity {
      * @param string $id
      * @return Entity The entity instance itself
      */
-    public function setId(string $id): Entity {
+    public function setId(string $id): Entity
+    {
         $this->id = $id;
         return $this;
     }
@@ -43,7 +47,8 @@ abstract class Entity {
      * Gets the type(s) of the entity instance
      * @return array The type(s) as an array
      */
-    public function getTypes(): array {
+    public function getTypes(): array
+    {
         return $this->types;
     }
 
@@ -52,7 +57,8 @@ abstract class Entity {
      * @param array $newTypes The new type(s)
      * @return Entity The entity instance itself
      */
-    public function setTypes(array $newTypes): Entity {
+    public function setTypes(array $newTypes): Entity
+    {
         $this->types = $newTypes;
         return $this;
     }
@@ -62,7 +68,8 @@ abstract class Entity {
      * @param string $type The type to add
      * @return Entity The entity instance itself
      */
-    public function addType(string $type): Entity {
+    public function addType(string $type): Entity
+    {
         if (!in_array($type, $this->types, true)) {
             $this->types[] = $type;
         }
@@ -74,7 +81,8 @@ abstract class Entity {
      * @param string $type The type to be removed
      * @return Entity The entity instance itself
      */
-    public function removeType(string $type): Entity {
+    public function removeType(string $type): Entity
+    {
         if (in_array($type, $this->types, true)) {
             $key = array_search($type, $this->types, true);
             unset($this->types[$key]);
@@ -87,7 +95,8 @@ abstract class Entity {
      * @param string $key The key string
      * @return mixed The value corresponding to the key or null if there is no such key
      */
-    public function getProperty(string $key): mixed {
+    public function getProperty(string $key): mixed
+    {
         return $this->properties[$key] ?? null;
     }
 
@@ -95,7 +104,8 @@ abstract class Entity {
      * Gets all the properties of the entity instance
      * @return array The properties as an array of key-value pair(s)
      */
-    public function getProperties(): array {
+    public function getProperties(): array
+    {
         return $this->properties;
     }
 
@@ -105,7 +115,8 @@ abstract class Entity {
      * @param mixed $value The value of the property
      * @return Entity The entity instance itself
      */
-    public function addProperty(string $key, $value): Entity {
+    public function addProperty(string $key, $value): Entity
+    {
         $this->properties[$key] = $value;
         return $this;
     }
@@ -117,39 +128,50 @@ abstract class Entity {
      * @param mixed $flag The flag is true if @id, or is false if literal
      * @return Entity The entity instance itself
      */
-    public function addPropertyPair(string $propertyKey, $value, ?bool $flag = null): Entity {
+    public function addPropertyPair(string $propertyKey, $value, ?bool $flag = null): Entity
+    {
 
         if (array_key_exists($propertyKey, $this->properties)) {
-            if (!is_array($this->properties[$propertyKey])) return $this;
-            if ($this->properties[$propertyKey] === []) return $this;
+            if (!is_array($this->properties[$propertyKey])) {
+                return $this;
+            }
+            if ($this->properties[$propertyKey] === []) {
+                return $this;
+            }
 
             if (!is_null($flag)) {
                 if ($flag) {
-                    if (in_array(['@id' => $value], $this->properties[$propertyKey], true)) return $this;
+                    if (in_array(['@id' => $value], $this->properties[$propertyKey], true)) {
+                        return $this;
+                    }
                     $this->properties[$propertyKey][] = ['@id' => $value];
-                }
-                else {
-                    if (in_array($value, $this->properties[$propertyKey], true)) return $this;
+                } else {
+                    if (in_array($value, $this->properties[$propertyKey], true)) {
+                        return $this;
+                    }
                     $this->properties[$propertyKey][] = $value;
                 }
                 return $this;
             }
 
             if (!is_array($this->properties[$propertyKey][0])) {
-                if (in_array($value, $this->properties[$propertyKey], true)) return $this;
+                if (in_array($value, $this->properties[$propertyKey], true)) {
+                    return $this;
+                }
                 $this->properties[$propertyKey][] = $value;
-            }
-            else {
-                if (in_array(['@id' => $value], $this->properties[$propertyKey], true)) return $this;
+            } else {
+                if (in_array(['@id' => $value], $this->properties[$propertyKey], true)) {
+                    return $this;
+                }
                 $this->properties[$propertyKey][] = ['@id' => $value];
             }
-        }
-        else {
-            if(is_null($flag)) return $this;
+        } else {
+            if (is_null($flag)) {
+                return $this;
+            }
             if ($flag) {
                 $this->addProperty($propertyKey, [['@id' => $value]]);
-            }
-            else {
+            } else {
                 $this->addProperty($propertyKey, [$value]);
             }
         }
@@ -162,7 +184,8 @@ abstract class Entity {
      * @param string $key The key string of the property to remove
      * @return Entity The entity instance itself
      */
-    public function removeProperty(string $key): Entity {
+    public function removeProperty(string $key): Entity
+    {
         if (array_key_exists($key, $this->properties)) {
             unset($this->properties[$key]);
         }
@@ -176,21 +199,27 @@ abstract class Entity {
      * @param mixed $value The value to be deleted of the property
      * @return Entity The entity instance itself
      */
-    public function removePropertyPair(string $propertyKey, $value): Entity {
+    public function removePropertyPair(string $propertyKey, $value): Entity
+    {
 
         if (array_key_exists($propertyKey, $this->properties)) {
-            if (!is_array($this->properties[$propertyKey])) return $this;
+            if (!is_array($this->properties[$propertyKey])) {
+                return $this;
+            }
 
             if (array_search($value, $this->properties[$propertyKey]) !== false) {
                 // is literal
                 unset($this->properties[$propertyKey][array_search($value, $this->properties[$propertyKey])]);
-                if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
-            }
-            else if (array_search(["@id" => $value], $this->properties[$propertyKey]) !== false) {
+                if ($this->properties[$propertyKey] === []) {
+                    $this->removeProperty($propertyKey);
+                }
+            } elseif (array_search(["@id" => $value], $this->properties[$propertyKey]) !== false) {
                 // is ["@id" => "..."]
                 unset($this->properties[$propertyKey][array_search(["@id" => $value], $this->properties[$propertyKey])]);
                 $this->properties[$propertyKey] = array_values($this->properties[$propertyKey]);
-                if ($this->properties[$propertyKey] === []) $this->removeProperty($propertyKey);
+                if ($this->properties[$propertyKey] === []) {
+                    $this->removeProperty($propertyKey);
+                }
             }
 
             /*
@@ -223,7 +252,8 @@ abstract class Entity {
      * @param \ROCrate\ROCrate $crate The crate object
      * @return void
      */
-    public function setCrate(ROCrate $crate): void {
+    public function setCrate(ROCrate $crate): void
+    {
         $this->crate = $crate;
     }
 
@@ -237,9 +267,9 @@ abstract class Entity {
      * Gets the basic information of the entity as an array
      * @return array{@id: string, @type: array} The array consisting of the ID and type(s) of the entity instance
      */
-    protected function baseArray(): array {
-        if ($this->types) 
-        {
+    protected function baseArray(): array
+    {
+        if ($this->types) {
             // there is at least one type
             return [
                 '@id' => $this->id,

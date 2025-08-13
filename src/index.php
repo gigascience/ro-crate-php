@@ -30,17 +30,16 @@ try {
     // Read and flatten JSON
     $data = FileHandler::readJsonFile(__DIR__ . '/../resources/ro-crate-metadata.json');
     $flattened = $flattener->flatten($data);
-    
+
     // Process flattened data
     foreach ($flattened as $key => $value) {
         // Do something with key-value pairs
-        echo''. $key .' -> '. $value ." ";
+        echo'' . $key . ' -> ' . $value . " ";
     }
-    
+
     // Unflatten and write
     $nested = $unflattener->unflatten($flattened);
     FileHandler::writeJsonFile(__DIR__ . '/../resources/output.json', $nested);
-    
 } catch (JsonFileException $e) {
     die("JSON Error: " . $e->getMessage());
 }
@@ -95,9 +94,8 @@ $author->addPropertyPair("encodingFormat", "test/pdf", false)->addPropertyPair("
 
 try {
     $crate->save();
-}
-catch (Exception $e) {
-    foreach($crate->showErrors() as $msg) {
+} catch (Exception $e) {
+    foreach ($crate->showErrors() as $msg) {
         echo "\n$msg";
     }
 }

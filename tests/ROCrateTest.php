@@ -11,7 +11,7 @@ use ROCrate\Person;
 /**
  * Summary of ROCrateTest
  */
-class ROCrateTest extends TestCase 
+class ROCrateTest extends TestCase
 {
     /**
      * Tests whether the creation of a ro-crate object is successful from nothing
@@ -41,7 +41,7 @@ class ROCrateTest extends TestCase
         $author->addProperty('affiliation', 'University of Example 2');
         $crate->addEntity($author);
         $root->addProperty('creator', [['@id' => '#alice'], ['@id' => '#bob']]);
-        
+
         $this->assertEquals('My Research Project', $root->getProperties()['name']);
         $this->assertEquals('Example RO-Crate', $root->getProperties()['description']);
         $this->assertEquals('#alice', $root->getProperties()['creator'][0]['@id']);
@@ -66,7 +66,7 @@ class ROCrateTest extends TestCase
         $author->addProperty('affiliation', 'University of Example 2');
         $crate->addEntity($author);
         $root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']]);
-        
+
         $this->assertEquals('./', $root->getId());
         $this->assertEquals('./', $crate->getDescriptor()->getProperties()['about'][0]['@id']);
         $this->assertEquals('#cathy', $root->getProperties()['creator'][0]['@id']);
@@ -104,9 +104,9 @@ class ROCrateTest extends TestCase
         $author->addPropertyPair('knows', '#alice')->addPropertyPair('knows', '#cathy');
 
         $crate->addEntity($author);
-        
+
         $root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')->addPropertyPair('creator', '#cathy');
-        
+
         $this->assertEquals('#alice', $author->getProperties()['knows'][0]);
         $this->assertEquals('#cathy', $author->getProperties()['knows'][1]);
         $this->assertEquals('#alice', $root->getProperties()['creator'][0]['@id']);
@@ -131,7 +131,7 @@ class ROCrateTest extends TestCase
         $author->addProperty('affiliation', 'University of Example 2');
         $crate->addEntity($author);
         $root->addProperty('creator', [['@id' => '#cathy'], ['@id' => '#alice']])->removePropertyPair('creator', '#bob')->removePropertyPair('creator', '#cathy');
-        
+
         $this->assertEquals('#alice', $root->getProperties()['creator'][0]['@id']);
     }
 
@@ -152,9 +152,9 @@ class ROCrateTest extends TestCase
         $author->addProperty('name', 'Cathy');
         $author->addProperty('affiliation', 'University of Example 2');
         $crate->addEntity($author);
-        
+
         $root->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob')->addPropertyPair('creator', '#cathy')->removePropertyPair('creator', '#alice')->addPropertyPair('creator', '#alice', true)->addPropertyPair('creator', '#bob');
-        
+
         $this->assertEquals('#bob', $root->getProperties()['creator'][0]['@id']);
         $this->assertEquals('#cathy', $root->getProperties()['creator'][1]['@id']);
     }
@@ -163,9 +163,10 @@ class ROCrateTest extends TestCase
      * Tests the ISO date string validator
      * @return void
      */
-    public function testISOValidator(): void {
+    public function testISOValidator(): void
+    {
         $strings = ["", "23", "asdada", "-2015-04", "0862", "0000-03-02", "0000-53-02", "2346-06,19", "2025-08-04T10:30:45Z", "2030-12-25T08:00:00+02:00", "1999-07-14T23:59:59-05:00", "-2024-02-29T00:00:00Z", "-0044-03-15T09:30:00+03:00", "2023-12-31T23:59:59-11:30"];
-        
+
         $this->assertEquals(false, ROCrate::isValidISO8601Date($strings[0]));
         $this->assertEquals(false, ROCrate::isValidISO8601Date($strings[1]));
         $this->assertEquals(false, ROCrate::isValidISO8601Date($strings[2]));
@@ -189,7 +190,8 @@ class ROCrateTest extends TestCase
      * Tests the uri validator
      * @return void
      */
-    public function testUriValidator(): void {
+    public function testUriValidator(): void
+    {
         $strings = ["http://example.com", "https://sub.example.com/path?q=val", "ftp://files.example.com", "path/to/file", "path/to/file", "//example.com", "file.txt?query=abc#section", "invalid|path", "space in url", "percent%2G"];
 
         $this->assertEquals(true, ROCrate::isValidUri($strings[0]));
@@ -213,7 +215,8 @@ class ROCrateTest extends TestCase
      * Tests the url validator
      * @return void
      */
-    public function testUrlValidator(): void {
+    public function testUrlValidator(): void
+    {
         $strings = ["http://example.com", "https://sub.example.com/path", "ftp://files.example.com", "mailto:contact@example.com", "//example.com", "example.com", "/path/to/file"];
 
          $this->assertEquals(true, ROCrate::isValidUrl($strings[0]));

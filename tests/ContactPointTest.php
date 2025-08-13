@@ -11,12 +11,14 @@ use ROCrate\ContactPoint;
 /**
  * Summary of ContactPointTest
  */
-class ContactPointTest extends TestCase {
+class ContactPointTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testContactPoint(): void {
+    public function testContactPoint(): void
+    {
         $contactPoint = new ContactPoint("mailto:example@abc.def.gh");
 
         $this->assertEquals("mailto:example@abc.def.gh", $contactPoint->getId());
@@ -27,7 +29,8 @@ class ContactPointTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $contactPoint = new ContactPoint("mailto:example@abc.def.gh");
         $contactPoint->addProperty("contactType", "customer service")
             ->addProperty("email", "example@abc.def.gh")

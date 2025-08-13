@@ -29,11 +29,11 @@ class JsonFileHandlerTest extends TestCase
     public function testReadWriteCycle(): void
     {
         $data = ['test' => ['nested' => true]];
-        
+
         // Write then read
         $this->handler->writeJsonFile(self::TEST_FILE, $data);
         $result = $this->handler->readJsonFile(self::TEST_FILE);
-        
+
         $this->assertEquals($data, $result);
     }
 
@@ -49,7 +49,7 @@ class JsonFileHandlerTest extends TestCase
         // Create invalid data (circular reference)
         $data = [];
         $data['self'] = &$data;
-        
+
         $this->expectException(JsonFileException::class);
         $this->expectExceptionCode(JsonFileException::INVALID_JSON);
         $this->handler->writeJsonFile(self::TEST_FILE, $data);
@@ -58,7 +58,7 @@ class JsonFileHandlerTest extends TestCase
     public function testInvalidJsonFile(): void
     {
         file_put_contents(self::TEST_FILE, '{invalid json}');
-        
+
         $this->expectException(JsonFileException::class);
         $this->expectExceptionCode(JsonFileException::INVALID_JSON);
         $this->handler->readJsonFile(self::TEST_FILE);

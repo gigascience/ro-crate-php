@@ -11,12 +11,14 @@ use ROCrate\Descriptor;
 /**
  * Summary of DescriptorTest
  */
-class DescriptorTest extends TestCase {
+class DescriptorTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testDescriptor(): void {
+    public function testDescriptor(): void
+    {
         $descriptor = new Descriptor();
 
         $this->assertEquals("ro-crate-metadata.json", $descriptor->getId());
@@ -27,7 +29,8 @@ class DescriptorTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $descriptor = new Descriptor();
         $descriptor->addPropertyPair("about", "./", true)
             ->addPropertyPair("conformsTo", "https://w3id.org/ro/crate/1.2", true);

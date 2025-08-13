@@ -1,4 +1,5 @@
 <?php
+
 // src/Json/Unflattener.php
 namespace Json;
 
@@ -9,7 +10,7 @@ class Unflattener
 {
     /**
      * Unflatten dot-notated keys into a nested array
-     * 
+     *
      * @param array $data Flattened key-value pairs
      * @param string $separator Key separator
      * @return array Nested array structure
@@ -17,11 +18,10 @@ class Unflattener
     public function unflatten(array $data, string $separator = '.'): array
     {
         $result = [];
-        
         foreach ($data as $key => $value) {
             $this->assignValueByPath($result, $key, $value, $separator);
         }
-        
+
         return $result;
     }
 
@@ -32,17 +32,15 @@ class Unflattener
     {
         $keys = explode($separator, $path);
         $current = &$array;
-        
         while (count($keys) > 1) {
             $key = array_shift($keys);
-            
             if (!isset($current[$key]) || !is_array($current[$key])) {
                 $current[$key] = [];
             }
-            
+
             $current = &$current[$key];
         }
-        
+
         $current[array_shift($keys)] = $value;
     }
 }

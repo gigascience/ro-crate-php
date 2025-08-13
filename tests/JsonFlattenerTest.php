@@ -30,13 +30,13 @@ class JsonFlattenerTest extends TestCase
             'a' => 1,
             'b' => ['c' => 2, 'd' => ['e' => 3]]
         ];
-        
+
         $expected = [
             'a' => 1,
             'b.c' => 2,
             'b.d.e' => 3
         ];
-        
+
         $this->assertEquals($expected, $this->flattener->flatten($input));
     }
 

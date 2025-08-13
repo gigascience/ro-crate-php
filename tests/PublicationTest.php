@@ -11,12 +11,14 @@ use ROCrate\Publication;
 /**
  * Summary of PublicationTest
  */
-class PublicationTest extends TestCase {
+class PublicationTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testPublication(): void {
+    public function testPublication(): void
+    {
         $publication = new Publication("https://doi.org/10.1109/TCYB.2014.2386282", "CreativeWork");
 
         $this->assertEquals("https://doi.org/10.1109/TCYB.2014.2386282", $publication->getId());
@@ -27,7 +29,8 @@ class PublicationTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $publication = new Publication("https://doi.org/10.1109/TCYB.2014.2386282");
         $publication->addPropertyPair("author", "https://orcid.org/0000-0002-8367-6908", true)
             ->addPropertyPair("author", "https://orcid.org/0000-0003-0690-4732")

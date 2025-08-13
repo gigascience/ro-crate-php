@@ -7,7 +7,8 @@ use Exceptions\ROCrateException;
 /**
  * Helps generate the ro-crate website for human-readability
  */
-class ROCratePreviewGenerator {
+class ROCratePreviewGenerator
+{
     public static $rootId = './';
 
     /**
@@ -15,7 +16,8 @@ class ROCratePreviewGenerator {
      * @param string $directory The base directory
      * @return void
      */
-    public static function generatePreview(string $directory): void {
+    public static function generatePreview(string $directory): void
+    {
         $basePath = realpath($directory) ?: $directory;
 
         // Configuration
@@ -57,7 +59,8 @@ class ROCratePreviewGenerator {
      * @param mixed $context The context extracted from the metadata file
      * @return array The term URIs
      */
-    public function buildTermUris($context): array {
+    public function buildTermUris($context): array
+    {
         $termUris = [];
         if (is_array($context)) {
             foreach ($context as $key => $value) {
@@ -76,7 +79,8 @@ class ROCratePreviewGenerator {
      * @param array $graph The entities extracted from the metadata file
      * @return array The array of indiced entities
      */
-    public function indexEntities(array $graph): array {
+    public function indexEntities(array $graph): array
+    {
         $index = [];
         foreach ($graph as $entity) {
             $index[$entity['@id']] = $entity;
@@ -88,7 +92,8 @@ class ROCratePreviewGenerator {
      * Finds the root data entity
      * @param array $entities The indiced entities
      */
-    public function findRootEntity(array $entities) {
+    public function findRootEntity(array $entities)
+    {
         foreach ($entities as $entityData) {
             if (str_contains($entityData['@id'], "ro-crate-metadata.json") && array_key_exists("conformsTo", $entityData)) {
                 global $rootId;
@@ -113,7 +118,8 @@ class ROCratePreviewGenerator {
      * @param mixed $basePath The base path
      * @return bool|string The HTML file as a string
      */
-    public function generateHTML($rootEntity, $entities, $termUris, $basePath): string {
+    public function generateHTML($rootEntity, $entities, $termUris, $basePath): string
+    {
         ob_start(); ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -295,7 +301,7 @@ class ROCratePreviewGenerator {
     <body>
         <header>
             <h1><?= htmlspecialchars($rootEntity['name'] ?? 'RO-Crate Preview') ?></h1>
-            <?php if (isset($rootEntity['description'])): ?>
+            <?php if (isset($rootEntity['description'])) : ?>
                 <p><?= htmlspecialchars($rootEntity['description']) ?></p>
             <?php endif; ?>
         </header>
@@ -306,9 +312,11 @@ class ROCratePreviewGenerator {
                 <?= ROCratePreviewGenerator::renderEntity($rootEntity, $entities, $termUris, $basePath) ?>
             </section>
 
-            <?php foreach ($entities as $id => $entity):
+            <?php foreach ($entities as $id => $entity) :
                 global $rootId;
-                if ($id === $rootId) continue; ?>
+                if ($id === $rootId) {
+                    continue;
+                } ?>
                 <section id="<?= htmlspecialchars($id) ?>">
                     <h2><?= htmlspecialchars($entity['name'] ?? $entity['@id']) ?></h2>
                     <?= ROCratePreviewGenerator::renderEntity($entity, $entities, $termUris, $basePath) ?>
@@ -321,16 +329,18 @@ class ROCratePreviewGenerator {
         </footer>
     </body>
     </html>
-    <?php
+        <?php
         return ob_get_clean();
     }
 
-    public static function renderEntity($entity, $entities, $termUris, $basePath, $depth = 0) {
-        if ($depth > 3) return '<div class="error">Embedding depth exceeded</div>';
-        
+    public static function renderEntity($entity, $entities, $termUris, $basePath, $depth = 0)
+    {
+        if ($depth > 3) {
+            return '<div class="error">Embedding depth exceeded</div>';
+        }
+
         $html = '<ul>';
         foreach ($entity as $key => $value) {
-            
             $keyHtml = ROCratePreviewGenerator::renderKey($key, $termUris);
             $valStr = ROCratePreviewGenerator::renderValue($value, $entities, $termUris, $depth);
 
@@ -343,45 +353,48 @@ class ROCratePreviewGenerator {
 
                 if (is_array($values)) {
                     $keyFirst = "<li><span class=\"property\">$keyHtml <a href=$resolvedKey> [?] </a> </span>:";
-                    foreach($values as $valueHtml) {
-                        // if value is id, we make it hyperlink and show name if name exists in the entity 
+                    foreach ($values as $valueHtml) {
+                        // if value is id, we make it hyperlink and show name if name exists in the entity
                         if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
                             $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
-                            if (strcmp($temp, "") == 0) $temp = $valueHtml;
+                            if (strcmp($temp, "") == 0) {
+                                $temp = $valueHtml;
+                            }
                             $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
-                        }
-                        else if (ROCrate::isValidUri($valueHtml)) {
+                        } elseif (ROCrate::isValidUri($valueHtml)) {
                             $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                        } else {
+                            $html .= $keyFirst . " $valueHtml</li>";
                         }
-                        else $html .= $keyFirst . " $valueHtml</li>";
 
                         $keyFirst = ", ";
                     }
                 }
                 //else {
                 //    $valueHtml = $values;
-                //    // if value is id, we make it hyperlink and show name if name exists in the entity 
+                //    // if value is id, we make it hyperlink and show name if name exists in the entity
                 //    if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
                 //        $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
                 //        $html .= "<li><span class=\"property\"> $keyHtml <a href=$resolvedKey> [?] </a> </span>: <a href=#$valueHtml> $temp </a></li>";
                 //    }
                 //    else $html .= "<li><span class=\"property\">$keyHtml <a href=$resolvedKey> [?] </a> </span>: $valueHtml</li>";
                 //}
-            }
-            else {
+            } else {
                 if (is_array($values)) {
                     $keyFirst = "<li><span class=\"property\"> $keyHtml </span>:";
-                    foreach($values as $valueHtml) {
+                    foreach ($values as $valueHtml) {
                         // if value is id, we make it hyperlink and show name if name exists in the entity
                         if ((!is_array($valueHtml)) && (strcmp($key, '@id') !== 0) && (array_key_exists($valueHtml, $entities))) {
                             $temp = htmlspecialchars($entities[$valueHtml]['name'] ?? $valueHtml);
-                            if (strcmp($temp, "") == 0) $temp = $valueHtml;
+                            if (strcmp($temp, "") == 0) {
+                                $temp = $valueHtml;
+                            }
                             $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
-                        }
-                        else if (ROCrate::isValidUri($valueHtml)) {
+                        } elseif (ROCrate::isValidUri($valueHtml)) {
                             $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                        } else {
+                            $html .= $keyFirst . " $valueHtml</li>";
                         }
-                        else $html .= $keyFirst . " $valueHtml</li>";
 
                         $keyFirst = ", ";
                     }
@@ -408,7 +421,8 @@ class ROCratePreviewGenerator {
      * @param mixed $termUris The term URIs
      * @return string The rendered key
      */
-    public static function renderKey($key, $termUris): string {
+    public static function renderKey($key, $termUris): string
+    {
         if (isset($termUris[$key])) {
             return sprintf(
                 '<a href="%s" title="Term definition" class="external-link">%s</a>',
@@ -428,7 +442,8 @@ class ROCratePreviewGenerator {
      * @param mixed $depth The depth
      * @return string The rendered value as string
      */
-    public static function renderValue($value, $entities, $termUris, $depth): string {
+    public static function renderValue($value, $entities, $termUris, $depth): string
+    {
         if (is_array($value)) {
             $values = [];
             foreach ($value as $item) {
@@ -436,14 +451,14 @@ class ROCratePreviewGenerator {
             }
             return implode(' %%$$%%$$** ', $values);
         }
-        
+
         if (is_object($value)) {
             $value = (array)$value;
         }
-        
+
         if (is_array($value) && isset($value['@id'])) {
             $id = $value['@id'];
-            
+
             // Handle external URIs
             if (filter_var($id, FILTER_VALIDATE_URL)) {
                 return sprintf(
@@ -452,7 +467,7 @@ class ROCratePreviewGenerator {
                     htmlspecialchars($id)
                 );
             }
-            
+
             // Handle local entities
             if (isset($entities[$id])) {
                 $target = $entities[$id];
@@ -470,7 +485,7 @@ class ROCratePreviewGenerator {
                 }
             }
         }
-        
+
         // Default handling
         return htmlspecialchars(is_array($value) ? json_encode($value) : $value);
     }

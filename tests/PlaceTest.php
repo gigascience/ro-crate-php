@@ -11,12 +11,14 @@ use ROCrate\Place;
 /**
  * Summary of PlaceTest
  */
-class PlaceTest extends TestCase {
+class PlaceTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testPlace(): void {
+    public function testPlace(): void
+    {
         $place = new Place("http://sws.geonames.org/8152662/");
 
         $this->assertEquals("http://sws.geonames.org/8152662/", $place->getId());
@@ -27,7 +29,8 @@ class PlaceTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $place = new Place("http://sws.geonames.org/8152662/");
         $place->addProperty("description", "Catalina Park is a disused motor racing venue, located at Katoomba ...")
             ->addPropertyPair("geo", "_:Geometry-1", true)

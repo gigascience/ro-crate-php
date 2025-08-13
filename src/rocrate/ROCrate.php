@@ -15,12 +15,14 @@ use ROCrate\Dataset;
 use ROCrate\File;
 use ROCrate\Descriptor;
 use ROCrate\Person;
+
 use function PHPUnit\Framework\throwException;
 
 /**
  * Stores the structural information of a ro-crate-metadata.json as a crate object
  */
-class ROCrate {
+class ROCrate
+{
     private string $basePath;
     private array $entities = [];
     private mixed $context = "https://w3id.org/ro/crate/1.2/context";
@@ -40,21 +42,22 @@ class ROCrate {
      * @param bool $attahcedFlag The flag to indicate whether RO-Crate Package is attached
      * @param bool $previewFlag The flag to indicate whether the RO-Crate Website is needed
      */
-    public function __construct(string $directory, bool $loadExisting = false, bool $attachedFlag = true, bool $previewFlag = false) {
+    public function __construct(string $directory, bool $loadExisting = false, bool $attachedFlag = true, bool $previewFlag = false)
+    {
         $this->attached = $attachedFlag;
         $this->preview = $previewFlag;
-        
+
         $this->basePath = realpath($directory) ?: $directory;
         $this->graph = new Graph();
         $this->httpClient = new Client();
-        
+
         RdfNamespace::set('rocrate', 'https://w3id.org/ro/crate/1.2');
         RdfNamespace::set('schema', 'http://schema.org/');
-        
+
         if (!file_exists($this->basePath)) {
             mkdir($this->basePath, 0755, true);
         }
-        
+
         if ($loadExisting && file_exists($this->getMetadataPath())) {
             $this->loadMetadata();
         } else {
@@ -67,7 +70,8 @@ class ROCrate {
      * @param mixed $newContext The new context
      * @return ROCrate The crate whose context is updated
      */
-    public function setContext(mixed $newContext): ROCrate {
+    public function setContext(mixed $newContext): ROCrate
+    {
         $this->context = $newContext;
         return $this;
     }
@@ -76,7 +80,8 @@ class ROCrate {
      * Gets the path to the ro-crate metadata file
      * @return string The path to the ro-crate metadata file as a string
      */
-    private function getMetadataPath(): string {
+    private function getMetadataPath(): string
+    {
         return $this->basePath . '/ro-crate-metadata.json';
     }
 
@@ -84,7 +89,8 @@ class ROCrate {
      * Initializes a ro-crate instance
      * @return void
      */
-    private function initializeNewCrate(): void {
+    private function initializeNewCrate(): void
+    {
         $this->descriptor = new Descriptor();
         $this->addEntity($this->descriptor);
 
@@ -92,8 +98,9 @@ class ROCrate {
         $this->addEntity($this->rootDataset);
 
         if ($this->preview) {
-            $this->website = new class("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
-                public function toArray(): array {
+            $this->website = new class ("ro-crate-preview.html", ["CreativeWork"]) extends ContextualEntity {
+                public function toArray(): array
+                {
                     return array_merge($this->baseArray(), $this->properties);
                 }
             };
@@ -110,8 +117,7 @@ class ROCrate {
                         $entity->addProperty($key, [$entity->getProperties()[$key]]);
                     }
                     // else already [...]
-                }
-                else {
+                } else {
                     // literal
                     $entity->addProperty($key, [$entity->getProperties()[$key]]);
                 }
@@ -124,13 +130,14 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return void
      */
-    public function loadMetadata(): void {
+    public function loadMetadata(): void
+    {
         $path = $this->getMetadataPath();
-        
+
         if (!file_exists($path)) {
             throw new ROCrateException("Metadata file not found: $path");
         }
-        
+
         try {
             $json = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
@@ -140,10 +147,10 @@ class ROCrate {
         $this->descriptor = new Descriptor();
         $this->addEntity($this->descriptor);
         $this->addProfile();
-        
+
         // Set context
         $this->context = $json['@context'] ?? $this->context;
-        
+
         // Parse entities
         $rootId = './';
         foreach ($json['@graph'] as $entityData) {
@@ -186,7 +193,7 @@ class ROCrate {
                 }
             }
         }*/
-        
+
         if (!$this->descriptor) {
             throw new ROCrateException("Metadata descriptor not found in crate");
         }
@@ -204,8 +211,7 @@ class ROCrate {
                         $entity->addProperty($key, [$entity->getProperties()[$key]]);
                     }
                     // else already [...]
-                }
-                else {
+                } else {
                     // literal
                     $entity->addProperty($key, [$entity->getProperties()[$key]]);
                 }
@@ -219,27 +225,28 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return ROCrate The crate to which the entity is added
      */
-    private function addEntityFromArray(array $data): ROCrate {
+    private function addEntityFromArray(array $data): ROCrate
+    {
         $id = $data['@id'] ?? null;
         $types = (array)($data['@type'] ?? []);
-        
+
         if (!$id) {
             throw new ROCrateException("Entity missing @id property");
         }
-        
+
         if (empty($types)) {
             throw new ROCrateException("Entity missing @type property: $id");
         }
-        
+
         $entity = $this->createGenericEntity($id, $types);
-        
+
         // Set properties
         foreach ($data as $key => $value) {
             if (!in_array($key, ['@id', '@type'])) {
                 $entity->addProperty($key, $value);
             }
         }
-        
+
         $this->addEntity($entity);
 
         return $this;
@@ -251,9 +258,11 @@ class ROCrate {
      * @param array $types The type(s) of the entity as an array
      * @return Entity The entity instance
      */
-    public function createGenericEntity(string $id, array $types): Entity {
-        return new class($id, $types) extends Entity {
-            public function toArray(): array {
+    public function createGenericEntity(string $id, array $types): Entity
+    {
+        return new class ($id, $types) extends Entity {
+            public function toArray(): array
+            {
                 return array_merge($this->baseArray(), $this->properties);
             }
         };
@@ -265,13 +274,14 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return ROCrate The crate to which the entity is added
      */
-    public function addEntity(Entity $entity): ROCrate {
+    public function addEntity(Entity $entity): ROCrate
+    {
         $id = $entity->getId();
-        
+
         if (isset($this->entities[$id])) {
             throw new ROCrateException("Entity with ID $id already exists");
         }
-        
+
         $entity->setCrate($this);
         $this->entities[$id] = $entity;
         return $this;
@@ -282,7 +292,8 @@ class ROCrate {
      * @param string $id The ID of the entity instacne to retrieve
      * @return mixed The entity instacne or null if the ID is invalid
      */
-    public function getEntity(string $id): ?Entity {
+    public function getEntity(string $id): ?Entity
+    {
         return $this->entities[$id] ?? null;
     }
 
@@ -292,7 +303,8 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return ROCrate The crate from which the entity is deleted
      */
-    public function removeEntity(string $id): ROCrate {
+    public function removeEntity(string $id): ROCrate
+    {
         if (!isset($this->entities[$id])) {
             throw new ROCrateException("Entity not found: $id");
         }
@@ -304,12 +316,13 @@ class ROCrate {
      * Validates the crate before saving with minimal checks only
      * @return string[] The error(s) or issue(s) found during the validation as a string array
      */
-    public function validate(): array {
+    public function validate(): array
+    {
         $errors = [];
 
         // MUST Checks
         // RO-Crate Structure
-        
+
         // 1. Metadata descriptor check
         if (!$this->descriptor) {
             $errors[] = "Missing metadata descriptor";
@@ -323,13 +336,17 @@ class ROCrate {
         // Metadata of the RO-Crate
 
         // 1. @id check
-        foreach($this->entities as $entity) {
-            if (!is_string($entity->getId())) $errors[] = "There is an entity without an id.";
+        foreach ($this->entities as $entity) {
+            if (!is_string($entity->getId())) {
+                $errors[] = "There is an entity without an id.";
+            }
         }
 
         // 2. @type check
-        foreach($this->entities as $entity) {
-            if ($entity->getTypes() === []) $errors[] = "There is an entity without a type using id: " . $entity->getId() . ".";
+        foreach ($this->entities as $entity) {
+            if ($entity->getTypes() === []) {
+                $errors[] = "There is an entity without a type using id: " . $entity->getId() . ".";
+            }
         }
 
         // 3. entity property references to other entities using {"@id": "..."} check
@@ -338,7 +355,7 @@ class ROCrate {
         // and context with extra terms
         // old property imported either:
         // case 1: reset it using removeProperty and manage using ...Pair
-        // case 2: the developers have to be cautious for any change 
+        // case 2: the developers have to be cautious for any change
 
         // 4. flat @graph list is enforced in the implementation
 
@@ -355,19 +372,16 @@ class ROCrate {
             if (strcmp($this->descriptor->getTypes()[0], "CreativeWork") !== 0) {
                 $errors[] = "The descriptor's type is invalid.";
             }
-        }
-        else {
+        } else {
             $errors[] = "The descriptor's type is invalid.";
         }
 
         // 3. The descriptor has an about property and it references the Root Data Entity's @id check
         if (array_key_exists("about", $this->descriptor->getProperties())) {
-
             if ((is_array($this->getDescriptor()->getProperty("about"))) && (strcmp($this->descriptor->getProperty("about")['@id'], $this->rootDataset->getId()) !== 0)) {
                 $errors[] = "The descriptor's about property is invalid.";
             }
-        }
-        else {
+        } else {
             $errors[] = "The descriptor does not have an about property.";
         }
 
@@ -390,13 +404,11 @@ class ROCrate {
         // has to be a string in ISO 8601 date format
         if (!array_key_exists("datePublished", $this->rootDataset->getProperties())) {
             $errors[] = "The root data entity does not have a datePublished property.";
-        }
-        else if (is_string($this->rootDataset->getProperty("datePublished"))) {
+        } elseif (is_string($this->rootDataset->getProperty("datePublished"))) {
             if (!ROCrate::isValidISO8601Date($this->rootDataset->getProperty("datePublished"))) {
                 $errors[] = "The root data entity's datePublished property is not in ISO 8601 date format.";
             }
-        }
-        else {
+        } else {
             $errors[] = "The root data entity's datePublished property is not a string.";
         }
 
@@ -446,7 +458,7 @@ class ROCrate {
 
         // 2. no repeated use of @id
         $idArray = [];
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             $idArray[] = $entity->getId();
         }
         $uniqueIdArray = array_unique($idArray);
@@ -470,7 +482,7 @@ class ROCrate {
         // Provenance of entities
 
         // 1. A curation action, i.e. type of CreateAction or UpdateAction, has at least one object check
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
                 if (!array_key_exists("object", $entity->getProperties())) {
                     $errors[] = "There is no object property for a curation action.";
@@ -479,27 +491,29 @@ class ROCrate {
         }
 
         // 2. An action's endTime has to be in ISO 8601 date format if this property is present, same for startTime
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
                 // startTime
-                if (!in_array("startTime", $entity->getProperties())) continue;
+                if (!in_array("startTime", $entity->getProperties())) {
+                    continue;
+                }
                 if (is_string($entity->getProperty("startTime"))) {
                     if (!ROCrate::isValidISO8601Date($entity->getProperty("startTime"))) {
                         $errors[] = "An action's startTime property is not in ISO 8601 date format.";
                     }
-                }
-                else {
+                } else {
                     $errors[] = "An action's startTime property is not in ISO 8601 date format.";
                 }
 
                 // endTime
-                if (!in_array("endTime", $entity->getProperties())) continue;
+                if (!in_array("endTime", $entity->getProperties())) {
+                    continue;
+                }
                 if (is_string($entity->getProperty("endTime"))) {
                     if (!ROCrate::isValidISO8601Date($entity->getProperty("endTime"))) {
                         $errors[] = "An action's endTime property is not in ISO 8601 date format.";
                     }
-                }
-                else {
+                } else {
                     $errors[] = "An action's endTime property is not in ISO 8601 date format.";
                 }
             }
@@ -507,25 +521,43 @@ class ROCrate {
 
         // 3. if an action has an actionStatus property, the property has to be ActiveActionStatus,
         // CompletedActionStatus, FailedActionStatus or PotentialActionStatus of type ActionStatusType
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
-                if (!array_key_exists("actionStatus", $entity->getProperties())) continue;
+                if (!array_key_exists("actionStatus", $entity->getProperties())) {
+                    continue;
+                }
                 $actionStatus = $entity->getProperty("actionStatus")["@id"];
-                if (strcmp($actionStatus, "http://schema.org/ActiveActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "https://schema.org/ActiveActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "http://schema.org/CompletedActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "https://schema.org/CompletedActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "http://schema.org/FailedActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "https://schema.org/FailedActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "http://schema.org/PotentialActionStatus") == 0) continue;
-                if (strcmp($actionStatus, "https://schema.org/PotentialActionStatus") == 0) continue;
+                if (strcmp($actionStatus, "http://schema.org/ActiveActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "https://schema.org/ActiveActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "http://schema.org/CompletedActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "https://schema.org/CompletedActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "http://schema.org/FailedActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "https://schema.org/FailedActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "http://schema.org/PotentialActionStatus") == 0) {
+                    continue;
+                }
+                if (strcmp($actionStatus, "https://schema.org/PotentialActionStatus") == 0) {
+                    continue;
+                }
                 $errors[] = "An action's actionStatus property is invalid.";
             }
         }
 
         // Profiles
 
-        // 1. The profile URI, i.e. the reference of comformsTo property of the root data entity, resolves 
+        // 1. The profile URI, i.e. the reference of comformsTo property of the root data entity, resolves
         // to a human-readable profile description
         // It relies on disciplined use.
 
@@ -533,9 +565,9 @@ class ROCrate {
         // as one of its type(s), similarly for multiple profiles
         if (array_key_exists("conformsTo", $this->rootDataset->getProperties())) {
             if (is_array($this->rootDataset->getProperty("conformsTo"))) {
-                foreach($this->rootDataset->getProperty("conformsTo") as $profile) {
+                foreach ($this->rootDataset->getProperty("conformsTo") as $profile) {
                     $flag = true;
-                    foreach($this->entities as $entity) {
+                    foreach ($this->entities as $entity) {
                         if (strcmp($entity->getId(), $profile["@id"]) == 0) {
                             if (in_array("Profile", $entity->getTypes())) {
                                 $flag = false;
@@ -547,10 +579,9 @@ class ROCrate {
                         $errors[] = "The contextual entity for a profile is missing.";
                     }
                 }
-            }
-            else {
+            } else {
                 $flag = true;
-                foreach($this->entities as $entity) {
+                foreach ($this->entities as $entity) {
                     if (strcmp($entity->getId(), $this->rootDataset->getProperty("conformsTo")["@id"]) == 0) {
                         if (in_array("Profile", $entity->getTypes())) {
                             $flag = false;
@@ -586,7 +617,7 @@ class ROCrate {
         // It relies on disciplined use.
 
         // 2. If a contextual entity has type ComputerLanguage and/or SoftwareApplication, it has a name, url and version
-        foreach($this->entities as $entity) {
+        foreach ($this->entities as $entity) {
             if (in_array("ComputerLanguage", $entity->getTypes()) || in_array("SoftwareApplication", $entity->getTypes())) {
                 if (!array_key_exists("name", $entity->getProperties())) {
                     $errors[] = "The name property for the contextual entity of type ComputerLanguage and/or SoftwareApplication is missing.";
@@ -630,10 +661,10 @@ class ROCrate {
 
         // 2. if (present) generate ro-crate website, use sameAs for the term.
         // it relies on disiplined use.
-        
+
         // 3. if there is extra / ad-hoc term / vocab, put them in context.
         // it relies on disiplined use.
-        
+
         return $errors;
     }
 
@@ -644,7 +675,8 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return void
      */
-    public function save(?string $path = null, string $prefix = ""): void {
+    public function save(?string $path = null, string $prefix = ""): void
+    {
         $this->errors = [];
 
         // make values of all properties, i.e. key-value pairs, of each entity to be without [...] if there
@@ -668,8 +700,8 @@ class ROCrate {
             }
         }
 
-        
-        if(!$this->attached) {
+
+        if (!$this->attached) {
             if (strcmp($prefix, "") == 0) {
                 throw new ROCrateException("The prefix cannot be empty for a detached RO-Crate Package.");
             }
@@ -681,16 +713,16 @@ class ROCrate {
         }
 
         $target = $path ? realpath($path) : $this->basePath;
-        
+
         if (!$target) {
             throw new ROCrateException("Invalid target directory: $path");
         }
-        
+
         // Ensure metadata directory exists
         if (!is_dir($target) && !mkdir($target, 0755, true)) {
             throw new ROCrateException("Failed to create directory: $target");
         }
-        
+
         // Generate JSON-LD
         $rootId = "";
         $first = [];
@@ -710,8 +742,12 @@ class ROCrate {
 
         foreach ($this->entities as $entity) {
             if (in_array('CreativeWork', $entity->getTypes()) && (!array_key_exists("conformsTo", $entity->getProperties()))) {
-                if (!array_key_exists("about", $entity->getProperties())) continue;
-                if (!($entity->getProperty("about")["@id"] === $rootId)) continue;
+                if (!array_key_exists("about", $entity->getProperties())) {
+                    continue;
+                }
+                if (!($entity->getProperty("about")["@id"] === $rootId)) {
+                    continue;
+                }
 
                 $first[] = $entity->toArray();
                 $key = array_search($entity, $this->entities, true);
@@ -724,13 +760,12 @@ class ROCrate {
             if (in_array('Dataset', $entity->getTypes()) && ($entity->getId() === $rootId)) {
                 $first[] = $entity->toArray();
                 continue;
-            }            
+            }
 
             if (in_array("Dataset", $entity->getTypes()) && (strcmp($entity->getId()[0], '#') !== 0)) {
                 $second[] = $entity->toArray();
                 continue;
-            }
-            else if (in_array("File", $entity->getTypes()) && (strcmp($entity->getId()[0], '#') !== 0)) {
+            } elseif (in_array("File", $entity->getTypes()) && (strcmp($entity->getId()[0], '#') !== 0)) {
                 $second[] = $entity->toArray();
                 continue;
             }
@@ -739,14 +774,16 @@ class ROCrate {
         }
 
         $graph = array_merge($graph, $first);
-        $graph = array_merge($graph, $second);;
-        $graph = array_merge($graph, $last);;
-        
+        $graph = array_merge($graph, $second);
+        ;
+        $graph = array_merge($graph, $last);
+        ;
+
         $metadata = [
             '@context' => $this->context,
             '@graph' => $graph
         ];
-        
+
         // Save metadata file
         try {
             $json = json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
@@ -754,8 +791,11 @@ class ROCrate {
             throw new ROCrateException("JSON encoding failed: " . $e->getMessage());
         }
         //!!!
-        if (strcmp($prefix, "") == 0) file_put_contents($target . '/ro-crate-metadata-out.json', $json);
-        else file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
+        if (strcmp($prefix, "") == 0) {
+            file_put_contents($target . '/ro-crate-metadata-out.json', $json);
+        } else {
+            file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
+        }
     }
 
     /**
@@ -763,7 +803,8 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return Entity|null The metadata descriptor instance or null if the instance does not exist
      */
-    public function getDescriptor(): Entity {
+    public function getDescriptor(): Entity
+    {
         if (!$this->descriptor) {
             throw new ROCrateException("Metadata descriptor not initialized");
         }
@@ -775,7 +816,8 @@ class ROCrate {
      * @throws \Exceptions\ROCrateException Exceptions with specific messages to indicate possible errors
      * @return Entity|null The root data entity instance or null if the instance does not exist
      */
-    public function getRootDataset(): Entity {
+    public function getRootDataset(): Entity
+    {
         if (!$this->rootDataset) {
             throw new ROCrateException("Root dataset not initialized");
         }
@@ -788,7 +830,8 @@ class ROCrate {
      * @param string $about The dataset to describe
      * @return void
      */
-    public function addProfile(string $profile = 'https://w3id.org/ro/crate/1.2', string $about = './'): void {
+    public function addProfile(string $profile = 'https://w3id.org/ro/crate/1.2', string $about = './'): void
+    {
         $this->descriptor->addProperty('conformsTo', ['@id' => $profile]);
         $this->descriptor->addProperty('about', ['@id' => $about]);
     }
@@ -798,7 +841,7 @@ class ROCrate {
      * @param string $basePath The base path as a string
      * @return void
      */
-    public function setBasePath(string $basePath): void 
+    public function setBasePath(string $basePath): void
     {
         $this->basePath = $basePath;
     }
@@ -809,7 +852,8 @@ class ROCrate {
      * @param string $dateString The text to be validated
      * @return bool The flag that indicates the result of validation
      */
-    public static function isValidISO8601Date(string $dateString): bool {
+    public static function isValidISO8601Date(string $dateString): bool
+    {
 
         $MM = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 
@@ -824,7 +868,7 @@ class ROCrate {
         // It does not check for the presence of day 29, 30 and 31 in the particular month for day-only,
         // month-only and year-only cases
         $flag = true;
-        switch(strlen($dateString)) {
+        switch (strlen($dateString)) {
             case 4:
                 $year = $dateString;
                 if (!ctype_digit($year)) {
@@ -839,16 +883,14 @@ class ROCrate {
                 $month = substr($dateString, 5, 2);
                 if (!ctype_digit($year)) {
                     $flag = false;
-                }
-                else if (!in_array($month, $MM)) {
+                } elseif (!in_array($month, $MM)) {
                     $flag = false;
                 }
                 break;
             case 10:
                 if (strcmp(substr($dateString, 4, 1), "-") !== 0) {
                     $flag = false;
-                }
-                else if (strcmp(substr($dateString, 7, 1), "-") !== 0) {
+                } elseif (strcmp(substr($dateString, 7, 1), "-") !== 0) {
                     $flag = false;
                 }
                 $year = substr($dateString, 0, 4);
@@ -856,15 +898,12 @@ class ROCrate {
                 $day = substr($dateString, 8, 2);
                 if (!ctype_digit($year)) {
                     $flag = false;
-                }
-                else if (!in_array($month, $MM)) {
+                } elseif (!in_array($month, $MM)) {
                     $flag = false;
-                }
-                else if (!in_array($day, $MM)) {
+                } elseif (!in_array($day, $MM)) {
                     if (!ctype_digit($year)) {
                         $flag = false;
-                    }
-                    else if (((int)$day < 13) || ((int)$day > 31)) {
+                    } elseif (((int)$day < 13) || ((int)$day > 31)) {
                         $flag = false;
                     }
                 }
@@ -873,7 +912,9 @@ class ROCrate {
                 $flag = false;
                 break;
         }
-        if ($flag) return true;
+        if ($flag) {
+            return true;
+        }
 
 
         // Regex to match the structure: optional minus, date, time, and optional timezone
@@ -943,8 +984,10 @@ class ROCrate {
             // Validate sign and hour part (00-23)
             $sign = $offsetSignPart[0];
             $offsetHour = substr($offsetSignPart, 1);
-            if (($sign !== '+' && $sign !== '-') || 
-                $offsetHour < '00' || $offsetHour > '23') {
+            if (
+                ($sign !== '+' && $sign !== '-') ||
+                $offsetHour < '00' || $offsetHour > '23'
+            ) {
                 return false;
             }
             // Validate minute part (00-59)
@@ -952,7 +995,7 @@ class ROCrate {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -962,17 +1005,18 @@ class ROCrate {
      * @param bool $absoluteOnly The flag to indicate whether only absolute uri is allowed
      * @return bool The flag that indicates the validation result
      */
-    public static function isValidUri(string $uri, bool $absoluteOnly = true): bool {
+    public static function isValidUri(string $uri, bool $absoluteOnly = true): bool
+    {
         // Validate absolute URI (requires a scheme like http, ftp, etc.)
         if (filter_var($uri, FILTER_VALIDATE_URL) !== false) {
             return true;
         }
-        
+
         // If only absolute URIs are allowed, return false here
         if ($absoluteOnly) {
             return false;
         }
-        
+
         // Validate relative URI: checks for allowed characters and proper percent-encoding
         $pattern = '/^([a-zA-Z0-9._~!$&\'()*+,;=:@\/?#\[\]-]|%[0-9a-fA-F]{2})*$/';
         return (bool) preg_match($pattern, $uri);
@@ -983,12 +1027,13 @@ class ROCrate {
      * @param string $url The url string to be exmained
      * @return bool The flag that indicates the checking result
      */
-    public static function isValidUrl(string $url): bool {
+    public static function isValidUrl(string $url): bool
+    {
         // Validate URL structure using filter_var
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             return false;
         }
-        
+
         // Ensure the URL has a valid scheme
         $scheme = parse_url($url, PHP_URL_SCHEME);
         return $scheme !== null;
@@ -1000,7 +1045,8 @@ class ROCrate {
      * @param mixed $indent The indentation
      * @return void
      */
-    public function printNestedArray($array, $indent = 0) : void {
+    public function printNestedArray($array, $indent = 0): void
+    {
         foreach ($array as $key => $value) {
             // Add indentation for better readability of nested levels
             echo str_repeat("  ", $indent);
@@ -1018,7 +1064,8 @@ class ROCrate {
      * Returns the validation error(s)
      * @return array The array of all the error message(s)
      */
-    public function showErrors(): array {
+    public function showErrors(): array
+    {
         return $this->errors;
     }
 
@@ -1026,13 +1073,13 @@ class ROCrate {
      * Saves with the error message explicitly returned for further examination
      * @return array The array consisting of error messages
      */
-    public function saveWithErrorMessage(): array {
+    public function saveWithErrorMessage(): array
+    {
         $errors = [];
 
         try {
             $this->save();
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $errors = $this->showErrors();
         }
 

@@ -11,12 +11,14 @@ use ROCrate\Organization;
 /**
  * Summary of OrganizationTest
  */
-class OrganizationTest extends TestCase {
+class OrganizationTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testOrganization(): void {
+    public function testOrganization(): void
+    {
         $organization = new Organization("https://ror.org/03f0f6041");
 
         $this->assertEquals("https://ror.org/03f0f6041", $organization->getId());
@@ -27,7 +29,8 @@ class OrganizationTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $organization = new Organization("https://ror.org/03f0f6041");
         $organization->addProperty("name", "University of Technology Sydney")
             ->addProperty("url", "https://ror.org/03f0f6041");

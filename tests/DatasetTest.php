@@ -11,12 +11,14 @@ use ROCrate\Dataset;
 /**
  * Summary of DatasetTest
  */
-class DatasetTest extends TestCase {
+class DatasetTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testDataset(): void {
+    public function testDataset(): void
+    {
         $dataset = new Dataset("./");
 
         $this->assertEquals("./", $dataset->getId());
@@ -27,7 +29,8 @@ class DatasetTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $dataset = new Dataset("./");
         $dataset->addPropertyPair("hasPart", "survey-responses-2019.csv", true)
             ->addPropertyPair("hasPart", "https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf");

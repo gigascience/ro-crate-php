@@ -1,4 +1,5 @@
 <?php
+
 // src/exceptions/JsonFileException.php
 namespace Exceptions;
 

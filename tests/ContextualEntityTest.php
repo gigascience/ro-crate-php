@@ -11,12 +11,14 @@ use ROCrate\ContextualEntity;
 /**
  * Summary of ContextualEntityTest
  */
-class ContextualEntityTest extends TestCase {
+class ContextualEntityTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testContactPoint(): void {
+    public function testContactPoint(): void
+    {
         $contactPoint = new ContextualEntity("mailto:example@abc.def.gh", ["Person"]);
 
         $this->assertEquals("mailto:example@abc.def.gh", $contactPoint->getId());
@@ -27,7 +29,8 @@ class ContextualEntityTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $contactPoint = new ContextualEntity("mailto:example@abc.def.gh", ["Person"]);
         $contactPoint->addProperty("description", "This is a contextual entity.");
         $array = $contactPoint->toArray();

@@ -11,12 +11,14 @@ use ROCrate\File;
 /**
  * Summary of FileTest
  */
-class FileTest extends TestCase {
+class FileTest extends TestCase
+{
     /**
      * Tests the constructor
      * @return void
      */
-    public function testFile(): void {
+    public function testFile(): void
+    {
         $file = new File("https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf");
 
         $this->assertEquals("https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf", $file->getId());
@@ -27,7 +29,8 @@ class FileTest extends TestCase {
      * Tests the toArray method
      * @return void
      */
-    public function testToArray(): void {
+    public function testToArray(): void
+    {
         $file = new File("https://zenodo.org/record/3541888/files/ro-crate-1.0.0.pdf");
         $file->addProperty("name", "RO-Crate specification")
             ->addProperty("contentSize", "310691")

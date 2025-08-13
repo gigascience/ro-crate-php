@@ -4,7 +4,7 @@ namespace ROCrate;
 
 /**
  * Supports nested objects/arrays with array and object access
- * 
+ *
  * Implements ArrayAccess, IteratorAggregate, Countable, and JsonSerializable interfaces
  * to provide JSON-like behavior in PHP
  */
@@ -42,7 +42,7 @@ class JsonData implements \ArrayAccess, \IteratorAggregate, \Countable, \JsonSer
         if (is_array($value)) {
             $value = new self($value);
         }
-        
+
         if ($offset === null) {
             $this->data[] = $value;
         } else {
@@ -102,13 +102,13 @@ class JsonData implements \ArrayAccess, \IteratorAggregate, \Countable, \JsonSer
     public static function fromJson(string $json): self
     {
         $data = json_decode($json, true);
-        
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \InvalidArgumentException(
                 'JSON decode error: ' . json_last_error_msg()
             );
         }
-        
+
         return new self($data);
     }
 
@@ -119,7 +119,7 @@ class JsonData implements \ArrayAccess, \IteratorAggregate, \Countable, \JsonSer
     public function toArray(): array
     {
         $result = [];
-        
+
         foreach ($this->data as $key => $value) {
             if ($value instanceof self) {
                 $result[$key] = $value->toArray();
@@ -127,7 +127,7 @@ class JsonData implements \ArrayAccess, \IteratorAggregate, \Countable, \JsonSer
                 $result[$key] = $value;
             }
         }
-        
+
         return $result;
     }
 
