@@ -38,15 +38,15 @@ class ROCrate
     /**
      * Constructs a ROCrate instance
      * @param string $directory The directory for reading and writing files
-     * @param bool $lE The flag to indicate whether we construct from nothing or reading an existing file
-     * @param bool $aF The flag to indicate whether RO-Crate Package is attached
-     * @param bool $pF The flag to indicate whether the RO-Crate Website is needed
+     * @param bool $lEFlag The flag to indicate whether we construct from nothing or reading an existing file
+     * @param bool $aFlag The flag to indicate whether RO-Crate Package is attached
+     * @param bool $pFlag The flag to indicate whether the RO-Crate Website is needed
      */
-    public function __construct(string $directory, bool $lE = false, bool $aF = true, bool $pF = false)
+    public function __construct(string $directory, bool $lEFlag = false, bool $aFlag = true, bool $pFlag = false)
     {
-        $loadExisting = $lE;
-        $attachedFlag = $aF;
-        $previewFlag = $pF;
+        $loadExisting = $lEFlag;
+        $attachedFlag = $aFlag;
+        $previewFlag = $pFlag;
 
         $this->attached = $attachedFlag;
         $this->preview = $previewFlag;
@@ -542,31 +542,20 @@ class ROCrate
                     continue;
                 }
                 $actionStatus = $entity->getProperty("actionStatus")["@id"];
-                if (strcmp($actionStatus, "http://schema.org/ActiveActionStatus") == 0) {
-                    continue;
+                $validStatuses = [
+                    "http://schema.org/ActiveActionStatus",
+                    "https://schema.org/ActiveActionStatus",
+                    "http://schema.org/CompletedActionStatus",
+                    "https://schema.org/CompletedActionStatus",
+                    "http://schema.org/FailedActionStatus",
+                    "https://schema.org/FailedActionStatus",
+                    "http://schema.org/PotentialActionStatus",
+                    "https://schema.org/PotentialActionStatus"
+                ];
+
+                if (!in_array($actionStatus, $validStatuses)) {
+                    $errors[] = "An action's actionStatus property is invalid.";
                 }
-                if (strcmp($actionStatus, "https://schema.org/ActiveActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "http://schema.org/CompletedActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "https://schema.org/CompletedActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "http://schema.org/FailedActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "https://schema.org/FailedActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "http://schema.org/PotentialActionStatus") == 0) {
-                    continue;
-                }
-                if (strcmp($actionStatus, "https://schema.org/PotentialActionStatus") == 0) {
-                    continue;
-                }
-                $errors[] = "An action's actionStatus property is invalid.";
             }
         }
 
@@ -639,16 +628,16 @@ class ROCrate
             $conditionTwo = in_array("SoftwareApplication", $entity->getTypes());
             if ($conditionOne || $conditionTwo) {
                 if (!array_key_exists("name", $entity->getProperties())) {
-                    $errors[] = "The name property for the contextual entity of type ComputerLanguage 
-                    and/or SoftwareApplication is missing.";
+                    $errors[] = 'The name property for the contextual entity of type ComputerLanguage ' .
+                    'and/or SoftwareApplication is missing.';
                 }
                 if (!array_key_exists("url", $entity->getProperties())) {
-                    $errors[] = "The url property for the contextual entity of type ComputerLanguage 
-                    and/or SoftwareApplication is missing.";
+                    $errors[] = 'The url property for the contextual entity of type ComputerLanguage ' .
+                    'and/or SoftwareApplication is missing.';
                 }
                 if (!array_key_exists("version", $entity->getProperties())) {
-                    $errors[] = "The version property for the contextual entity of type ComputerLanguage 
-                    and/or SoftwareApplication is missing.";
+                    $errors[] = 'The version property for the contextual entity of type ComputerLanguage ' .
+                    'and/or SoftwareApplication is missing.';
                 }
             }
         }
