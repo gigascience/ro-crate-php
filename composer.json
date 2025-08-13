@@ -1,8 +1,8 @@
 {
-    "name": "alex/my-php-app",
+    "name": "gigascience/ro-crate-php",
     "description": "Developer tools to manipulate ro-crate metadata files as objects",
     "type": "library",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Alex",
