@@ -38,9 +38,9 @@ class ROCrate
     /**
      * Constructs a ROCrate instance
      * @param string $directory The directory for reading and writing files
-     * @param bool $loadExisting The flag to indicate whether we construct from nothing or reading an existing file
-     * @param bool $attahcedFlag The flag to indicate whether RO-Crate Package is attached
-     * @param bool $previewFlag The flag to indicate whether the RO-Crate Website is needed
+     * @param bool $lE The flag to indicate whether we construct from nothing or reading an existing file
+     * @param bool $aF The flag to indicate whether RO-Crate Package is attached
+     * @param bool $pF The flag to indicate whether the RO-Crate Website is needed
      */
     public function __construct(string $directory, bool $lE = false, bool $aF = true, bool $pF = false)
     {
