@@ -16,3 +16,20 @@ services:
       - "host.docker.internal:host-gateway"
     command: >
       sh -c "docker-php-entrypoint apache2-foreground"
+  test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./src:/var/www/html
+      - ./tests:/var/www/tests
+      - ./vendor:/var/www/vendor
+      - ./resources:/var/www/resources
+    working_dir: /var/www
+    command: vendor/bin/phpunit --colors=always tests
+    environment:
+      APP_ENV: testing
+    depends_on:
+      - php-app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
