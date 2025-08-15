@@ -50,3 +50,6 @@ Use the following code to generate a human-readable HTML preview from the RO-Cra
 
 ## Change Log
 The tool is currently under development.
+
+## GigaDB Example
+An example based on GigaDB dataset 102736 is generated using the code in index.php to illustarte how the tool can be utilized. The inforamtion to generate the metadata file is mainly from the *[Website](https://gigadb.org/dataset/102736)*. The example ro-crate-metadata.json and ro-crate-preview.html are stored in the assets directory. To make the file easier to read, only the first 2 files and a zipped file treated as a directory are included, where the remaining files are described using a collective directory construct.

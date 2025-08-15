@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RO-Crate Preview: Supporting data for &quot;Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.&quot;</title>
+        <link rel="stylesheet" href="">
+        <style>
+            :root {
+                --primary: #0366d6;
+                --primary-dark: #0356b6;
+                --secondary: #6c757d;
+                --light: #f8f9fa;
+                --border: #dee2e6;
+                --success: #28a745;
+            }
+            * { box-sizing: border-box; }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                line-height: 1.6;
+                color: #212529;
+                background-color: #f5f7fa;
+                margin: 0;
+                padding: 0;
+            }
+            header {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                color: white;
+                padding: 2rem 0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin-bottom: 2rem;
+                padding-left: 50px;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+            }
+            .page-title {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .logo {
+                font-size: 2.5rem;
+                filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            }
+            h1, h2, h3, h4 {
+                margin-top: 0;
+                font-weight: 600;
+            }
+            h1 { font-size: 2.2rem; }
+            h2 {
+                font-size: 1.8rem;
+                color: var(--primary);
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--border);
+                margin-bottom: 1.5rem;
+            }
+            h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+            section {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+                padding: 2rem;
+                margin-bottom: 2.5rem;
+            }
+            .entity-card {
+                background: var(--light);
+                padding: 1.5rem;
+                border-radius: 6px;
+                margin-bottom: 1.5rem;
+                border-left: 4px solid var(--primary);
+                transition: transform 0.2s;
+            }
+            .entity-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            }
+            .property-list dt {
+                font-weight: 600;
+                margin-top: 0.8rem;
+                color: var(--primary-dark);
+            }
+            .property-list dd {
+                margin-left: 0;
+                margin-bottom: 0.5rem;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            th, td {
+                padding: 1rem;
+                text-align: left;
+                border-bottom: 1px solid var(--border);
+            }
+            th {
+                background-color: var(--primary);
+                color: white;
+                font-weight: 600;
+            }
+            tr:nth-child(even) {
+                background-color: rgba(248, 249, 250, 0.5);
+            }
+            tr:hover {
+                background-color: rgba(3, 102, 214, 0.05);
+            }
+            .badge {
+                display: inline-block;
+                padding: 0.3em 0.6em;
+                border-radius: 4px;
+                background: var(--primary);
+                color: white;
+                font-size: 0.85em;
+                font-weight: 500;
+                margin-right: 0.5em;
+            }
+            .badge-dataset { background: #6610f2; }
+            .badge-file { background: var(--success); }
+            .badge-person { background: #e83e8c; }
+            .badge-org { background: #fd7e14; }
+            .badge-other { background: var(--secondary); }
+            .entity-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
+            a {
+                color: var(--primary);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .text-muted {
+                color: var(--secondary);
+            }
+            footer {
+                text-align: center;
+                padding: 2.5rem 0;
+                color: var(--secondary);
+                font-size: 0.9rem;
+                border-top: 1px solid var(--border);
+                margin-top: 2rem;
+            }
+            .back-to-top {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                cursor: pointer;
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+            .back-to-top:hover {
+                opacity: 1;
+            }
+            @media (max-width: 768px) {
+                .entity-grid {
+                    grid-template-columns: 1fr;
+                }
+                section {
+                    padding: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Supporting data for &quot;Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.&quot;</h1>
+                            <p>Polyadenylation is a dynamic process which is important in cellular physiology. Oxford Nanopore Technologies direct RNA-sequencing provides a strategy for sequencing the full-length RNA molecule and analysis of the transcriptome and epi-transcriptome. There are currently several tools available for poly(A) tail-length estimation, including well-established tools such as tailfindr and nanopolish, as well as two more recent deep learning models: Dorado and BoostNano. However, there has been limited benchmarking of the accuracy of these tools against gold-standard datasets. In this paper we evaluate four poly(A) estimation tools using synthetic RNA standards (Sequins), which have known poly(A) tail-lengths and provide a valuable approach to measuring the accuracy of poly(A) tail-length estimation. All four tools generate mean tail-length estimates which lie within 12% of the correct value. Overall, Dorado is recommended as the preferred approach due to its relatively fast run times, low coefficient of variation and ease of use with integration with base-calling.</p>
+                    </header>
+
+        <main>
+            <section id="https://gigadb.org/dataset/102736">
+                <h2>Root Data Entity</h2>
+                <ul><li><span class="property"> @id </span>: <a href=https://gigadb.org/dataset/102736> https://gigadb.org/dataset/102736 </a></li><li><span class="property"> @type </span>: Dataset</li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: <a href=#https://doi.org/10.5524/102736> https://doi.org/10.5524/102736 </a></li><li><span class="property">cite-as <a href=http://www.iana.org/assignments/relation/cite-as> [?] </a> </span>: <a href=#https://doi.org/10.5524/102736> https://doi.org/10.5524/102736 </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Supporting data for &quot;Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.&quot;</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Polyadenylation is a dynamic process which is important in cellular physiology. Oxford Nanopore Technologies direct RNA-sequencing provides a strategy for sequencing the full-length RNA molecule and analysis of the transcriptome and epi-transcriptome. There are currently several tools available for poly(A) tail-length estimation, including well-established tools such as tailfindr and nanopolish, as well as two more recent deep learning models: Dorado and BoostNano. However, there has been limited benchmarking of the accuracy of these tools against gold-standard datasets. In this paper we evaluate four poly(A) estimation tools using synthetic RNA standards (Sequins), which have known poly(A) tail-lengths and provide a valuable approach to measuring the accuracy of poly(A) tail-length estimation. All four tools generate mean tail-length estimates which lie within 12% of the correct value. Overall, Dorado is recommended as the preferred approach due to its relatively fast run times, low coefficient of variation and ease of use with integration with base-calling.</li><li><span class="property">datePublished <a href=http://schema.org/datePublished> [?] </a> </span>: 2025-07-29</li><li><span class="property">sdDatePublished <a href=http://schema.org/sdDatePublished> [?] </a> </span>: 2025-07-29</li><li><span class="property">publisher <a href=http://schema.org/publisher> [?] </a> </span>: <a href=#https://gigadb.org/> GigaScience DataBase </a></li><li><span class="property">sdPublisher <a href=http://schema.org/sdPublisher> [?] </a> </span>: <a href=#https://gigadb.org/> GigaScience DataBase </a></li><li><span class="property">license <a href=http://schema.org/license> [?] </a> </span>: <a href=#https://creativecommons.org/publicdomain/zero/1.0/> Creative Commons Zero v1.0 Universal </a></li><li><span class="property">thumbnail <a href=http://schema.org/thumbnail> [?] </a> </span>: <a href=https://assets.gigadb-cdn.net/live/images/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png> https://assets.gigadb-cdn.net/live/images/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png </a></li><li><span class="property">hasPart <a href=http://schema.org/hasPart> [?] </a> </span>: 1</li>,  2</li>,  <a href=##other-files> other files </a></li><li><span class="property">author <a href=http://schema.org/author> [?] </a> </span>: <a href=#https://orcid.org/0000-0001-9083-6757> Chang JJ </a></li>,  <a href=##Xuan_Yang> Yang X </a></li>,  <a href=#https://orcid.org/0000-0003-0337-8722> Teng H </a></li>,  <a href=##Benjamin_Reames> Reames B </a></li>,  <a href=#https://orcid.org/0000-0003-1155-0959> Corbin V </a></li>,  <a href=#https://orcid.org/0000-0002-4300-455X> Coin LJM </a></li><li><span class="property">citation <a href=http://schema.org/citation> [?] </a> </span>: <a href=#https://doi.org/10.5524/100425> https://doi.org/10.5524/100425 </a></li><li><span class="property">funder <a href=http://schema.org/funder> [?] </a> </span>: <a href=#https://ror.org/011kf5r70> National Health and Medical Research Council </a></li><li><span class="property">exifData <a href=http://schema.org/exifData> [?] </a> </span>: <a href=##datasetTypes> Dataset type </a></li>,  <a href=##additionalInfo1> Additional information </a></li>,  <a href=##additionalInfo2> Additional information </a></li>,  <a href=##additionalInfo3> Additional information </a></li>,  <a href=##additionalInfo4> Additional information </a></li>,  <a href=##additionalInfo5> Additional information </a></li>,  <a href=##additionalInfo6> Additional information </a></li>,  <a href=##additionalInfo7> Additional information </a></li>,  <a href=##additionalInfo8> Additional information </a></li>,  <a href=##githubLink1> Github links </a></li>,  <a href=##githubLink2> Github links </a></li>,  <a href=##githubLink3> Github links </a></li>,  <a href=##githubLink4> Github links </a></li>,  <a href=##accessions> Accessions (data not in GigaDB) </a></li>,  <a href=##history> History </a></li><li><span class="property">keywords <a href=http://schema.org/keywords> [?] </a> </span>: oxford nanopore technologies, poly(a) tail, estimation, segmentation, direct rna sequencing</li><li><span class="property">about <a href=http://schema.org/about> [?] </a> </span>: <a href=#https://nanoporetech.com/> oxford nanopore technologies </a></li></ul>            </section>
+
+                            <section id="ro-crate-metadata.json">
+                    <h2>ro-crate-metadata.json</h2>
+                    <ul><li><span class="property"> @id </span>: ro-crate-metadata.json</li><li><span class="property"> @type </span>: CreativeWork</li><li><span class="property">conformsTo <a href=http://purl.org/dc/terms/conformsTo> [?] </a> </span>: <a href=https://w3id.org/ro/crate/1.2> https://w3id.org/ro/crate/1.2 </a></li><li><span class="property">about <a href=http://schema.org/about> [?] </a> </span>: <a href=#https://gigadb.org/dataset/102736> Supporting data for &quot;Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.&quot; </a></li></ul>                </section>
+                            <section id="https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt">
+                    <h2>readme_102736.txt</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt> https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt </a></li><li><span class="property"> @type </span>: File</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: readme_102736.txt</li><li><span class="property">contentSize <a href=http://schema.org/contentSize> [?] </a> </span>: 9.30 kB</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/txt</li><li><span class="property">exifData <a href=http://schema.org/exifData> [?] </a> </span>: <a href=##oneExtra> Extra Information </a></li></ul>                </section>
+                            <section id="https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv">
+                    <h2>boostnano_no_dorado_R1_tails.csv</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv> https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv </a></li><li><span class="property"> @type </span>: File</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: boostnano_no_dorado_R1_tails.csv</li><li><span class="property">contentSize <a href=http://schema.org/contentSize> [?] </a> </span>: 317.24 kB</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/csv</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: PolyA tail lengths as found by Boostnano for R1 sequins which were filtered out by Dorado but kept by Boostnano; underlying data for figure 3</li><li><span class="property">exifData <a href=http://schema.org/exifData> [?] </a> </span>: <a href=##twoExtra> Extra Information </a></li></ul>                </section>
+                            <section id="https://gigadb.org/dataset/view/id/102736/Files_page/4">
+                    <h2>BoostNano-master</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://gigadb.org/dataset/view/id/102736/Files_page/4> https://gigadb.org/dataset/view/id/102736/Files_page/4 </a></li><li><span class="property"> @type </span>: Dataset</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: BoostNano-master</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Archival copy of the GitHub repository https://github.com/haotianteng/BoostNano downloaded 18-July-2025. BoostNano, a tool for preprocessing ONT-Nanopore RNA sequencing reads.This project is licensed under the MPL 2.0 license. Please refer to the GitHub repo for most recent updates.</li><li><span class="property">distribution <a href=http://schema.org/distribution> [?] </a> </span>: <a href=#https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip> https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip </a></li><li><span class="property">releaseDate <a href=http://schema.org/releaseDate> [?] </a> </span>: 2025-07-23</li><li><span class="property">exifData <a href=http://schema.org/exifData> [?] </a> </span>: <a href=##zipExtra> Extra Information </a></li></ul>                </section>
+                            <section id="https://doi.org/10.5524/100425">
+                    <h2>https://doi.org/10.5524/100425</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://doi.org/10.5524/100425> https://doi.org/10.5524/100425 </a></li><li><span class="property"> @type </span>: CreativeWork</li>,  Dataset</li><li><span class="property">conformsTo <a href=http://purl.org/dc/terms/conformsTo> [?] </a> </span>: <a href=https://w3id.org/ro/crate> https://w3id.org/ro/crate </a></li></ul>                </section>
+                            <section id="#oneExtra">
+                    <h2>Extra Information</h2>
+                    <ul><li><span class="property"> @id </span>: #oneExtra</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Extra Information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: Data Type: Readme, File Attributes: MD5 checksum: 450ef019cf8ba58beb644ef18d1411d0</li></ul>                </section>
+                            <section id="#twoExtra">
+                    <h2>Extra Information</h2>
+                    <ul><li><span class="property"> @id </span>: #twoExtra</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Extra Information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: Data Type: Tabular data, File Attributes: MD5 checksum: 97ee210d263c783e4ddfe20352831d60 Figure in MS: 3</li></ul>                </section>
+                            <section id="https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip">
+                    <h2>https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip> https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip </a></li><li><span class="property"> @type </span>: DataDownload</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li>,  <a href=https://www.nationalarchives.gov.uk/PRONOM/x-fmt/263> https://www.nationalarchives.gov.uk/PRONOM/x-fmt/263 </a></li><li><span class="property">contentSize <a href=http://schema.org/contentSize> [?] </a> </span>: 2.44 MB</li></ul>                </section>
+                            <section id="#zipExtra">
+                    <h2>Extra Information</h2>
+                    <ul><li><span class="property"> @id </span>: #zipExtra</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Extra Information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: Data Type: GitHub archive, File Attributes: MD5 checksum: 4b4d2ce7259e5045d89b731b7bfcf730 SWH: swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70 license: MPL 2.0</li></ul>                </section>
+                            <section id="#other-files">
+                    <h2>other files</h2>
+                    <ul><li><span class="property"> @id </span>: #other-files</li><li><span class="property"> @type </span>: Dataset</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: other files</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: This dataset contains too many files that are not individually described</li></ul>                </section>
+                            <section id="https://orcid.org/0000-0001-9083-6757">
+                    <h2>Chang JJ</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://orcid.org/0000-0001-9083-6757> https://orcid.org/0000-0001-9083-6757 </a></li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/01ej9dk98> The University of Melbourne </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Chang JJ</li></ul>                </section>
+                            <section id="https://ror.org/01ej9dk98">
+                    <h2>The University of Melbourne</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://ror.org/01ej9dk98> https://ror.org/01ej9dk98 </a></li><li><span class="property"> @type </span>: Organization</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: The University of Melbourne</li></ul>                </section>
+                            <section id="#Xuan_Yang">
+                    <h2>Yang X</h2>
+                    <ul><li><span class="property"> @id </span>: #Xuan_Yang</li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/01ej9dk98> The University of Melbourne </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Yang X</li></ul>                </section>
+                            <section id="https://orcid.org/0000-0003-0337-8722">
+                    <h2>Teng H</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://orcid.org/0000-0003-0337-8722> https://orcid.org/0000-0003-0337-8722 </a></li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/05x2bcf33> Carnegie Mellon University </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Teng H</li></ul>                </section>
+                            <section id="https://ror.org/05x2bcf33">
+                    <h2>Carnegie Mellon University</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://ror.org/05x2bcf33> https://ror.org/05x2bcf33 </a></li><li><span class="property"> @type </span>: Organization</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Carnegie Mellon University</li></ul>                </section>
+                            <section id="#Benjamin_Reames">
+                    <h2>Reames B</h2>
+                    <ul><li><span class="property"> @id </span>: #Benjamin_Reames</li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/01ej9dk98> The University of Melbourne </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Reames B</li></ul>                </section>
+                            <section id="https://orcid.org/0000-0003-1155-0959">
+                    <h2>Corbin V</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://orcid.org/0000-0003-1155-0959> https://orcid.org/0000-0003-1155-0959 </a></li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/01ej9dk98> The University of Melbourne </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Corbin V</li></ul>                </section>
+                            <section id="https://orcid.org/0000-0002-4300-455X">
+                    <h2>Coin LJM</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://orcid.org/0000-0002-4300-455X> https://orcid.org/0000-0002-4300-455X </a></li><li><span class="property"> @type </span>: Person</li><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: <a href=#https://ror.org/01ej9dk98> The University of Melbourne </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Coin LJM</li></ul>                </section>
+                            <section id="https://ror.org/011kf5r70">
+                    <h2>National Health and Medical Research Council</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://ror.org/011kf5r70> https://ror.org/011kf5r70 </a></li><li><span class="property"> @type </span>: Organization</li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: <a href=#https://ror.org/011kf5r70> National Health and Medical Research Council </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: National Health and Medical Research Council</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Funding Body</li><li><span class="property">exifData <a href=http://schema.org/exifData> [?] </a> </span>: <a href=##awardee> Awardee </a></li>,  <a href=##awardId> Award ID </a></li></ul>                </section>
+                            <section id="#awardee">
+                    <h2>Awardee</h2>
+                    <ul><li><span class="property"> @id </span>: #awardee</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Awardee</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: L Coin</li></ul>                </section>
+                            <section id="#awardId">
+                    <h2>Award ID</h2>
+                    <ul><li><span class="property"> @id </span>: #awardId</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Award ID</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: GNT1195743</li></ul>                </section>
+                            <section id="#datasetTypes">
+                    <h2>Dataset type</h2>
+                    <ul><li><span class="property"> @id </span>: #datasetTypes</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Dataset type</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: Epigenomic, Bioinformatics, Software, Transcriptomic</li></ul>                </section>
+                            <section id="https://nanoporetech.com/">
+                    <h2>oxford nanopore technologies</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://nanoporetech.com/> https://nanoporetech.com/ </a></li><li><span class="property"> @type </span>: URL</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: oxford nanopore technologies</li></ul>                </section>
+                            <section id="https://doi.org/10.5524/102736">
+                    <h2>https://doi.org/10.5524/102736</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://doi.org/10.5524/102736> https://doi.org/10.5524/102736 </a></li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">propertyID <a href=http://schema.org/propertyID> [?] </a> </span>: <a href=https://registry.identifiers.org/registry/doi> https://registry.identifiers.org/registry/doi </a></li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: doi:10.5524/102736</li><li><span class="property">url <a href=http://schema.org/url> [?] </a> </span>: <a href=#https://doi.org/10.5524/102736> https://doi.org/10.5524/102736 </a></li></ul>                </section>
+                            <section id="https://creativecommons.org/publicdomain/zero/1.0/">
+                    <h2>Creative Commons Zero v1.0 Universal</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://creativecommons.org/publicdomain/zero/1.0/> https://creativecommons.org/publicdomain/zero/1.0/ </a></li><li><span class="property"> @type </span>: CreativeWork</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Creative Commons Zero v1.0 Universal</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.</li></ul>                </section>
+                            <section id="https://gigadb.org/">
+                    <h2>GigaScience DataBase</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://gigadb.org/> https://gigadb.org/ </a></li><li><span class="property"> @type </span>: Organization</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: GigaScience DataBase</li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: GigaDB is a data repository supporting scientific publications in the Life/Biomedical Sciences domain. GigaDB organises and curates data from individually publishable units into datasets, which are provided openly and in as FAIR manner as possible for the global research community.</li><li><span class="property">contactPoint <a href=http://schema.org/contactPoint> [?] </a> </span>: <a href=#mailto:database@gigasciencejournal.com> mailto:database@gigasciencejournal.com </a></li></ul>                </section>
+                            <section id="mailto:database@gigasciencejournal.com">
+                    <h2>mailto:database@gigasciencejournal.com</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=mailto:database@gigasciencejournal.com> mailto:database@gigasciencejournal.com </a></li><li><span class="property"> @type </span>: ContactPoint</li><li><span class="property">contactType <a href=http://schema.org/contactType> [?] </a> </span>: contact of the publisher</li><li><span class="property">email <a href=http://schema.org/email> [?] </a> </span>: database@gigasciencejournal.com</li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: database@gigasciencejournal.com</li></ul>                </section>
+                            <section id="#additionalInfo1">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo1</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://doi.org/10.26188/c.7767503.v1> https://doi.org/10.26188/c.7767503.v1 </a></li></ul>                </section>
+                            <section id="#additionalInfo2">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo2</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://registry.dome-ml.org/review/4ctuzhv3y5> https://registry.dome-ml.org/review/4ctuzhv3y5 </a></li></ul>                </section>
+                            <section id="#additionalInfo3">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo3</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://archive.softwareheritage.org/swh:1:snp:1d8fdaa469108a2834a854d8249913d267fb9cfc> https://archive.softwareheritage.org/swh:1:snp:1d8fdaa469108a2834a854d8249913d267fb9cfc </a></li></ul>                </section>
+                            <section id="#additionalInfo4">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo4</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://archive.softwareheritage.org/swh:1:snp:95b1531358ec75027da00fc8b539bce14188d30d> https://archive.softwareheritage.org/swh:1:snp:95b1531358ec75027da00fc8b539bce14188d30d </a></li></ul>                </section>
+                            <section id="#additionalInfo5">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo5</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://archive.softwareheritage.org/swh:1:snp:98b3a8996ab44283990fe707ffc44d45b2a61695> https://archive.softwareheritage.org/swh:1:snp:98b3a8996ab44283990fe707ffc44d45b2a61695 </a></li></ul>                </section>
+                            <section id="#additionalInfo6">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo6</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://archive.softwareheritage.org/swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70> https://archive.softwareheritage.org/swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70 </a></li></ul>                </section>
+                            <section id="#additionalInfo7">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo7</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://scicrunch.org/resolver/RRID:SCR_026467> https://scicrunch.org/resolver/RRID:SCR_026467 </a></li></ul>                </section>
+                            <section id="#additionalInfo8">
+                    <h2>Additional information</h2>
+                    <ul><li><span class="property"> @id </span>: #additionalInfo8</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Additional information</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://bio.tools/boostnano> https://bio.tools/boostnano </a></li></ul>                </section>
+                            <section id="#githubLink1">
+                    <h2>Github links</h2>
+                    <ul><li><span class="property"> @id </span>: #githubLink1</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Github links</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://github.com/haotianteng/BoostNano> https://github.com/haotianteng/BoostNano </a></li></ul>                </section>
+                            <section id="#githubLink2">
+                    <h2>Github links</h2>
+                    <ul><li><span class="property"> @id </span>: #githubLink2</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Github links</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://github.com/adnaniazi/tailfindr> https://github.com/adnaniazi/tailfindr </a></li></ul>                </section>
+                            <section id="#githubLink3">
+                    <h2>Github links</h2>
+                    <ul><li><span class="property"> @id </span>: #githubLink3</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Github links</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://github.com/haotianteng/chiron> https://github.com/haotianteng/chiron </a></li></ul>                </section>
+                            <section id="#githubLink4">
+                    <h2>Github links</h2>
+                    <ul><li><span class="property"> @id </span>: #githubLink4</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Github links</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: <a href=https://github.com/jts/nanopolish> https://github.com/jts/nanopolish </a></li></ul>                </section>
+                            <section id="#accessions">
+                    <h2>Accessions (data not in GigaDB)</h2>
+                    <ul><li><span class="property"> @id </span>: #accessions</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Accessions (data not in GigaDB)</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: BioProject: PRJNA675370</li></ul>                </section>
+                            <section id="#history">
+                    <h2>History</h2>
+                    <ul><li><span class="property"> @id </span>: #history</li><li><span class="property"> @type </span>: PropertyValue</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: History</li><li><span class="property">value <a href=http://schema.org/value> [?] </a> </span>: Date: July 29, 2025, Action: Dataset publish</li></ul>                </section>
+                    </main>
+
+        <footer>
+            <p>Generated from RO-Crate metadata on 2025-08-15</p>
+        </footer>
+    </body>
+    </html>
+        

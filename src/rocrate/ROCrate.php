@@ -845,8 +845,8 @@ class ROCrate
      */
     public function addProfile(string $profile = 'https://w3id.org/ro/crate/1.2', string $about = './'): void
     {
-        $this->descriptor->addProperty('conformsTo', ['@id' => $profile]);
-        $this->descriptor->addProperty('about', ['@id' => $about]);
+        $this->descriptor->addPropertyPair('conformsTo', $profile, true);
+        $this->descriptor->addPropertyPair('about', $about, true);
     }
 
     /**
