@@ -197,7 +197,6 @@ abstract class Entity
      * Removes a key-value pair from a property of the entity instance,
      * or does nothing when the either key does not exist or there is no inner array
      * @param string $propertyKey The key string of the property to remove
-     * @param string $key The key string of the property to remove
      * @param mixed $value The value to be deleted of the property
      * @return Entity The entity instance itself
      */

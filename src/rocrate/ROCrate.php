@@ -16,8 +16,6 @@ use ROCrate\File;
 use ROCrate\Descriptor;
 use ROCrate\Person;
 
-use function PHPUnit\Framework\throwException;
-
 /**
  * Stores the structural information of a ro-crate-metadata.json as a crate object
  */
@@ -509,7 +507,7 @@ class ROCrate
         foreach ($this->entities as $entity) {
             if (in_array("CreateAction", $entity->getTypes()) || in_array("UpdateAction", $entity->getTypes())) {
                 // startTime
-                if (!in_array("startTime", $entity->getProperties())) {
+                if (!array_key_exists("startTime", $entity->getProperties())) {
                     continue;
                 }
                 if (is_string($entity->getProperty("startTime"))) {
@@ -521,7 +519,7 @@ class ROCrate
                 }
 
                 // endTime
-                if (!in_array("endTime", $entity->getProperties())) {
+                if (!array_key_exists("endTime", $entity->getProperties())) {
                     continue;
                 }
                 if (is_string($entity->getProperty("endTime"))) {

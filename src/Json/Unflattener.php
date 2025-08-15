@@ -19,7 +19,7 @@ class Unflattener
     {
         $result = [];
         foreach ($data as $key => $value) {
-            $this->assignValueByPath($result, $key, $value, $separator);
+            $this->assignValueByPath($result, (string) $key, $value, $separator);
         }
 
         return $result;

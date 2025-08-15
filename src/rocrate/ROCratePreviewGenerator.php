@@ -335,6 +335,15 @@ class ROCratePreviewGenerator
         return ob_get_clean();
     }
 
+    /**
+     * Renders the entity
+     * @param mixed $entity The entity to render
+     * @param mixed $entities All the entities
+     * @param mixed $termUris The term URIs
+     * @param mixed $basePath The base path
+     * @param mixed $depth The depth
+     * @return string The rendered entity
+     */
     public static function renderEntity($entity, $entities, $termUris, $basePath, $depth = 0)
     {
         if ($depth > 3) {
@@ -344,7 +353,7 @@ class ROCratePreviewGenerator
         $html = '<ul>';
         foreach ($entity as $key => $value) {
             $keyHtml = ROCratePreviewGenerator::renderKey($key, $termUris);
-            $valStr = ROCratePreviewGenerator::renderValue($value, $entities, $termUris, $depth);
+            $valStr = ROCratePreviewGenerator::renderValue($value, $entities, $termUris, $basePath, $depth);
 
             $values = explode(' %%$$%%$$** ', $valStr);
 
@@ -451,15 +460,16 @@ class ROCratePreviewGenerator
      * @param mixed $value The value to render
      * @param mixed $entities The indiced entities array
      * @param mixed $termUris The term URIs
+     * @param mixed $basePath The base path
      * @param mixed $depth The depth
      * @return string The rendered value as string
      */
-    public static function renderValue($value, $entities, $termUris, $depth): string
+    public static function renderValue($value, $entities, $termUris, $basePath, $depth): string
     {
         if (is_array($value)) {
             $values = [];
             foreach ($value as $item) {
-                $values[] = ROCratePreviewGenerator::renderValue($item, $entities, $termUris, $depth);
+                $values[] = ROCratePreviewGenerator::renderValue($item, $entities, $termUris, $basePath, $depth);
             }
             return implode(' %%$$%%$$** ', $values);
         }
@@ -492,7 +502,7 @@ class ROCratePreviewGenerator
                 } else {
                     return sprintf(
                         '<div class="embedded">%s</div>',
-                        ROCratePreviewGenerator::renderEntity($target, $entities, $termUris, $depth + 1)
+                        ROCratePreviewGenerator::renderEntity($target, $entities, $termUris, $basePath, $depth + 1)
                     );
                 }
             }

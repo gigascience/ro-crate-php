@@ -1,25 +1,10 @@
 <?php
 
-#echo '/../vendor/autoload.php';
-
-#require '/../vendor/autoload.php';
 require __DIR__ . '/../vendor/autoload.php';
-#require '/top/vendor/autoload.php';
-#require($_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php');
 
 use Json\{Flattener, Unflattener, FileHandler};
 use Exceptions\JsonFileException;
 use ROCrate\{ROCrate, File, Person, ROCratePreviewGenerator};
-
-/*
-$example = new Example();
-echo $example->test(); // Should output message
-
-// Test Monolog
-$log = new Monolog\Logger('name');
-$log->pushHandler(new Monolog\Handler\StreamHandler('app.log', Monolog\Logger::WARNING));
-$log->warning('Test log!');
-*/
 
 //phpinfo();
 
@@ -34,7 +19,7 @@ try {
     // Process flattened data
     foreach ($flattened as $key => $value) {
         // Do something with key-value pairs
-        echo'' . $key . ' -> ' . $value . " ";
+        echo'' . $key . ' -> ' . $value . "\n";
     }
 
     // Unflatten and write
@@ -93,30 +78,10 @@ $author->addPropertyPair("encodingFormat", "test/pdf", false)
 
 //$crate->removeEntity($author->getId());
 
-// Validate and save
-//echo $crate->validate()[0];
-
 try {
-    $crate->save();
+    $errMsg = $crate->saveWithErrorMessage();
 } catch (Exception $e) {
-    foreach ($crate->showErrors() as $msg) {
+    foreach ($errMsg as $msg) {
         echo "\n$msg";
     }
 }
-
-
-
-/*
-foreach ($root->toArray() as $key => $value) {
-    print("". $key ."=>". $value ."");
-}*/
-
-// Usage example:
-/*
-try {
-    $generator = new ROCratePreviewGenerator(__DIR__ . '/../resources');
-    $generator->generateHTML();
-    echo "RO-Crate HTML preview generated successfully!";
-} catch (Exception $e) {
-    die("Error: " . $e->getMessage());
-}*/
