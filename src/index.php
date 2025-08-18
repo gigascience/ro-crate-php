@@ -112,7 +112,10 @@ $root->setId("https://gigadb.org/dataset/102736")
     ->addPropertyPair("thumbnail", "https://assets.gigadb-cdn.net/live/images" .
     "/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png", true);
 
-$parts = ["1", "2", "#other-files"];
+$parts = ["https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/" .
+"102001_103000/102736/readme_102736.txt", "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/" .
+"10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv",
+"https://gigadb.org/dataset/view/id/102736/Files_page/4", "#other-files"];
 foreach ($parts as $part) {
     $root->addPropertyPair("hasPart", $part, true);
 }
@@ -361,9 +364,8 @@ $history->addPropertyPair("name", "History", false)
     ->addPropertyPair("value", "Date: July 29, 2025, Action: Dataset publish", false);
 $crate->addEntity($history);
 
-try {
-    $errMsg = $crate->saveWithErrorMessage();
-} catch (Exception $e) {
+$errMsg = $crate->saveWithErrorMessage();
+if ($errMsg !== []) {
     foreach ($errMsg as $msg) {
         echo "\n$msg";
     }

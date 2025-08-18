@@ -40,10 +40,13 @@
             },
             "hasPart": [
                 {
-                    "@id": "1"
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt"
                 },
                 {
-                    "@id": "2"
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv"
+                },
+                {
+                    "@id": "https://gigadb.org/dataset/view/id/102736/Files_page/4"
                 },
                 {
                     "@id": "#other-files"
