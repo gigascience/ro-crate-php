@@ -1,224 +1,405 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RO-Crate Preview: MetaGoFlow Results</title>
+        <link rel="stylesheet" href="">
+        <style>
+            :root {
+                --primary: #0366d6;
+                --primary-dark: #0356b6;
+                --secondary: #6c757d;
+                --light: #f8f9fa;
+                --border: #dee2e6;
+                --success: #28a745;
+            }
+            * { box-sizing: border-box; }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                line-height: 1.6;
+                color: #212529;
+                background-color: #f5f7fa;
+                margin: 0;
+                padding: 0;
+            }
+            header {
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                color: white;
+                padding: 2rem 0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin-bottom: 2rem;
+                padding-left: 50px;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+            }
+            .page-title {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .logo {
+                font-size: 2.5rem;
+                filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            }
+            h1, h2, h3, h4 {
+                margin-top: 0;
+                font-weight: 600;
+            }
+            h1 { font-size: 2.2rem; }
+            h2 {
+                font-size: 1.8rem;
+                color: var(--primary);
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid var(--border);
+                margin-bottom: 1.5rem;
+            }
+            h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+            section {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+                padding: 2rem;
+                margin-bottom: 2.5rem;
+            }
+            .entity-card {
+                background: var(--light);
+                padding: 1.5rem;
+                border-radius: 6px;
+                margin-bottom: 1.5rem;
+                border-left: 4px solid var(--primary);
+                transition: transform 0.2s;
+            }
+            .entity-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            }
+            .property-list dt {
+                font-weight: 600;
+                margin-top: 0.8rem;
+                color: var(--primary-dark);
+            }
+            .property-list dd {
+                margin-left: 0;
+                margin-bottom: 0.5rem;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            th, td {
+                padding: 1rem;
+                text-align: left;
+                border-bottom: 1px solid var(--border);
+            }
+            th {
+                background-color: var(--primary);
+                color: white;
+                font-weight: 600;
+            }
+            tr:nth-child(even) {
+                background-color: rgba(248, 249, 250, 0.5);
+            }
+            tr:hover {
+                background-color: rgba(3, 102, 214, 0.05);
+            }
+            .badge {
+                display: inline-block;
+                padding: 0.3em 0.6em;
+                border-radius: 4px;
+                background: var(--primary);
+                color: white;
+                font-size: 0.85em;
+                font-weight: 500;
+                margin-right: 0.5em;
+            }
+            .badge-dataset { background: #6610f2; }
+            .badge-file { background: var(--success); }
+            .badge-person { background: #e83e8c; }
+            .badge-org { background: #fd7e14; }
+            .badge-other { background: var(--secondary); }
+            .entity-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
+            a {
+                color: var(--primary);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .text-muted {
+                color: var(--secondary);
+            }
+            footer {
+                text-align: center;
+                padding: 2.5rem 0;
+                color: var(--secondary);
+                font-size: 0.9rem;
+                border-top: 1px solid var(--border);
+                margin-top: 2rem;
+            }
+            .back-to-top {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                cursor: pointer;
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+            .back-to-top:hover {
+                opacity: 1;
+            }
+            @media (max-width: 768px) {
+                .entity-grid {
+                    grid-template-columns: 1fr;
+                }
+                section {
+                    padding: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>MetaGoFlow Results</h1>
+                    </header>
 
+        <main>
+            <section id="./">
+                <h2>Root Data Entity</h2>
+                <ul><li><span class="property"> @id </span>: ./</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li><li><span class="property">datePublished <a href=http://schema.org/datePublished> [?] </a> </span>: 2023-05-10T09:59:46+00:00</li><li><span class="property">hasPart <a href=http://schema.org/hasPart> [?] </a> </span>: <a href=#results/> results/ </a></li>,  <a href=#ERR599171.yml> ERR599171.yml </a>,  <a href=#config.yml> MetaGOflow configuration file </a>,  <a href=#results/sequence-categorisation/> Sequence categorisation </a>,  <a href=#results/taxonomy-summary/> results/taxonomy-summary/ </a>,  <a href=#results/functional-annotation/> results/functional-annotation/ </a>,  <a href=#results/final.contigs.fa> FASTA formatted contig sequences </a>,  <a href=#results/fastp.html> FASTP analysis of raw sequence data </a>,  <a href=#results/ERR599171_1.fastq.trimmed.fasta> Filtered .fastq file of the single-end reads (forward/reverse). </a>,  <a href=#results/ERR599171_2.fastq.trimmed.fasta> Filtered .fastq file of the single-end reads (forward/reverse). </a>,  <a href=#results/ERR599171.merged.fasta> Merged filtered reads. </a>,  <a href=#results/ERR599171.merged.qc_summary> Summary with statistics of the merged reads. </a>,  <a href=#results/ERR599171.merged.motus.tsv> results/ERR599171.merged.motus.tsv </a>,  <a href=#results/ERR599171.merged.unfiltered_fasta> results/ERR599171.merged.unfiltered_fasta </a>,  <a href=#results/ERR599171.merged.cmsearch.all.tblout.deoverlapped> Sequence hits against covariance model databases. Mandatory to run partially the functional annotation step of metaGOflow. </a>,  <a href=#results/ERR599171.merged_CDS.faa> Coding sequences with amino acids. </a>,  <a href=#results/ERR599171.merged_CDS.ffn> Coding sequences with nucleotides. </a>,  <a href=#results/ERR599171_1.fastq.trimmed.qc_summary> Summary with statistics of the single-end reads (forward/reverse). </a>,  <a href=#results/ERR599171_2.fastq.trimmed.qc_summary> Summary with statistics of the single-end reads (forward/reverse). </a>,  <a href=#results/RNA-counts> Numbers of RNA&#039;s counted </a>,  <a href=#results/sequence-categorisation/5_8S.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/tRNA.RF00005.fasta.gz> Sequence categorisation </a>,  <a href=#results/sequence-categorisation/tmRNA.RF00023.fasta.gz> Sequence categorisation </a>,  <a href=#results/taxonomy-summary/SSU/> results/taxonomy-summary/SSU/ </a>,  <a href=#results/taxonomy-summary/LSU/> results/taxonomy-summary/LSU/ </a>,  <a href=#results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.gz> LSU sequences used for indentification </a>,  <a href=#results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.tsv> Tab-separated formatted taxon counts for SSU sequences </a>,  <a href=#results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.txt> Text-based formatted taxon counts for SSU sequences </a>,  <a href=#results/taxonomy-summary/SSU/krona.html> Krona summary of LSU taxonomic inventory </a>,  <a href=#results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_hdf5.biom> BIOM formatted hdf5 taxon counts for SSU sequences </a>,  <a href=#results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_json.biom> BIOM formatted taxon counts for SSU sequences </a>,  <a href=#results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.gz> LSU sequences used for indentification </a>,  <a href=#results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.tsv> Tab-separated formatted taxon counts for LSU sequences </a>,  <a href=#results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.txt> Text-based taxon counts for LSU sequences </a>,  <a href=#results/taxonomy-summary/LSU/krona.html> Krona summary of LSU taxonomic inventory </a>,  <a href=#results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_hdf5.biom> BIOM formatted hdf5 taxon counts for LSU sequences </a>,  <a href=#results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_json.biom> BIOM formatted taxon counts for LSU sequences </a>,  <a href=#results/functional-annotation/stats/> results/functional-annotation/stats/ </a>,  <a href=#results/functional-annotation/ERR599171.merged.summary.ips> Merged contigs InterProScan </a>,  <a href=#results/functional-annotation/ERR599171.merged.summary.ko> Merged contigs KO summary </a>,  <a href=#results/functional-annotation/ERR599171.merged.summary.pfam> Merged contigs PFAM summary </a>,  <a href=#results/functional-annotation/ERR599171.merged.summary.go> Merged contigs GO summary </a>,  <a href=#results/functional-annotation/ERR599171.merged.summary.go_slim> Merged contigs GO summary </a>,  <a href=#results/functional-annotation/ERR599171.merged.hmm.tsv.gz> Merged contigs HMM summary </a>,  <a href=#results/functional-annotation/ERR599171.merged_CDS.I5.tsv.gz> Merged contigs CDS I5 summary </a>,  <a href=#results/functional-annotation/ERR599171.merged.hmm.tsv.chunks> results/functional-annotation/ERR599171.merged.hmm.tsv.chunks </a>,  <a href=#results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks> results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks </a>,  <a href=#results/functional-annotation/stats/interproscan.stats> InterProScan summary statistics </a>,  <a href=#results/functional-annotation/stats/go.stats> Geno Ontology summary statistics </a>,  <a href=#results/functional-annotation/stats/ko.stats> Kegg Ontology summary statistics </a>,  <a href=#results/functional-annotation/stats/pfam.stats> Pfam summary statistcs </a>,  <a href=#results/functional-annotation/stats/orf.stats> ORF summary statistics </a><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: MetaGoFlow Results</li><li><span class="property">publisher <a href=http://schema.org/publisher> [?] </a> </span>: <a href=#https://ror.org/0038zss60> European Marine Biological Resource Centre </a></li></ul>            </section>
 
-<html>
-<head>
+                            <section id="ro-crate-metadata.json">
+                    <h2>ro-crate-metadata.json</h2>
+                    <ul><li><span class="property"> @id </span>: ro-crate-metadata.json</li><li><span class="property"> @type </span>: <a href=http://schema.org/CreativeWork> CreativeWork </a></li><li><span class="property">about <a href=http://schema.org/about> [?] </a> </span>: <a href=#./> MetaGoFlow Results </a></li><li><span class="property">conformsTo <a href=http://purl.org/dc/terms/conformsTo> [?] </a> </span>: <a href=https://w3id.org/ro/crate/1.1> https://w3id.org/ro/crate/1.1 </a></li></ul>                </section>
+                            <section id="results/">
+                    <h2>results/</h2>
+                    <ul><li><span class="property"> @id </span>: results/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="ERR599171.yml">
+                    <h2>ERR599171.yml</h2>
+                    <ul><li><span class="property"> @id </span>: ERR599171.yml</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li></ul>                </section>
+                            <section id="config.yml">
+                    <h2>MetaGOflow configuration file</h2>
+                    <ul><li><span class="property"> @id </span>: config.yml</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: The configuration file through which the user sets the values of the metaGOflow parameters.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/yaml</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: MetaGOflow configuration file</li></ul>                </section>
+                            <section id="results/sequence-categorisation/">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/taxonomy-summary/">
+                    <h2>results/taxonomy-summary/</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="results/functional-annotation/">
+                    <h2>results/functional-annotation/</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="results/final.contigs.fa">
+                    <h2>FASTA formatted contig sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/final.contigs.fa</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: These are the assembled contig sequences from the merged reads in FASTA format</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: FASTA formatted contig sequences</li></ul>                </section>
+                            <section id="results/fastp.html">
+                    <h2>FASTP analysis of raw sequence data</h2>
+                    <ul><li><span class="property"> @id </span>: results/fastp.html</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Quality control and preprocessing of FASTQ files</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/html</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: FASTP analysis of raw sequence data</li></ul>                </section>
+                            <section id="results/ERR599171_1.fastq.trimmed.fasta">
+                    <h2>Filtered .fastq file of the single-end reads (forward/reverse).</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171_1.fastq.trimmed.fasta</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Filtered .fastq file of the single-end reads (forward/reverse).</li></ul>                </section>
+                            <section id="results/ERR599171_2.fastq.trimmed.fasta">
+                    <h2>Filtered .fastq file of the single-end reads (forward/reverse).</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171_2.fastq.trimmed.fasta</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Filtered .fastq file of the single-end reads (forward/reverse).</li></ul>                </section>
+                            <section id="results/ERR599171.merged.fasta">
+                    <h2>Merged filtered reads.</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged.fasta</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged filtered reads.</li></ul>                </section>
+                            <section id="results/ERR599171.merged.qc_summary">
+                    <h2>Summary with statistics of the merged reads.</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged.qc_summary</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Summary with statistics of the merged reads.</li></ul>                </section>
+                            <section id="results/ERR599171.merged.motus.tsv">
+                    <h2></h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged.motus.tsv</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: </li></ul>                </section>
+                            <section id="results/ERR599171.merged.unfiltered_fasta">
+                    <h2></h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged.unfiltered_fasta</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: </li></ul>                </section>
+                            <section id="results/ERR599171.merged.cmsearch.all.tblout.deoverlapped">
+                    <h2>Sequence hits against covariance model databases. Mandatory to run partially the functional annotation step of metaGOflow.</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged.cmsearch.all.tblout.deoverlapped</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence hits against covariance model databases. Mandatory to run partially the functional annotation step of metaGOflow.</li></ul>                </section>
+                            <section id="results/ERR599171.merged_CDS.faa">
+                    <h2>Coding sequences with amino acids.</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged_CDS.faa</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Coding sequences with amino acids.</li></ul>                </section>
+                            <section id="results/ERR599171.merged_CDS.ffn">
+                    <h2>Coding sequences with nucleotides.</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171.merged_CDS.ffn</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Coding sequences with nucleotides.</li></ul>                </section>
+                            <section id="results/ERR599171_1.fastq.trimmed.qc_summary">
+                    <h2>Summary with statistics of the single-end reads (forward/reverse).</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171_1.fastq.trimmed.qc_summary</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Summary with statistics of the single-end reads (forward/reverse).</li></ul>                </section>
+                            <section id="results/ERR599171_2.fastq.trimmed.qc_summary">
+                    <h2>Summary with statistics of the single-end reads (forward/reverse).</h2>
+                    <ul><li><span class="property"> @id </span>: results/ERR599171_2.fastq.trimmed.qc_summary</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Summary with statistics of the single-end reads (forward/reverse).</li></ul>                </section>
+                            <section id="results/RNA-counts">
+                    <h2>Numbers of RNA&#039;s counted</h2>
+                    <ul><li><span class="property"> @id </span>: results/RNA-counts</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Numbers of RNA&#039;s counted</li></ul>                </section>
+                            <section id="results/sequence-categorisation/5_8S.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/5_8S.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/tRNA.RF00005.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/tRNA.RF00005.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/sequence-categorisation/tmRNA.RF00023.fasta.gz">
+                    <h2>Sequence categorisation</h2>
+                    <ul><li><span class="property"> @id </span>: results/sequence-categorisation/tmRNA.RF00023.fasta.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">description <a href=http://schema.org/description> [?] </a> </span>: Identify specific loci in the sample.</li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Sequence categorisation</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/">
+                    <h2>results/taxonomy-summary/SSU/</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/">
+                    <h2>results/taxonomy-summary/LSU/</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.gz">
+                    <h2>LSU sequences used for indentification</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: LSU sequences used for indentification</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.tsv">
+                    <h2>Tab-separated formatted taxon counts for SSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.tsv</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Tab-separated formatted taxon counts for SSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.txt">
+                    <h2>Text-based formatted taxon counts for SSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.txt</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Text-based formatted taxon counts for SSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/krona.html">
+                    <h2>Krona summary of LSU taxonomic inventory</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/krona.html</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/html</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Krona summary of LSU taxonomic inventory</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_hdf5.biom">
+                    <h2>BIOM formatted hdf5 taxon counts for SSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_hdf5.biom</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: BIOM formatted hdf5 taxon counts for SSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_json.biom">
+                    <h2>BIOM formatted taxon counts for SSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_json.biom</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: BIOM formatted taxon counts for SSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.gz">
+                    <h2>LSU sequences used for indentification</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: LSU sequences used for indentification</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.tsv">
+                    <h2>Tab-separated formatted taxon counts for LSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.tsv</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Tab-separated formatted taxon counts for LSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.txt">
+                    <h2>Text-based taxon counts for LSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.txt</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Text-based taxon counts for LSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/krona.html">
+                    <h2>Krona summary of LSU taxonomic inventory</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/krona.html</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/html</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Krona summary of LSU taxonomic inventory</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_hdf5.biom">
+                    <h2>BIOM formatted hdf5 taxon counts for LSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_hdf5.biom</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: BIOM formatted hdf5 taxon counts for LSU sequences</li></ul>                </section>
+                            <section id="results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_json.biom">
+                    <h2>BIOM formatted taxon counts for LSU sequences</h2>
+                    <ul><li><span class="property"> @id </span>: results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_json.biom</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/json-ld</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: BIOM formatted taxon counts for LSU sequences</li></ul>                </section>
+                            <section id="results/functional-annotation/stats/">
+                    <h2>results/functional-annotation/stats/</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/</li><li><span class="property"> @type </span>: <a href=http://schema.org/Dataset> Dataset </a></li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.summary.ips">
+                    <h2>Merged contigs InterProScan</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.summary.ips</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs InterProScan</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.summary.ko">
+                    <h2>Merged contigs KO summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.summary.ko</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs KO summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.summary.pfam">
+                    <h2>Merged contigs PFAM summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.summary.pfam</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs PFAM summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.summary.go">
+                    <h2>Merged contigs GO summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.summary.go</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs GO summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.summary.go_slim">
+                    <h2>Merged contigs GO summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.summary.go_slim</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs GO summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.hmm.tsv.gz">
+                    <h2>Merged contigs HMM summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.hmm.tsv.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs HMM summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged_CDS.I5.tsv.gz">
+                    <h2>Merged contigs CDS I5 summary</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged_CDS.I5.tsv.gz</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: application/zip</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Merged contigs CDS I5 summary</li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged.hmm.tsv.chunks">
+                    <h2>results/functional-annotation/ERR599171.merged.hmm.tsv.chunks</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged.hmm.tsv.chunks</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li></ul>                </section>
+                            <section id="results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks">
+                    <h2>results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li></ul>                </section>
+                            <section id="results/functional-annotation/stats/interproscan.stats">
+                    <h2>InterProScan summary statistics</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/interproscan.stats</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: InterProScan summary statistics</li></ul>                </section>
+                            <section id="results/functional-annotation/stats/go.stats">
+                    <h2>Geno Ontology summary statistics</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/go.stats</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Geno Ontology summary statistics</li></ul>                </section>
+                            <section id="results/functional-annotation/stats/ko.stats">
+                    <h2>Kegg Ontology summary statistics</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/ko.stats</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Kegg Ontology summary statistics</li></ul>                </section>
+                            <section id="results/functional-annotation/stats/pfam.stats">
+                    <h2>Pfam summary statistcs</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/pfam.stats</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Pfam summary statistcs</li></ul>                </section>
+                            <section id="results/functional-annotation/stats/orf.stats">
+                    <h2>ORF summary statistics</h2>
+                    <ul><li><span class="property"> @id </span>: results/functional-annotation/stats/orf.stats</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li><li><span class="property">encodingFormat <a href=http://schema.org/encodingFormat> [?] </a> </span>: text/plain</li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: ORF summary statistics</li></ul>                </section>
+                            <section id="https://www.apache.org/licenses/LICENSE-2.0">
+                    <h2>Apache License 2.0</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://www.apache.org/licenses/LICENSE-2.0> https://www.apache.org/licenses/LICENSE-2.0 </a></li><li><span class="property"> @type </span>: <a href=http://schema.org/CreativeWork> CreativeWork </a></li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: <a href=https://spdx.org/licenses/Apache-2.0.html> https://spdx.org/licenses/Apache-2.0.html </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Apache License 2.0</li></ul>                </section>
+                            <section id="https://creativecommons.org/licenses/by/4.0/legalcode">
+                    <h2>Creative Commons (CC-BY 4.0)</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://creativecommons.org/licenses/by/4.0/legalcode> https://creativecommons.org/licenses/by/4.0/legalcode </a></li><li><span class="property"> @type </span>: <a href=http://schema.org/CreativeWork> CreativeWork </a></li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: <a href=https://spdx.org/licenses/CC-BY-4.0.html> https://spdx.org/licenses/CC-BY-4.0.html </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: Creative Commons (CC-BY 4.0)</li></ul>                </section>
+                            <section id="mailto:emobon@embrc.eu">
+                    <h2>mailto:emobon@embrc.eu</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=mailto:emobon@embrc.eu> mailto:emobon@embrc.eu </a></li><li><span class="property"> @type </span>: <a href=http://schema.org/ContactPoint> ContactPoint </a></li><li><span class="property">contactType <a href=http://schema.org/contactType> [?] </a> </span>: Help Desk</li><li><span class="property">email <a href=http://schema.org/email> [?] </a> </span>: emobon@embrc.eu</li><li><span class="property">identifier <a href=http://schema.org/identifier> [?] </a> </span>: emobon@embrc.eu</li><li><span class="property">url <a href=http://schema.org/url> [?] </a> </span>: <a href=https://www.embrc.eu/about-us/contact-us> https://www.embrc.eu/about-us/contact-us </a></li></ul>                </section>
+                            <section id="https://ror.org/0038zss60">
+                    <h2>European Marine Biological Resource Centre</h2>
+                    <ul><li><span class="property"> @id </span>: <a href=https://ror.org/0038zss60> https://ror.org/0038zss60 </a></li><li><span class="property"> @type </span>: <a href=http://schema.org/Organization> Organization </a></li><li><span class="property">contactPoint <a href=http://schema.org/contactPoint> [?] </a> </span>: <a href=#mailto:emobon@embrc.eu> mailto:emobon@embrc.eu </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: European Marine Biological Resource Centre</li><li><span class="property">url <a href=http://schema.org/url> [?] </a> </span>: <a href=#https://ror.org/0038zss60> European Marine Biological Resource Centre </a></li></ul>                </section>
+                            <section id="#workflow/metaGOflow">
+                    <h2>metaGOflow</h2>
+                    <ul><li><span class="property"> @id </span>: #workflow/metaGOflow</li><li><span class="property"> @type </span>: <a href=http://schema.org/MediaObject> File </a></li>,  <a href=http://schema.org/SoftwareSourceCode> SoftwareSourceCode </a>,  <a href=https://bioschemas.org/ComputationalWorkflow> ComputationalWorkflow </a><li><span class="property">affiliation <a href=http://schema.org/affiliation> [?] </a> </span>: University of Flatland</li><li><span class="property">author <a href=http://schema.org/author> [?] </a> </span>: EMO BON</li><li><span class="property">hasPart <a href=http://schema.org/hasPart> [?] </a> </span>: <a href=#config.yml> MetaGOflow configuration file </a></li>,  TARA_OCEANS_SAMPLE_3steps/ERR599171.yml<li><span class="property">license <a href=http://schema.org/license> [?] </a> </span>: <a href=#https://www.apache.org/licenses/LICENSE-2.0> Apache License 2.0 </a></li><li><span class="property">name <a href=http://schema.org/name> [?] </a> </span>: metaGOflow</li><li><span class="property">url <a href=http://schema.org/url> [?] </a> </span>: <a href=https://github.com/emo-bon/MetaGOflow/releases/tag/v1.0.0> https://github.com/emo-bon/MetaGOflow/releases/tag/v1.0.0 </a></li></ul>                </section>
+                    </main>
 
-
-<script type="application/ld+json"> 
-  {
-  "@context": [
-    "https://w3id.org/ro/crate/1.2/context"
-  ],
-  "@graph": [
-    {
-      "@id": "ro-crate-metadata.json",
-      "@type": "CreativeWork",
-      "conformsTo": {
-        "@id": "https://w3id.org/ro/crate/1.2"
-      },
-      "about": {
-        "@id": "./"
-      }
-    },
-    {
-      "@id": "./",
-      "@type": "Dataset",
-      "name": "Example dataset for RO-Crate specification",
-      "description": "Official rainfall readings for Katoomba, NSW 2022, Australia",
-      "datePublished": "2022-12-01",
-      "publisher": {
-        "@id": "https://ror.org/04dkp1p98"
-      },
-      "license": {
-        "@id": "http://spdx.org/licenses/CC0-1.0"
-      },
-      "hasPart": [
-        {
-          "@id": "data.csv"
-        }
-      ]
-    },
-    {
-      "@id": "https://ror.org/04dkp1p98",
-      "@type": "Organization",
-      "name": "Bureau of Meteorology",
-      "description": "Australian Government Bureau of Meteorology",
-      "url": "http://www.bom.gov.au/"
-    },
-    {
-      "@id": "data.csv",
-      "@type": "File",
-      "name": "Rainfall data for Katoomba, NSW Australia February 2022",
-      "encodingFormat": "text/csv",
-      "license": {
-        "@id": "https://creativecommons.org/licenses/by-nc-sa/3.0/au/"
-      }
-    },
-    {
-      "@id": "https://creativecommons.org/licenses/by-nc-sa/3.0/au/",
-      "@type": "CreativeWork",
-      "name": "CC BY-NC-SA 3.0 AU",
-      "description": "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia"
-    }
-  ]
-}
-</script>
-
-    
-<!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script -->
-<script src="https://unpkg.com/ro-crate-html@0.1/dist/ro-crate-dynamic.min.js"></script>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<meta charset='utf-8'/>
-<style>
-
-table.table {
-  padding-bottom: 300px;
-}
-</style>
-</head>
-
-
-<body>
-
-  <nav class="navbar">
-
-    <ul class="nav navbar-nav" >
-        <li ><a href="#"><span class="glyphicon glyphicon-home dataset_name">&nbsp;Example dataset for RO-Crate specification</span></a></li>
-    </ul>
-
-  </nav>
-<div class="container">
-<div class="jumbotron">
-<h4 class="citation"></h4>
-<h3 class="item_name">Example dataset for RO-Crate specification</h3>
-
-
-<a href="./ro-crate-metadata.json">⬇️🏷️ Download all the metadata for <span class='name'>Example dataset for RO-Crate specification</span> in JSON-LD format</a>
-
-
-<div id="check"></div>
-
-
-</div>
-
-
-
-<div id="summary">
-<div class='all-meta'>
-            <div>
-                <h3> Example dataset for RO-Crate specification</h3>
-                
-                
-                
-                
-        <div id="./">
-            
-            <table class="table metadata table-striped" >
-                <tbody><tr>
-            <th style="text-align:left;" class="prop">@id</th>
-            <td style='text-align:left'><span>./</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">name<span>&nbsp;</span><a href="http://schema.org/name">[?]</a></th>
-            <td style='text-align:left'><span>Example dataset for RO-Crate specification</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">@type</th>
-            <td style='text-align:left'><span>Dataset</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">description<span>&nbsp;</span><a href="http://schema.org/description">[?]</a></th>
-            <td style='text-align:left'><span>Official rainfall readings for Katoomba, NSW 2022, Australia</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">datePublished<span>&nbsp;</span><a href="http://schema.org/datePublished">[?]</a></th>
-            <td style='text-align:left'><span>2022-12-01</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">publisher<span>&nbsp;</span><a href="http://schema.org/publisher">[?]</a></th>
-            <td style='text-align:left'><a href="#https%3A//ror.org/04dkp1p98">Bureau of Meteorology</a></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">license<span>&nbsp;</span><a href="http://schema.org/license">[?]</a></th>
-            <td style='text-align:left'><a href="http://spdx.org/licenses/CC0-1.0">http://spdx.org/licenses/CC0-1.0</a></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">hasPart<span>&nbsp;</span><a href="http://schema.org/hasPart">[?]</a></th>
-            <td style='text-align:left'><a href="#data.csv">Rainfall data for Katoomba, NSW Australia February 2022</a></td>
-            </tr><tr><th colspan="2" style="text-align:center">Items that reference this one</th><tr><tr>
-            <th style="text-align:left;" class="prop">about<span>&nbsp;</span><a href="http://schema.org/about">[?]</a></th>
-            <td style='text-align:left'><a href="#ro-crate-metadata.json">ro-crate-metadata.json</a></td>
-            </tr></tbody>
-            </table>
-        </div>
-            </div>
-        <hr/><br/><br/>
-            <div>
-                <h3><a href="https://ror.org/04dkp1p98">Go to: </a> Bureau of Meteorology</h3>
-                
-                
-                
-                
-        <div id="https://ror.org/04dkp1p98">
-            
-            <table class="table metadata table-striped" >
-                <tbody><tr>
-            <th style="text-align:left;" class="prop">@id</th>
-            <td style='text-align:left'><a href="https://ror.org/04dkp1p98">https://ror.org/04dkp1p98</a></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">name<span>&nbsp;</span><a href="http://schema.org/name">[?]</a></th>
-            <td style='text-align:left'><span>Bureau of Meteorology</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">@type</th>
-            <td style='text-align:left'><span>Organization</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">description<span>&nbsp;</span><a href="http://schema.org/description">[?]</a></th>
-            <td style='text-align:left'><span>Australian Government Bureau of Meteorology</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">url<span>&nbsp;</span><a href="http://schema.org/url">[?]</a></th>
-            <td style='text-align:left'><a href="http://www.bom.gov.au/">http://www.bom.gov.au/</a></td>
-            </tr><tr><th colspan="2" style="text-align:center">Items that reference this one</th><tr><tr>
-            <th style="text-align:left;" class="prop">publisher<span>&nbsp;</span><a href="http://schema.org/publisher">[?]</a></th>
-            <td style='text-align:left'><a href="#./">Example dataset for RO-Crate specification</a></td>
-            </tr></tbody>
-            </table>
-        </div>
-            </div>
-        <hr/><br/><br/><hr/><br/><br/>
-            <div>
-                <h3><a href="data.csv">⬇️ Download: </a> Rainfall data for Katoomba, NSW Australia February 2022</h3>
-                
-                
-                
-                
-        <div id="data.csv">
-            
-            <table class="table metadata table-striped" >
-                <tbody><tr>
-            <th style="text-align:left;" class="prop">@id</th>
-            <td style='text-align:left'><span>data.csv</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">name<span>&nbsp;</span><a href="http://schema.org/name">[?]</a></th>
-            <td style='text-align:left'><span>Rainfall data for Katoomba, NSW Australia February 2022</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">@type</th>
-            <td style='text-align:left'><span>File</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">encodingFormat<span>&nbsp;</span><a href="http://schema.org/encodingFormat">[?]</a></th>
-            <td style='text-align:left'><span>text/csv</span></td>
-            </tr><tr>
-            <th style="text-align:left;" class="prop">license<span>&nbsp;</span><a href="http://schema.org/license">[?]</a></th>
-            <td style='text-align:left'><a href="#https%3A//creativecommons.org/licenses/by-nc-sa/3.0/au/">CC BY-NC-SA 3.0 AU</a></td>
-            </tr><tr><th colspan="2" style="text-align:center">Items that reference this one</th><tr><tr>
-            <th style="text-align:left;" class="prop">hasPart<span>&nbsp;</span><a href="http://schema.org/hasPart">[?]</a></th>
-            <td style='text-align:left'><a href="#./">Example dataset for RO-Crate specification</a></td>
-            </tr></tbody>
-            </table>
-        </div>
-            </div>
-        <hr/><br/><br/></div>
-</div>
-
-
-
-
-
-</body>
-</html>
+        <footer>
+            <p>Generated from RO-Crate metadata on 2025-08-18</p>
+        </footer>
+    </body>
+    </html>
+        

@@ -112,6 +112,9 @@ $root->setId("https://gigadb.org/dataset/102736")
     ->addPropertyPair("thumbnail", "https://assets.gigadb-cdn.net/live/images" .
     "/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png", true);
 
+$crate->addEntity(new File("https://assets.gigadb-cdn.net/live/images" .
+    "/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png"));
+
 $parts = ["https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/" .
 "102001_103000/102736/readme_102736.txt", "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/" .
 "10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv",
