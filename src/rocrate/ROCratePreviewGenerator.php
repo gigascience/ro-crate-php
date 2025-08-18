@@ -373,11 +373,23 @@ class ROCratePreviewGenerator
                             if (strcmp($temp, "") == 0) {
                                 $temp = $valueHtml;
                             }
-                            $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
+                            } else {
+                                $html .= $keyFirst . " <a href=#$valueHtml> $temp </a>";
+                            }
                         } elseif (ROCrate::isValidUri($valueHtml)) {
-                            $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                            } else {
+                                $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a>";
+                            }
                         } else {
-                            $html .= $keyFirst . " $valueHtml</li>";
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " $valueHtml</li>";
+                            } else {
+                                $html .= $keyFirst . " $valueHtml";
+                            }
                         }
 
                         $keyFirst = ", ";
@@ -408,11 +420,30 @@ class ROCratePreviewGenerator
                             if (strcmp($temp, "") == 0) {
                                 $temp = $valueHtml;
                             }
-                            $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " <a href=#$valueHtml> $temp </a></li>";
+                            } else {
+                                $html .= $keyFirst . " <a href=#$valueHtml> $temp </a>";
+                            }
                         } elseif (ROCrate::isValidUri($valueHtml)) {
-                            $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a></li>";
+                            } else {
+                                $html .= $keyFirst . " <a href=$valueHtml> $valueHtml </a>";
+                            }
+                        } elseif (strcmp($key, '@type') !== 0) {
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " $valueHtml</li>";
+                            } else {
+                                $html .= $keyFirst . " $valueHtml";
+                            }
                         } else {
-                            $html .= $keyFirst . " $valueHtml</li>";
+                            $resolvedKey = $contextData[$valueHtml];
+                            if (strcmp(substr($keyFirst, -1), ':') == 0) {
+                                $html .= $keyFirst . " <a href=$resolvedKey> $valueHtml </a></li>";
+                            } else {
+                                $html .= $keyFirst . " <a href=$resolvedKey> $valueHtml </a>";
+                            }
                         }
 
                         $keyFirst = ", ";

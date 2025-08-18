@@ -1,5 +1,5 @@
 {
-    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@context": "https://w3id.org/ro/crate/1.2/context",
     "@graph": [
         {
             "@id": "ro-crate-metadata.json",
@@ -7,830 +7,494 @@
                 "CreativeWork"
             ],
             "conformsTo": {
-                "@id": "https://w3id.org/ro/crate/1.1"
+                "@id": "https://w3id.org/ro/crate/1.2"
             },
             "about": {
-                "@id": "./"
+                "@id": "https://gigadb.org/dataset/102736"
             }
         },
         {
-            "@id": "./",
+            "@id": "https://gigadb.org/dataset/102736",
             "@type": [
                 "Dataset"
             ],
-            "datePublished": "2023-05-10T09:59:46+00:00",
+            "identifier": {
+                "@id": "https://doi.org/10.5524/102736"
+            },
+            "cite-as": "https://doi.org/10.5524/102736",
+            "name": "Supporting data for \"Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.\"",
+            "description": "Polyadenylation is a dynamic process which is important in cellular physiology. Oxford Nanopore Technologies direct RNA-sequencing provides a strategy for sequencing the full-length RNA molecule and analysis of the transcriptome and epi-transcriptome. There are currently several tools available for poly(A) tail-length estimation, including well-established tools such as tailfindr and nanopolish, as well as two more recent deep learning models: Dorado and BoostNano. However, there has been limited benchmarking of the accuracy of these tools against gold-standard datasets. In this paper we evaluate four poly(A) estimation tools using synthetic RNA standards (Sequins), which have known poly(A) tail-lengths and provide a valuable approach to measuring the accuracy of poly(A) tail-length estimation. All four tools generate mean tail-length estimates which lie within 12% of the correct value. Overall, Dorado is recommended as the preferred approach due to its relatively fast run times, low coefficient of variation and ease of use with integration with base-calling.",
+            "datePublished": "2025-07-29",
+            "sdDatePublished": "2025-07-29",
+            "publisher": {
+                "@id": "https://gigadb.org/"
+            },
+            "sdPublisher": {
+                "@id": "https://gigadb.org/"
+            },
+            "license": {
+                "@id": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            "thumbnail": {
+                "@id": "https://assets.gigadb-cdn.net/live/images/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png"
+            },
             "hasPart": [
                 {
-                    "@id": "results/"
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt"
                 },
                 {
-                    "@id": "ERR599171.yml"
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv"
                 },
                 {
-                    "@id": "config.yml"
+                    "@id": "https://gigadb.org/dataset/view/id/102736/Files_page/4"
                 },
                 {
-                    "@id": "results/sequence-categorisation/"
-                },
-                {
-                    "@id": "results/taxonomy-summary/"
-                },
-                {
-                    "@id": "results/functional-annotation/"
-                },
-                {
-                    "@id": "results/final.contigs.fa"
-                },
-                {
-                    "@id": "results/fastp.html"
-                },
-                {
-                    "@id": "results/ERR599171_1.fastq.trimmed.fasta"
-                },
-                {
-                    "@id": "results/ERR599171_2.fastq.trimmed.fasta"
-                },
-                {
-                    "@id": "results/ERR599171.merged.fasta"
-                },
-                {
-                    "@id": "results/ERR599171.merged.qc_summary"
-                },
-                {
-                    "@id": "results/ERR599171.merged.motus.tsv"
-                },
-                {
-                    "@id": "results/ERR599171.merged.unfiltered_fasta"
-                },
-                {
-                    "@id": "results/ERR599171.merged.cmsearch.all.tblout.deoverlapped"
-                },
-                {
-                    "@id": "results/ERR599171.merged_CDS.faa"
-                },
-                {
-                    "@id": "results/ERR599171.merged_CDS.ffn"
-                },
-                {
-                    "@id": "results/ERR599171_1.fastq.trimmed.qc_summary"
-                },
-                {
-                    "@id": "results/ERR599171_2.fastq.trimmed.qc_summary"
-                },
-                {
-                    "@id": "results/RNA-counts"
-                },
-                {
-                    "@id": "results/sequence-categorisation/5_8S.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/tRNA.RF00005.fasta.gz"
-                },
-                {
-                    "@id": "results/sequence-categorisation/tmRNA.RF00023.fasta.gz"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.gz"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.tsv"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.txt"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/krona.html"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_hdf5.biom"
-                },
-                {
-                    "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_json.biom"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.gz"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.tsv"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.txt"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/krona.html"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_hdf5.biom"
-                },
-                {
-                    "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_json.biom"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.summary.ips"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.summary.ko"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.summary.pfam"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.summary.go"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.summary.go_slim"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.hmm.tsv.gz"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged_CDS.I5.tsv.gz"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged.hmm.tsv.chunks"
-                },
-                {
-                    "@id": "results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/interproscan.stats"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/go.stats"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/ko.stats"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/pfam.stats"
-                },
-                {
-                    "@id": "results/functional-annotation/stats/orf.stats"
+                    "@id": "#other-files"
                 }
             ],
-            "name": "MetaGoFlow Results",
-            "publisher": {
-                "@id": "https://ror.org/0038zss60"
+            "author": [
+                {
+                    "@id": "https://orcid.org/0000-0001-9083-6757"
+                },
+                {
+                    "@id": "#Xuan_Yang"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0337-8722"
+                },
+                {
+                    "@id": "#Benjamin_Reames"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-1155-0959"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-4300-455X"
+                }
+            ],
+            "citation": {
+                "@id": "https://doi.org/10.5524/100425"
             },
-            "description": "Test Description",
-            "license": "Test License",
-            "creator": {
-                "@id": "#alice"
+            "funder": {
+                "@id": "https://ror.org/011kf5r70"
+            },
+            "exifData": [
+                {
+                    "@id": "#datasetTypes"
+                },
+                {
+                    "@id": "#additionalInfo1"
+                },
+                {
+                    "@id": "#additionalInfo2"
+                },
+                {
+                    "@id": "#additionalInfo3"
+                },
+                {
+                    "@id": "#additionalInfo4"
+                },
+                {
+                    "@id": "#additionalInfo5"
+                },
+                {
+                    "@id": "#additionalInfo6"
+                },
+                {
+                    "@id": "#additionalInfo7"
+                },
+                {
+                    "@id": "#additionalInfo8"
+                },
+                {
+                    "@id": "#githubLink1"
+                },
+                {
+                    "@id": "#githubLink2"
+                },
+                {
+                    "@id": "#githubLink3"
+                },
+                {
+                    "@id": "#githubLink4"
+                },
+                {
+                    "@id": "#accessions"
+                },
+                {
+                    "@id": "#history"
+                }
+            ],
+            "keywords": "oxford nanopore technologies, poly(a) tail, estimation, segmentation, direct rna sequencing",
+            "about": {
+                "@id": "https://nanoporetech.com/"
             }
         },
         {
-            "@id": "results/",
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt",
+            "@type": [
+                "File"
+            ],
+            "name": "readme_102736.txt",
+            "contentSize": "9.30 kB",
+            "encodingFormat": "text/txt",
+            "exifData": {
+                "@id": "#oneExtra"
+            }
+        },
+        {
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv",
+            "@type": [
+                "File"
+            ],
+            "name": "boostnano_no_dorado_R1_tails.csv",
+            "contentSize": "317.24 kB",
+            "encodingFormat": "text/csv",
+            "description": "PolyA tail lengths as found by Boostnano for R1 sequins which were filtered out by Dorado but kept by Boostnano; underlying data for figure 3",
+            "exifData": {
+                "@id": "#twoExtra"
+            }
+        },
+        {
+            "@id": "https://gigadb.org/dataset/view/id/102736/Files_page/4",
             "@type": [
                 "Dataset"
-            ]
-        },
-        {
-            "@id": "ERR599171.yml",
-            "@type": [
-                "File"
-            ]
-        },
-        {
-            "@id": "config.yml",
-            "@type": [
-                "File"
             ],
-            "description": "The configuration file through which the user sets the values of the metaGOflow parameters.",
-            "encodingFormat": "text/yaml",
-            "name": "MetaGOflow configuration file"
+            "name": "BoostNano-master",
+            "description": "Archival copy of the GitHub repository https://github.com/haotianteng/BoostNano downloaded 18-July-2025. BoostNano, a tool for preprocessing ONT-Nanopore RNA sequencing reads.This project is licensed under the MPL 2.0 license. Please refer to the GitHub repo for most recent updates.",
+            "distribution": {
+                "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip"
+            },
+            "releaseDate": "2025-07-23",
+            "exifData": {
+                "@id": "#zipExtra"
+            }
         },
         {
-            "@id": "results/sequence-categorisation/",
+            "@id": "https://doi.org/10.5524/100425",
+            "@type": [
+                "CreativeWork",
+                "Dataset"
+            ],
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate"
+            }
+        },
+        {
+            "@id": "#oneExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: Readme, File Attributes: MD5 checksum: 450ef019cf8ba58beb644ef18d1411d0"
+        },
+        {
+            "@id": "#twoExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: Tabular data, File Attributes: MD5 checksum: 97ee210d263c783e4ddfe20352831d60 Figure in MS: 3"
+        },
+        {
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip",
+            "@type": [
+                "DataDownload"
+            ],
+            "encodingFormat": [
+                "application/zip",
+                {
+                    "@id": "https://www.nationalarchives.gov.uk/PRONOM/x-fmt/263"
+                }
+            ],
+            "contentSize": "2.44 MB"
+        },
+        {
+            "@id": "#zipExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: GitHub archive, File Attributes: MD5 checksum: 4b4d2ce7259e5045d89b731b7bfcf730 SWH: swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70 license: MPL 2.0"
+        },
+        {
+            "@id": "#other-files",
             "@type": [
                 "Dataset"
             ],
-            "description": "Identify specific loci in the sample.",
-            "name": "Sequence categorisation"
+            "name": "other files",
+            "description": "This dataset contains too many files that are not individually described"
         },
         {
-            "@id": "results/taxonomy-summary/",
+            "@id": "https://orcid.org/0000-0001-9083-6757",
             "@type": [
-                "Dataset"
-            ]
-        },
-        {
-            "@id": "results/functional-annotation/",
-            "@type": [
-                "Dataset"
-            ]
-        },
-        {
-            "@id": "results/final.contigs.fa",
-            "@type": [
-                "File"
+                "Person"
             ],
-            "description": "These are the assembled contig sequences from the merged reads in FASTA format",
-            "encodingFormat": "text/plain",
-            "name": "FASTA formatted contig sequences"
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Chang JJ"
         },
         {
-            "@id": "results/fastp.html",
-            "@type": [
-                "File"
-            ],
-            "description": "Quality control and preprocessing of FASTQ files",
-            "encodingFormat": "text/html",
-            "name": "FASTP analysis of raw sequence data"
-        },
-        {
-            "@id": "results/ERR599171_1.fastq.trimmed.fasta",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Filtered .fastq file of the single-end reads (forward/reverse)."
-        },
-        {
-            "@id": "results/ERR599171_2.fastq.trimmed.fasta",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Filtered .fastq file of the single-end reads (forward/reverse)."
-        },
-        {
-            "@id": "results/ERR599171.merged.fasta",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged filtered reads."
-        },
-        {
-            "@id": "results/ERR599171.merged.qc_summary",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Summary with statistics of the merged reads."
-        },
-        {
-            "@id": "results/ERR599171.merged.motus.tsv",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": ""
-        },
-        {
-            "@id": "results/ERR599171.merged.unfiltered_fasta",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": ""
-        },
-        {
-            "@id": "results/ERR599171.merged.cmsearch.all.tblout.deoverlapped",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Sequence hits against covariance model databases. Mandatory to run partially the functional annotation step of metaGOflow."
-        },
-        {
-            "@id": "results/ERR599171.merged_CDS.faa",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Coding sequences with amino acids."
-        },
-        {
-            "@id": "results/ERR599171.merged_CDS.ffn",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Coding sequences with nucleotides."
-        },
-        {
-            "@id": "results/ERR599171_1.fastq.trimmed.qc_summary",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Summary with statistics of the single-end reads (forward/reverse)."
-        },
-        {
-            "@id": "results/ERR599171_2.fastq.trimmed.qc_summary",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Summary with statistics of the single-end reads (forward/reverse)."
-        },
-        {
-            "@id": "results/RNA-counts",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Numbers of RNA's counted"
-        },
-        {
-            "@id": "results/sequence-categorisation/5_8S.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/LSU_rRNA_archaea.RF02540.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/LSU_rRNA_bacteria.RF02541.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/LSU_rRNA_eukarya.RF02543.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/SSU_rRNA_archaea.RF01959.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/SSU_rRNA_bacteria.RF00177.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/SSU_rRNA_eukarya.RF01960.fa.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/Bacteria_large_SRP.RF01854.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/Bacteria_small_SRP.RF00169.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/RNaseP_bact_a.RF00010.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/alpha_tmRNA.RF01849.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/cyano_tmRNA.RF01851.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/tRNA-Sec.RF01852.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/tRNA.RF00005.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/sequence-categorisation/tmRNA.RF00023.fasta.gz",
-            "@type": [
-                "File"
-            ],
-            "description": "Identify specific loci in the sample.",
-            "encodingFormat": "application/zip",
-            "name": "Sequence categorisation"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/",
-            "@type": [
-                "Dataset"
-            ]
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/",
-            "@type": [
-                "Dataset"
-            ]
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.gz",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/zip",
-            "name": "LSU sequences used for indentification"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.tsv",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "Tab-separated formatted taxon counts for SSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq.txt",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "Text-based formatted taxon counts for SSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/krona.html",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/html",
-            "name": "Krona summary of LSU taxonomic inventory"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_hdf5.biom",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "BIOM formatted hdf5 taxon counts for SSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/SSU/ERR599171.merged_SSU.fasta.mseq_json.biom",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "BIOM formatted taxon counts for SSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.gz",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/zip",
-            "name": "LSU sequences used for indentification"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.tsv",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "Tab-separated formatted taxon counts for LSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq.txt",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "Text-based taxon counts for LSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/krona.html",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/html",
-            "name": "Krona summary of LSU taxonomic inventory"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_hdf5.biom",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "BIOM formatted hdf5 taxon counts for LSU sequences"
-        },
-        {
-            "@id": "results/taxonomy-summary/LSU/ERR599171.merged_LSU.fasta.mseq_json.biom",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/json-ld",
-            "name": "BIOM formatted taxon counts for LSU sequences"
-        },
-        {
-            "@id": "results/functional-annotation/stats/",
-            "@type": [
-                "Dataset"
-            ]
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.summary.ips",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged contigs InterProScan"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.summary.ko",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged contigs KO summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.summary.pfam",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged contigs PFAM summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.summary.go",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged contigs GO summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.summary.go_slim",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Merged contigs GO summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.hmm.tsv.gz",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/zip",
-            "name": "Merged contigs HMM summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged_CDS.I5.tsv.gz",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "application/zip",
-            "name": "Merged contigs CDS I5 summary"
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged.hmm.tsv.chunks",
-            "@type": [
-                "File"
-            ]
-        },
-        {
-            "@id": "results/functional-annotation/ERR599171.merged_CDS.I5.tsv.chunks",
-            "@type": [
-                "File"
-            ]
-        },
-        {
-            "@id": "results/functional-annotation/stats/interproscan.stats",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "InterProScan summary statistics"
-        },
-        {
-            "@id": "results/functional-annotation/stats/go.stats",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Geno Ontology summary statistics"
-        },
-        {
-            "@id": "results/functional-annotation/stats/ko.stats",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Kegg Ontology summary statistics"
-        },
-        {
-            "@id": "results/functional-annotation/stats/pfam.stats",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "Pfam summary statistcs"
-        },
-        {
-            "@id": "results/functional-annotation/stats/orf.stats",
-            "@type": [
-                "File"
-            ],
-            "encodingFormat": "text/plain",
-            "name": "ORF summary statistics"
-        },
-        {
-            "@id": "https://www.apache.org/licenses/LICENSE-2.0",
-            "@type": [
-                "CreativeWork"
-            ],
-            "identifier": "https://spdx.org/licenses/Apache-2.0.html",
-            "name": "Apache License 2.0"
-        },
-        {
-            "@id": "https://creativecommons.org/licenses/by/4.0/legalcode",
-            "@type": [
-                "CreativeWork"
-            ],
-            "identifier": "https://spdx.org/licenses/CC-BY-4.0.html",
-            "name": "Creative Commons (CC-BY 4.0)"
-        },
-        {
-            "@id": "mailto:emobon@embrc.eu",
-            "@type": [
-                "ContactPoint"
-            ],
-            "contactType": "Help Desk",
-            "email": "emobon@embrc.eu",
-            "identifier": "emobon@embrc.eu",
-            "url": "https://www.embrc.eu/about-us/contact-us"
-        },
-        {
-            "@id": "https://ror.org/0038zss60",
+            "@id": "https://ror.org/01ej9dk98",
             "@type": [
                 "Organization"
             ],
+            "name": "The University of Melbourne"
+        },
+        {
+            "@id": "#Xuan_Yang",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Yang X"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0337-8722",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/05x2bcf33"
+            },
+            "name": "Teng H"
+        },
+        {
+            "@id": "https://ror.org/05x2bcf33",
+            "@type": [
+                "Organization"
+            ],
+            "name": "Carnegie Mellon University"
+        },
+        {
+            "@id": "#Benjamin_Reames",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Reames B"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-1155-0959",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Corbin V"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-4300-455X",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Coin LJM"
+        },
+        {
+            "@id": "https://ror.org/011kf5r70",
+            "@type": [
+                "Organization"
+            ],
+            "identifier": "https://ror.org/011kf5r70",
+            "name": "National Health and Medical Research Council",
+            "description": "Funding Body",
+            "exifData": [
+                {
+                    "@id": "#awardee"
+                },
+                {
+                    "@id": "#awardId"
+                }
+            ]
+        },
+        {
+            "@id": "#awardee",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Awardee",
+            "value": "L Coin"
+        },
+        {
+            "@id": "#awardId",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Award ID",
+            "value": "GNT1195743"
+        },
+        {
+            "@id": "#datasetTypes",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Dataset type",
+            "value": "Epigenomic, Bioinformatics, Software, Transcriptomic"
+        },
+        {
+            "@id": "https://nanoporetech.com/",
+            "@type": [
+                "URL"
+            ],
+            "name": "oxford nanopore technologies"
+        },
+        {
+            "@id": "https://doi.org/10.5524/102736",
+            "@type": [
+                "PropertyValue"
+            ],
+            "propertyID": "https://registry.identifiers.org/registry/doi",
+            "value": "doi:10.5524/102736",
+            "url": "https://doi.org/10.5524/102736"
+        },
+        {
+            "@id": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "@type": [
+                "CreativeWork"
+            ],
+            "name": "Creative Commons Zero v1.0 Universal",
+            "description": "The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below."
+        },
+        {
+            "@id": "https://gigadb.org/",
+            "@type": [
+                "Organization"
+            ],
+            "name": "GigaScience DataBase",
+            "description": "GigaDB is a data repository supporting scientific publications in the Life/Biomedical Sciences domain. GigaDB organises and curates data from individually publishable units into datasets, which are provided openly and in as FAIR manner as possible for the global research community.",
             "contactPoint": {
-                "@id": "mailto:emobon@embrc.eu"
-            },
-            "name": "European Marine Biological Resource Centre",
-            "url": "https://ror.org/0038zss60"
+                "@id": "mailto:database@gigasciencejournal.com"
+            }
         },
         {
-            "@id": "#workflow/metaGOflow",
+            "@id": "mailto:database@gigasciencejournal.com",
             "@type": [
-                "File",
-                "SoftwareSourceCode",
-                "ComputationalWorkflow"
+                "ContactPoint"
             ],
-            "affiliation": "University of Flatland",
-            "author": {
-                "@id": "EMO BON"
-            },
-            "hasPart": [
-                {
-                    "@id": "config.yml"
-                },
-                {
-                    "@id": "TARA_OCEANS_SAMPLE_3steps/ERR599171.yml"
-                }
-            ],
-            "license": {
-                "@id": "https://www.apache.org/licenses/LICENSE-2.0"
-            },
-            "name": "metaGOflow",
-            "url": "https://github.com/emo-bon/MetaGOflow/releases/tag/v1.0.0"
+            "contactType": "contact of the publisher",
+            "email": "database@gigasciencejournal.com",
+            "identifier": "database@gigasciencejournal.com"
         },
         {
-            "@id": "#alice",
+            "@id": "#additionalInfo1",
             "@type": [
-                "Person"
+                "PropertyValue"
             ],
-            "name": "Alice Smith",
-            "affiliation": "University of Example 1"
+            "name": "Additional information",
+            "value": "https://doi.org/10.26188/c.7767503.v1"
         },
         {
-            "@id": "#bob",
+            "@id": "#additionalInfo2",
             "@type": [
-                "Person"
+                "PropertyValue"
             ],
-            "name": "Bob",
-            "affiliation": "University of Example 2",
-            "knows": [
-                {
-                    "@id": "#alice"
-                },
-                {
-                    "@id": "#cathy"
-                }
-            ],
-            "encodingFormat": [
-                "test/pdf",
-                {
-                    "@id": "TRY"
-                }
-            ]
+            "name": "Additional information",
+            "value": "https://registry.dome-ml.org/review/4ctuzhv3y5"
         },
         {
-            "@id": "Test ID",
+            "@id": "#additionalInfo3",
             "@type": [
-                "TestType"
-            ]
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:1d8fdaa469108a2834a854d8249913d267fb9cfc"
+        },
+        {
+            "@id": "#additionalInfo4",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:95b1531358ec75027da00fc8b539bce14188d30d"
+        },
+        {
+            "@id": "#additionalInfo5",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:98b3a8996ab44283990fe707ffc44d45b2a61695"
+        },
+        {
+            "@id": "#additionalInfo6",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70"
+        },
+        {
+            "@id": "#additionalInfo7",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://scicrunch.org/resolver/RRID:SCR_026467"
+        },
+        {
+            "@id": "#additionalInfo8",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://bio.tools/boostnano"
+        },
+        {
+            "@id": "#githubLink1",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/haotianteng/BoostNano"
+        },
+        {
+            "@id": "#githubLink2",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/adnaniazi/tailfindr"
+        },
+        {
+            "@id": "#githubLink3",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/haotianteng/chiron"
+        },
+        {
+            "@id": "#githubLink4",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/jts/nanopolish"
+        },
+        {
+            "@id": "#accessions",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Accessions (data not in GigaDB)",
+            "value": "BioProject: PRJNA675370"
+        },
+        {
+            "@id": "#history",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "History",
+            "value": "Date: July 29, 2025, Action: Dataset publish"
         }
     ]
 }
