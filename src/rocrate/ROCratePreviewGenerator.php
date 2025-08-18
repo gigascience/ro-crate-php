@@ -22,8 +22,7 @@ class ROCratePreviewGenerator
 
         // Configuration
         define('INPUT_JSON', $basePath . '/ro-crate-metadata.json');
-        // !!!
-        define('OUTPUT_HTML', $basePath . '/ro-crate-preview-out.html');
+        define('OUTPUT_HTML', $basePath . '/ro-crate-preview.html');
         define('CSS_PATH', '/ro-crate-preview_files/style.css');
 
         // Load and validate JSON
@@ -53,7 +52,6 @@ class ROCratePreviewGenerator
         echo "Successful Creation of Preview file";
     }
 
-    // Helper functions !!!
     /**
      * Builds context term URIs
      * @param mixed $context The context extracted from the metadata file
@@ -466,7 +464,6 @@ class ROCratePreviewGenerator
         return $html;
     }
 
-    //!!!
     /**
      * Renders the key
      * @param mixed $key The key to render
@@ -485,7 +482,6 @@ class ROCratePreviewGenerator
         return htmlspecialchars($key);
     }
 
-    //!!!
     /**
      * Renders the value
      * @param mixed $value The value to render

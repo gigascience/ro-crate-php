@@ -444,7 +444,6 @@ class ROCrate
         // This cannot be strictly enforced for the same reason as above
 
         // 3. @id have to be valid URI references
-        //!!!
         //foreach($this->entities as $entity) {
         //    if (ROCrate::isValidUri($entity->getId(), false)) {
         //        $errors[] = "The entity's id (" . $entity->getId() . ") is not a valid URI.";
@@ -803,11 +802,10 @@ class ROCrate
         } catch (JsonException $e) {
             throw new ROCrateException("JSON encoding failed: " . $e->getMessage());
         }
-        //!!!
         if (strcmp($prefix, "") == 0) {
-            file_put_contents($target . '/ro-crate-metadata-out.json', $json);
+            file_put_contents($target . '/ro-crate-metadata.json', $json);
         } else {
-            file_put_contents($target . '/' . $prefix . '-ro-crate-metadata-out.json', $json);
+            file_put_contents($target . '/' . $prefix . '-ro-crate-metadata.json', $json);
         }
     }
 
