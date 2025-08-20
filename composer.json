@@ -1,0 +1,48 @@
+{
+    "name": "gigascience/ro-crate-php",
+    "description": "Developer tools to manipulate ro-crate metadata files as objects",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Alex",
+            "email": "wltsangac@connect.ust.hk"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "squizlabs/php_codesniffer": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Json\\": "src/Json/",
+            "Exceptions\\": "src/exceptions/",
+            "ROCrate\\": "src/rocrate/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "monolog/monolog": "^3.0",
+        "easyrdf/easyrdf": "^1.1",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
+    }
+}
