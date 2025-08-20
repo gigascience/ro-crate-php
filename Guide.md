@@ -5,7 +5,7 @@ Below are some notes to pay attention to when developers are using the tool to m
 ---
 
 ## Overview
-This is a PHP tool to create and manipulate Research Object Crate. Please refer to the repository's *[REARME.md](https://github.com/gigascience/ro-crate-php/tree/main)* for more details. Below are the high-level steps instructing the creation of the metadata file for a GigaDB dataset from scratch. The created file may not be perfect but ought to be able to provide sufficient description of the dataset. An example created following the flow is in the assets directory of the repository above.
+This is a PHP tool to create and manipulate Research Object Crate. Please refer to the repository's *[README.md](https://github.com/gigascience/ro-crate-php/tree/main)* for more details. Below are the high-level steps instructing the creation of the metadata file for a GigaDB dataset from scratch. The created file may not be perfect but ought to be able to provide sufficient description of the dataset. An example created following the flow is in the assets directory of the repository above.
 
 **Version**: [1.0]  
 **Last Updated**: [2025-08-18]
