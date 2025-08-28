@@ -15,7 +15,7 @@ This is a PHP tool to create and manipulate Research Object Crate. Please refer 
 ## Note
 The general rule is that we use the @id construct (<b>true</b> flag if using the add/removePropertyPair methods) when referring to another entity, we otherwise use a plain literal (<b>false</b> flag if using the add/removePropertyPair methods). There are exceptions for specific constructs not following the rules.
 
-Another reminder is to add the entity to the crate before or after the creation of the entity.
+Another reminder is to add the entity to the crate after the creation of the entity.
 
 Also, only one entity with the same ID has to be created.
 
