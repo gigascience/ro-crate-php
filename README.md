@@ -5,7 +5,7 @@ This is a PHP tool to create and manipulate Research Object Crate.
 ## Install
 
 Install the tool using composer:
->composer require alex/my-php-app
+>composer require gigascience/ro-crate-php
 
 ## Docs
 Inline phpDoc comments are written.
