@@ -1,6 +1,6 @@
 
 # Usage Guide for ro-crate-php
-Below are some notes to pay attention to when developers are using the tool to manipulate RO-Crate Metadata file. The note is GigaDB-oriented. This note is written to help ease the use of the tool to create or manipulate the RO-Crate Metadata file concerning GigaDB datasets by removing unnecessary and only emphasizing relevant technical details about the specific standard of RO-Crate 1.2.
+Below are some notes to pay attention to when developers are using the tool to manipulate RO-Crate Metadata file. The note is GigaDB-oriented. This note is written to help ease the use of the tool to create or manipulate the RO-Crate Metadata file concerning GigaDB datasets by removing unnecessary and only emphasizing relevant technical details about the specific standard of RO-Crate 1.2. Please note that the implementation of the tool and this guide is 1.2-oriented, and some constraints in standard of RO-Crate 1.1 are no longer required in the standard of RO-Crate 1.2. To facilitate the use with other existing RO-Crate applications based on the standard of 1.1, a RO-Crate file has to be built in accordance with the requirements in the standard of 1.1.
 
 ---
 
