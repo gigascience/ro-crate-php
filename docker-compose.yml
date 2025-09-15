@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  php-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./src:/var/www/html
+      - ./vendor:/var/www/vendor 
+      - ./resources:/var/www/resources
+      # Exclude vendor folder from host
+      #- /var/www/vendor
+    ports:
+      - "8080:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: >
+      sh -c "docker-php-entrypoint apache2-foreground"
+  test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./src:/var/www/html
+      - ./tests:/var/www/tests
+      - ./vendor:/var/www/vendor
+      - ./resources:/var/www/resources
+    working_dir: /var/www
+    command: vendor/bin/phpunit --colors=always tests
+    environment:
+      APP_ENV: testing
+    depends_on:
+      - php-app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

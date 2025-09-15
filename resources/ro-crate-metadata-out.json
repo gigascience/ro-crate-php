@@ -1,0 +1,500 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.2/context",
+    "@graph": [
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": [
+                "CreativeWork"
+            ],
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            },
+            "about": {
+                "@id": "https://gigadb.org/dataset/102736"
+            }
+        },
+        {
+            "@id": "https://gigadb.org/dataset/102736",
+            "@type": [
+                "Dataset"
+            ],
+            "identifier": {
+                "@id": "https://doi.org/10.5524/102736"
+            },
+            "cite-as": "https://doi.org/10.5524/102736",
+            "name": "Supporting data for \"Using synthetic RNA to benchmark poly(A) length inference from direct RNA sequencing.\"",
+            "description": "Polyadenylation is a dynamic process which is important in cellular physiology. Oxford Nanopore Technologies direct RNA-sequencing provides a strategy for sequencing the full-length RNA molecule and analysis of the transcriptome and epi-transcriptome. There are currently several tools available for poly(A) tail-length estimation, including well-established tools such as tailfindr and nanopolish, as well as two more recent deep learning models: Dorado and BoostNano. However, there has been limited benchmarking of the accuracy of these tools against gold-standard datasets. In this paper we evaluate four poly(A) estimation tools using synthetic RNA standards (Sequins), which have known poly(A) tail-lengths and provide a valuable approach to measuring the accuracy of poly(A) tail-length estimation. All four tools generate mean tail-length estimates which lie within 12% of the correct value. Overall, Dorado is recommended as the preferred approach due to its relatively fast run times, low coefficient of variation and ease of use with integration with base-calling.",
+            "datePublished": "2025-07-29",
+            "sdDatePublished": "2025-07-29",
+            "publisher": {
+                "@id": "https://gigadb.org/"
+            },
+            "sdPublisher": {
+                "@id": "https://gigadb.org/"
+            },
+            "license": {
+                "@id": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            "thumbnail": {
+                "@id": "https://assets.gigadb-cdn.net/live/images/datasets/32d9369e-500d-5347-8842-9fe46cdc3693/102736.png"
+            },
+            "hasPart": [
+                {
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt"
+                },
+                {
+                    "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv"
+                },
+                {
+                    "@id": "https://gigadb.org/dataset/view/id/102736/Files_page/4"
+                },
+                {
+                    "@id": "#other-files"
+                }
+            ],
+            "author": [
+                {
+                    "@id": "https://orcid.org/0000-0001-9083-6757"
+                },
+                {
+                    "@id": "#Xuan_Yang"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0337-8722"
+                },
+                {
+                    "@id": "#Benjamin_Reames"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-1155-0959"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-4300-455X"
+                }
+            ],
+            "citation": {
+                "@id": "https://doi.org/10.5524/100425"
+            },
+            "funder": {
+                "@id": "https://ror.org/011kf5r70"
+            },
+            "exifData": [
+                {
+                    "@id": "#datasetTypes"
+                },
+                {
+                    "@id": "#additionalInfo1"
+                },
+                {
+                    "@id": "#additionalInfo2"
+                },
+                {
+                    "@id": "#additionalInfo3"
+                },
+                {
+                    "@id": "#additionalInfo4"
+                },
+                {
+                    "@id": "#additionalInfo5"
+                },
+                {
+                    "@id": "#additionalInfo6"
+                },
+                {
+                    "@id": "#additionalInfo7"
+                },
+                {
+                    "@id": "#additionalInfo8"
+                },
+                {
+                    "@id": "#githubLink1"
+                },
+                {
+                    "@id": "#githubLink2"
+                },
+                {
+                    "@id": "#githubLink3"
+                },
+                {
+                    "@id": "#githubLink4"
+                },
+                {
+                    "@id": "#accessions"
+                },
+                {
+                    "@id": "#history"
+                }
+            ],
+            "keywords": "oxford nanopore technologies, poly(a) tail, estimation, segmentation, direct rna sequencing",
+            "about": {
+                "@id": "https://nanoporetech.com/"
+            }
+        },
+        {
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/readme_102736.txt",
+            "@type": [
+                "File"
+            ],
+            "name": "readme_102736.txt",
+            "contentSize": "9.30 kB",
+            "encodingFormat": "text/txt",
+            "exifData": {
+                "@id": "#oneExtra"
+            }
+        },
+        {
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/boostnano_no_dorado_R1_tails.csv",
+            "@type": [
+                "File"
+            ],
+            "name": "boostnano_no_dorado_R1_tails.csv",
+            "contentSize": "317.24 kB",
+            "encodingFormat": "text/csv",
+            "description": "PolyA tail lengths as found by Boostnano for R1 sequins which were filtered out by Dorado but kept by Boostnano; underlying data for figure 3",
+            "exifData": {
+                "@id": "#twoExtra"
+            }
+        },
+        {
+            "@id": "https://gigadb.org/dataset/view/id/102736/Files_page/4",
+            "@type": [
+                "Dataset"
+            ],
+            "name": "BoostNano-master",
+            "description": "Archival copy of the GitHub repository https://github.com/haotianteng/BoostNano downloaded 18-July-2025. BoostNano, a tool for preprocessing ONT-Nanopore RNA sequencing reads.This project is licensed under the MPL 2.0 license. Please refer to the GitHub repo for most recent updates.",
+            "distribution": {
+                "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip"
+            },
+            "releaseDate": "2025-07-23",
+            "exifData": {
+                "@id": "#zipExtra"
+            }
+        },
+        {
+            "@id": "https://doi.org/10.5524/100425",
+            "@type": [
+                "CreativeWork",
+                "Dataset"
+            ],
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate"
+            }
+        },
+        {
+            "@id": "#oneExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: Readme, File Attributes: MD5 checksum: 450ef019cf8ba58beb644ef18d1411d0"
+        },
+        {
+            "@id": "#twoExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: Tabular data, File Attributes: MD5 checksum: 97ee210d263c783e4ddfe20352831d60 Figure in MS: 3"
+        },
+        {
+            "@id": "https://s3.ap-northeast-1.wasabisys.com/gigadb-datasets/live/pub/10.5524/102001_103000/102736/BoostNano-master.zip",
+            "@type": [
+                "DataDownload"
+            ],
+            "encodingFormat": [
+                "application/zip",
+                {
+                    "@id": "https://www.nationalarchives.gov.uk/PRONOM/x-fmt/263"
+                }
+            ],
+            "contentSize": "2.44 MB"
+        },
+        {
+            "@id": "#zipExtra",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Extra Information",
+            "value": "Data Type: GitHub archive, File Attributes: MD5 checksum: 4b4d2ce7259e5045d89b731b7bfcf730 SWH: swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70 license: MPL 2.0"
+        },
+        {
+            "@id": "#other-files",
+            "@type": [
+                "Dataset"
+            ],
+            "name": "other files",
+            "description": "This dataset contains too many files that are not individually described"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-9083-6757",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Chang JJ"
+        },
+        {
+            "@id": "https://ror.org/01ej9dk98",
+            "@type": [
+                "Organization"
+            ],
+            "name": "The University of Melbourne"
+        },
+        {
+            "@id": "#Xuan_Yang",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Yang X"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0337-8722",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/05x2bcf33"
+            },
+            "name": "Teng H"
+        },
+        {
+            "@id": "https://ror.org/05x2bcf33",
+            "@type": [
+                "Organization"
+            ],
+            "name": "Carnegie Mellon University"
+        },
+        {
+            "@id": "#Benjamin_Reames",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Reames B"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-1155-0959",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Corbin V"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-4300-455X",
+            "@type": [
+                "Person"
+            ],
+            "affiliation": {
+                "@id": "https://ror.org/01ej9dk98"
+            },
+            "name": "Coin LJM"
+        },
+        {
+            "@id": "https://ror.org/011kf5r70",
+            "@type": [
+                "Organization"
+            ],
+            "identifier": "https://ror.org/011kf5r70",
+            "name": "National Health and Medical Research Council",
+            "description": "Funding Body",
+            "exifData": [
+                {
+                    "@id": "#awardee"
+                },
+                {
+                    "@id": "#awardId"
+                }
+            ]
+        },
+        {
+            "@id": "#awardee",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Awardee",
+            "value": "L Coin"
+        },
+        {
+            "@id": "#awardId",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Award ID",
+            "value": "GNT1195743"
+        },
+        {
+            "@id": "#datasetTypes",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Dataset type",
+            "value": "Epigenomic, Bioinformatics, Software, Transcriptomic"
+        },
+        {
+            "@id": "https://nanoporetech.com/",
+            "@type": [
+                "URL"
+            ],
+            "name": "oxford nanopore technologies"
+        },
+        {
+            "@id": "https://doi.org/10.5524/102736",
+            "@type": [
+                "PropertyValue"
+            ],
+            "propertyID": "https://registry.identifiers.org/registry/doi",
+            "value": "doi:10.5524/102736",
+            "url": "https://doi.org/10.5524/102736"
+        },
+        {
+            "@id": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "@type": [
+                "CreativeWork"
+            ],
+            "name": "Creative Commons Zero v1.0 Universal",
+            "description": "The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below."
+        },
+        {
+            "@id": "https://gigadb.org/",
+            "@type": [
+                "Organization"
+            ],
+            "name": "GigaScience DataBase",
+            "description": "GigaDB is a data repository supporting scientific publications in the Life/Biomedical Sciences domain. GigaDB organises and curates data from individually publishable units into datasets, which are provided openly and in as FAIR manner as possible for the global research community.",
+            "contactPoint": {
+                "@id": "mailto:database@gigasciencejournal.com"
+            }
+        },
+        {
+            "@id": "mailto:database@gigasciencejournal.com",
+            "@type": [
+                "ContactPoint"
+            ],
+            "contactType": "contact of the publisher",
+            "email": "database@gigasciencejournal.com",
+            "identifier": "database@gigasciencejournal.com"
+        },
+        {
+            "@id": "#additionalInfo1",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://doi.org/10.26188/c.7767503.v1"
+        },
+        {
+            "@id": "#additionalInfo2",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://registry.dome-ml.org/review/4ctuzhv3y5"
+        },
+        {
+            "@id": "#additionalInfo3",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:1d8fdaa469108a2834a854d8249913d267fb9cfc"
+        },
+        {
+            "@id": "#additionalInfo4",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:95b1531358ec75027da00fc8b539bce14188d30d"
+        },
+        {
+            "@id": "#additionalInfo5",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:98b3a8996ab44283990fe707ffc44d45b2a61695"
+        },
+        {
+            "@id": "#additionalInfo6",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://archive.softwareheritage.org/swh:1:snp:ee789638699e0e33ca3b1d09da5bb1f485ea7c70"
+        },
+        {
+            "@id": "#additionalInfo7",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://scicrunch.org/resolver/RRID:SCR_026467"
+        },
+        {
+            "@id": "#additionalInfo8",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Additional information",
+            "value": "https://bio.tools/boostnano"
+        },
+        {
+            "@id": "#githubLink1",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/haotianteng/BoostNano"
+        },
+        {
+            "@id": "#githubLink2",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/adnaniazi/tailfindr"
+        },
+        {
+            "@id": "#githubLink3",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/haotianteng/chiron"
+        },
+        {
+            "@id": "#githubLink4",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Github links",
+            "value": "https://github.com/jts/nanopolish"
+        },
+        {
+            "@id": "#accessions",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "Accessions (data not in GigaDB)",
+            "value": "BioProject: PRJNA675370"
+        },
+        {
+            "@id": "#history",
+            "@type": [
+                "PropertyValue"
+            ],
+            "name": "History",
+            "value": "Date: July 29, 2025, Action: Dataset publish"
+        }
+    ]
+}
